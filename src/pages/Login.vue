@@ -30,13 +30,13 @@
 </template>
 
 <script setup>
+import router from "@/router/index.js";
 import { ref } from "vue";
 import { getCurrentInstance } from "vue";
-import { baseUrl } from "../../../conf";
-import Popup from "../Popup.vue";
+import { baseUrl } from "../../conf.js";
+import Popup from "../components/Popup.vue";
 
 const instance = getCurrentInstance();
-const tech = ref(instance.appContext.config.globalProperties.$tech);
 
 const name = ref("");
 const password = ref("");
@@ -74,9 +74,9 @@ async function login() {
 
     localStorage.setItem("token", data.token);
 
-    tech.value = data;
-
-    /* router.push("/home"); */
+    instance.appContext.config.globalProperties.$tech = data
+    
+    router.push('/home')
   } else {
     type.value = "error";
     msg.value = "Ops! algo deu errado";
@@ -112,7 +112,7 @@ async function login() {
   gap: 2rem;
   padding: 5rem;
   border-radius: 1.2rem;
-  background: rgb(90, 88, 230);
+  background: #5a58e6;
 }
 
 .login-container form input {
@@ -125,7 +125,7 @@ async function login() {
 .login-container form input[type="submit"] {
   font-weight: 600;
   width: 100%;
-  background: rgba(86, 92, 179, 0.667);
+  background: #565cb3aa;
   color: var(--light-color);
   font-size: 1.5rem;
   cursor: pointer;
