@@ -1,7 +1,7 @@
 <template>
   <main class="home-main">
     <section class="navbar-section">
-      <Navbar />
+      <Navbar :tech="tech" />
     </section>
     <section class="tickets-section">
       <p>
@@ -11,8 +11,8 @@
         <Ticket
           v-for="ticket in tickets"
           :key="ticket.id"
-          :status="ticket.status"
-          :ticketId="ticket.id"
+          :ticket="ticket"
+          :permissions="tech.permissions"
         >
           <template #clientName>{{ ticket.clientName }}</template>
           <template #description>{{ ticket.description }}</template>
@@ -35,9 +35,16 @@ import Navbar from "../components/Navbar.vue";
 import Ticket from "../components/Ticket.vue";
 import { baseUrl } from "../../conf";
 import { onMounted, ref } from "vue";
+import router from "../router";
 
 const tickets = ref([]);
 const total = ref(tickets.value.length);
+const tech = ref({});
+
+const token = localStorage.getItem("token");
+if (!token) {
+  router.push("/");
+}
 
 onMounted(async () => {
   const res = await fetch(baseUrl + "/ticket/list", {
@@ -47,7 +54,8 @@ onMounted(async () => {
   });
 
   const data = await res.json();
-  tickets.value = data;
+  tickets.value = data.tickets;
+  tech.value = data.tech;
 });
 
 function formatDate(date) {

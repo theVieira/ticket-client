@@ -27,19 +27,23 @@
   </div>
 
   <div class="ticket-actions" v-show="ticketFocus">
-    <div class="action" v-if="tech.admin" @click="deleteTicket">
+    <div
+      class="action"
+      v-if="props.permissions.admin || props.permissions.delete_ticket"
+      @click="deleteTicket"
+    >
       <label>Deletar</label>
       <img src="../assets/icons/trash.png" alt="trash icon" />
     </div>
-    <div class="action" v-if="props.status != 'finished'">
+    <div class="action" v-if="props.ticket.status != 'finished'">
       <label>Finalizar</label>
       <img src="../assets/icons/check.png" alt="check icon" />
     </div>
-    <div class="action" v-if="props.status == 'finished'">
+    <div class="action" v-if="props.ticket.status == 'finished'">
       <label>Abrir novamente</label>
       <img src="../assets/icons/reload.png" alt="reload icon" />
     </div>
-    <div class="action" v-if="props.status == 'open'">
+    <div class="action" v-if="props.ticket.status == 'open'">
       <label>Marcar em progresso</label>
       <img
         src="../assets/icons/progress.png"
@@ -52,17 +56,12 @@
 
 <script setup>
 import { ref } from "vue";
-import { getCurrentInstance } from "vue";
 import { baseUrl } from "../../conf";
 
 const props = defineProps({
-  status: "open" || "progress" || "finished",
-  ticketId: String,
+  ticket: {},
+  permissions: {},
 });
-
-const instance = getCurrentInstance();
-
-const tech = instance.appContext.config.globalProperties.$tech;
 
 const ticketFocus = ref(false);
 
@@ -75,9 +74,10 @@ async function deleteTicket() {
     method: "DELETE",
     headers: {
       authorization: `Bearer ${localStorage.getItem("token")}`,
+      "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      id: props.ticketId,
+      id: props.ticket.id,
     }),
   });
 

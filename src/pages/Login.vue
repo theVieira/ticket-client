@@ -31,12 +31,9 @@
 
 <script setup>
 import router from "@/router/index.js";
-import { ref } from "vue";
-import { getCurrentInstance } from "vue";
+import { onBeforeMount, ref } from "vue";
 import { baseUrl } from "../../conf.js";
 import Popup from "../components/Popup.vue";
-
-const instance = getCurrentInstance();
 
 const name = ref("");
 const password = ref("");
@@ -45,6 +42,13 @@ const msg = ref("");
 const type = ref("");
 
 const popup = ref(false);
+
+onBeforeMount(() => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    router.push("/home");
+  }
+});
 
 async function login() {
   const res = await fetch(baseUrl + "/tech/auth", {
@@ -74,9 +78,7 @@ async function login() {
 
     localStorage.setItem("token", data.token);
 
-    instance.appContext.config.globalProperties.$tech = data
-    
-    router.push('/home')
+    router.push("/home");
   } else {
     type.value = "error";
     msg.value = "Ops! algo deu errado";

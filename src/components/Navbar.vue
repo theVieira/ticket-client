@@ -25,20 +25,17 @@
         </ul>
       </div>
     </div>
-    <p class="tech-name">
-      {{ techName }}
-    </p>
+    <p class="tech-name">{{ props.tech.name }}</p>
   </nav>
 </template>
 
 <script setup>
-import { ref, getCurrentInstance } from "vue";
+import { ref, defineProps } from "vue";
 const listIndex = ref([false, false, false]);
 
-const instance = getCurrentInstance();
-const tech = instance.appContext.config.globalProperties.$tech;
-
-const techName = tech.name.toUpperCase();
+const props = defineProps({
+  tech: {},
+});
 </script>
 
 <style scoped>
