@@ -11,7 +11,9 @@
 
 :root {
   font-size: 62.5%;
-  --dark-background: #00010f;
+  --dark-background: #121518;
+  --medium-background: #1c1f22;
+  --light-background: #1c1f22f5;
   --light-color: #cecece;
 }
 

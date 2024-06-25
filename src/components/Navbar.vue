@@ -9,7 +9,7 @@
           </li>
           <li class="hover">Abertos</li>
           <li class="hover">Finalizados</li>
-          <li class="hover" v-if="props.tech.permissions.admin">
+          <li class="hover" v-if="props.admin">
             <RouterLink to="/create/ticket" class="link">Criar</RouterLink>
           </li>
         </ul>
@@ -17,23 +17,21 @@
       <div class="list" @click="listIndex[1] = !listIndex[1]">
         <h2 class="hover">Técnicos</h2>
         <ul v-if="listIndex[1]">
-          <li class="hover" v-if="props.tech.permissions.admin">Criar</li>
+          <li class="hover" v-if="props.admin">Criar</li>
           <li class="hover">Seus chamados</li>
-          <li class="hover" v-if="props.tech.permissions.admin">
-            Ver Relatório
-          </li>
-          <li class="hover" v-if="props.tech.permissions.admin">Gerenciar</li>
+          <li class="hover" v-if="props.admin">Ver Relatório</li>
+          <li class="hover" v-if="props.admin">Gerenciar</li>
         </ul>
       </div>
       <div class="list" @click="listIndex[2] = !listIndex[2]">
         <h2 class="hover">Clientes</h2>
         <ul v-if="listIndex[2]">
           <li class="hover">Todos</li>
-          <li class="hover" v-if="props.tech.permissions.admin">Criar</li>
+          <li class="hover" v-if="props.admin">Criar</li>
         </ul>
       </div>
     </div>
-    <p class="tech-name">{{ props.tech.name.toUpperCase() }}</p>
+    <p class="tech-name">{{ props.techName.toUpperCase() }}</p>
   </nav>
 </template>
 
@@ -42,7 +40,9 @@ import { ref, defineProps } from "vue";
 const listIndex = ref([false, false, false]);
 
 const props = defineProps({
-  tech: {},
+  techName: String,
+  admin: Boolean,
+  create_ticket: Boolean,
 });
 </script>
 

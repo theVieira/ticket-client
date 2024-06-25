@@ -29,7 +29,7 @@
   <div class="ticket-actions" v-show="ticketFocus">
     <div
       class="action"
-      v-if="props.permissions.admin || props.permissions.delete_ticket"
+      v-if="props.admin || props.delete_ticket"
       @click="deleteTicket"
     >
       <label>Deletar</label>
@@ -60,7 +60,8 @@ import { baseUrl } from "../../conf";
 
 const props = defineProps({
   ticket: {},
-  permissions: {},
+  admin: Boolean,
+  delete_ticket: Boolean,
 });
 
 const ticketFocus = ref(false);
@@ -88,6 +89,7 @@ async function deleteTicket() {
 
 <style scoped>
 .ticket-container {
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -103,17 +105,17 @@ async function deleteTicket() {
   align-items: center;
   gap: 0.5rem;
   text-align: center;
+  width: 20%;
 }
 
 .large {
-  max-width: 40%;
-  width: fit-content;
+  width: 40%;
 }
 
 .ticket-actions {
   margin-top: -1rem;
   width: 100%;
-  background: #121518;
+  background: var(--medium-background);
   padding: 1rem 3rem;
   border-radius: 1.2rem;
   display: flex;

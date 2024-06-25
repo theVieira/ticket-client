@@ -1,7 +1,11 @@
 <template>
-  <main class="home-main" v-if="techDefined">
+  <main class="home-main">
     <section class="navbar-section">
-      <Navbar :tech="tech" />
+      <Navbar
+        :admin="admin"
+        :create_ticket="create_ticket"
+        :techName="techName"
+      />
     </section>
     <section class="tickets-section">
       <p>
@@ -12,7 +16,8 @@
           v-for="ticket in tickets"
           :key="ticket.id"
           :ticket="ticket"
-          :permissions="tech.permissions"
+          :admin="admin"
+          :delete_ticket="delete_ticket"
         >
           <template #clientName>{{ ticket.clientName }}</template>
           <template #description>{{ ticket.description }}</template>
@@ -33,23 +38,22 @@
 <script setup>
 import Navbar from "../components/Navbar.vue";
 import Ticket from "../components/Ticket.vue";
-import { getCurrentInstance } from "vue";
 import { baseUrl } from "../../conf";
 import { onBeforeMount, ref } from "vue";
 import router from "../router";
 
-const instance = getCurrentInstance();
-
-const techDefined = ref(false);
-
 const tickets = ref([]);
 const total = ref(tickets.value.length);
-const tech = ref({});
 
 const token = localStorage.getItem("token");
 if (!token) {
   router.push("/");
 }
+
+const admin = Boolean(localStorage.getItem("admin"));
+const create_ticket = Boolean(localStorage.getItem("create_ticket"));
+const techName = localStorage.getItem("techName");
+const delete_ticket = Boolean(localStorage.getItem("delete_ticket"));
 
 onBeforeMount(async () => {
   const res = await fetch(baseUrl + "/ticket/list", {
@@ -59,10 +63,7 @@ onBeforeMount(async () => {
   });
 
   const data = await res.json();
-  tickets.value = data.tickets;
-  tech.value = data.tech;
-  instance.appContext.config.globalProperties.$tech = data.tech;
-  techDefined.value = true;
+  tickets.value = data;
 });
 
 function formatDate(date) {
@@ -83,7 +84,7 @@ function formatDate(date) {
 .tickets-section {
   width: 100%;
   padding: 3rem;
-  background: #121518;
+  background: var(--light-background);
   color: var(--light-color);
   display: flex;
   flex-direction: column;
@@ -95,7 +96,7 @@ function formatDate(date) {
 .tickets {
   width: 100%;
   height: 100%;
-  background: #1a1e22;
+  background: var(--medium-background);
   border-radius: 1.2rem;
   padding: 2rem;
   display: flex;

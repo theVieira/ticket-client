@@ -1,24 +1,89 @@
 <template>
-  <Navbar :tech="tech" />
-  <form @click.prevent="createTicket"></form>
+  <main class="create-ticket-container">
+    <section class="navbar-section">
+      <Navbar
+        :admin="admin"
+        :create_ticket="create_ticket"
+        :techName="techName"
+      />
+    </section>
+    <section class="form-section">
+      <form class="form">
+        <div class="form-data">
+          <label for="clientName">Cliente</label>
+          <select name="clientName" id="clientName" v-model="clientName">
+            <option value="" selected disabled>Selecione</option>
+            <option
+              v-for="client in clients"
+              :key="client.id"
+              :value="client.name"
+            >
+              {{ client.name.toUpperCase() }}
+            </option>
+          </select>
+        </div>
+        <div class="form-data">
+          <label for="priority">Prioridade</label>
+          <select name="priority" id="priority" v-model="priority">
+            <option value="" selected disabled>Selecione</option>
+            <option value="urgent">URGENTE</option>
+            <option value="high">ALTA</option>
+            <option value="medium">MÉDIA</option>
+            <option value="low">BAIXA</option>
+          </select>
+        </div>
+        <div class="form-data">
+          <label for="description">Descrição</label>
+          <textarea
+            name="description"
+            id="description"
+            cols="30"
+            rows="10"
+            v-model="description"
+          ></textarea>
+        </div>
+        <input
+          type="submit"
+          value="Salvar"
+          class="submit"
+          @click.prevent="createTicket"
+        />
+      </form>
+      <Popup class="popup">
+        <template #msg>{{ msg }}</template>
+        <template #type>{{ type }}</template>
+      </Popup>
+    </section>
+  </main>
 </template>
 
 <script setup>
 import Navbar from "@/components/Navbar.vue";
+import Popup from "@/components/Popup.vue";
 import { onBeforeMount, ref } from "vue";
 import { baseUrl } from "../../conf";
 import router from "@/router";
 
 const clients = ref();
-const tech = ref();
+
+const clientName = ref("");
+const priority = ref("");
+const description = ref("");
+
+const msg = ref("Ticket criado com sucesso!");
+const type = ref("success");
 
 const token = localStorage.getItem("token");
 if (!token) {
   router.push("/");
 }
 
+const admin = Boolean(localStorage.getItem("admin"));
+const create_ticket = Boolean(localStorage.getItem("create_ticket"));
+const techName = localStorage.getItem("techName");
+
 onBeforeMount(async () => {
-  const res = await fetch(baseUrl + "/tech/list", {
+  const res = await fetch(baseUrl + "/client/list", {
     method: "GET",
     headers: {
       authorization: `Bearer ${token}`,
@@ -26,8 +91,7 @@ onBeforeMount(async () => {
   });
 
   const data = await res.json();
-  tech.value = data.tech;
-  clients.value = data.clients;
+  clients.value = data;
 });
 
 async function createTicket() {
@@ -35,13 +99,87 @@ async function createTicket() {
     method: "POST",
     headers: {
       authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      clientName,
+      clientName: clientName.value,
+      description: description.value,
+      priority: priority.value,
     }),
   });
 
   const data = await res.json();
-  console.log(data);
+
+  clientName.value = "";
+  priority.value = "";
+  description.value = "";
 }
 </script>
+
+<style scoped>
+.create-ticket-container {
+  width: 100%;
+  background: var(--light-background);
+  display: flex;
+}
+
+.form-section {
+  padding: 3rem;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.form {
+  background: var(--medium-background);
+  padding: 3rem;
+  border-radius: 1.2rem;
+  color: var(--light-color);
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.form-data {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  font-weight: 600;
+}
+
+.form-data select {
+  border: 1px solid var(--light-color);
+  border-radius: 1.2rem;
+  padding: 0.5rem 1rem;
+  background: var(--medium-background);
+  color: var(--light-color);
+}
+
+.form-data textarea {
+  border-radius: 1.2rem;
+  padding: 1rem;
+  background: var(--medium-background);
+  color: var(--light-color);
+}
+
+.form-section input[type="submit"] {
+  border-radius: 1.2rem;
+  border: none;
+  padding: 1.2rem 2rem;
+  background: var(--dark-background);
+  color: var(--light-color);
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.form-section input[type="submit"]:hover {
+  filter: brightness(140%);
+}
+
+.popup {
+  position: absolute;
+  top: 3rem;
+}
+</style>

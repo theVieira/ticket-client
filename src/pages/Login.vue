@@ -77,7 +77,10 @@ async function login() {
     msg.value = "Logado com sucesso";
 
     localStorage.setItem("token", data.token);
-
+    localStorage.setItem("techName", data.name);
+    localStorage.setItem("admin", data.admin);
+    localStorage.setItem("create_ticket", data.create_ticket);
+    localStorage.setItem("delete_ticket", data.delete_ticket);
     router.push("/home");
   } else {
     type.value = "error";
