@@ -1,5 +1,5 @@
 <template>
-  <main class="home-main">
+  <main class="home-main" v-if="techDefined">
     <section class="navbar-section">
       <Navbar :tech="tech" />
     </section>
@@ -33,9 +33,14 @@
 <script setup>
 import Navbar from "../components/Navbar.vue";
 import Ticket from "../components/Ticket.vue";
+import { getCurrentInstance } from "vue";
 import { baseUrl } from "../../conf";
-import { onMounted, ref } from "vue";
+import { onBeforeMount, ref } from "vue";
 import router from "../router";
+
+const instance = getCurrentInstance();
+
+const techDefined = ref(false);
 
 const tickets = ref([]);
 const total = ref(tickets.value.length);
@@ -46,7 +51,7 @@ if (!token) {
   router.push("/");
 }
 
-onMounted(async () => {
+onBeforeMount(async () => {
   const res = await fetch(baseUrl + "/ticket/list", {
     headers: {
       authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -56,6 +61,8 @@ onMounted(async () => {
   const data = await res.json();
   tickets.value = data.tickets;
   tech.value = data.tech;
+  instance.appContext.config.globalProperties.$tech = data.tech;
+  techDefined.value = true;
 });
 
 function formatDate(date) {

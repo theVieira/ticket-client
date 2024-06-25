@@ -4,28 +4,36 @@
       <div class="list" @click="listIndex[0] = !listIndex[0]">
         <h2 class="hover">Chamados</h2>
         <ul v-show="listIndex[0]">
-          <li class="hover">Todos</li>
+          <li class="hover">
+            <RouterLink to="/home" class="link">Todos</RouterLink>
+          </li>
           <li class="hover">Abertos</li>
-          <li class="hover">Criar</li>
+          <li class="hover">Finalizados</li>
+          <li class="hover" v-if="props.tech.permissions.admin">
+            <RouterLink to="/create/ticket" class="link">Criar</RouterLink>
+          </li>
         </ul>
       </div>
       <div class="list" @click="listIndex[1] = !listIndex[1]">
         <h2 class="hover">Técnicos</h2>
         <ul v-if="listIndex[1]">
-          <li class="hover">Criar</li>
-          <li class="hover">Ver Relatório</li>
-          <li class="hover">Gerenciar</li>
+          <li class="hover" v-if="props.tech.permissions.admin">Criar</li>
+          <li class="hover">Seus chamados</li>
+          <li class="hover" v-if="props.tech.permissions.admin">
+            Ver Relatório
+          </li>
+          <li class="hover" v-if="props.tech.permissions.admin">Gerenciar</li>
         </ul>
       </div>
       <div class="list" @click="listIndex[2] = !listIndex[2]">
         <h2 class="hover">Clientes</h2>
         <ul v-if="listIndex[2]">
           <li class="hover">Todos</li>
-          <li class="hover">Criar</li>
+          <li class="hover" v-if="props.tech.permissions.admin">Criar</li>
         </ul>
       </div>
     </div>
-    <p class="tech-name">{{ props.tech.name }}</p>
+    <p class="tech-name">{{ props.tech.name.toUpperCase() }}</p>
   </nav>
 </template>
 
@@ -80,5 +88,9 @@ const props = defineProps({
 .navbar-container .tech-name {
   font-weight: 600;
   text-align: center;
+}
+
+.link {
+  color: var(--light-color);
 }
 </style>
