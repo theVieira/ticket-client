@@ -9,10 +9,11 @@
     </section>
     <section class="tickets-section">
       <p>
-        <strong>Total {{ total }}</strong>
+        <strong>Total {{ tickets.length }}</strong>
       </p>
       <div class="tickets">
         <Ticket
+          @teste="removeTicketFromArray"
           v-for="ticket in tickets"
           :key="ticket.id"
           :ticket="ticket"
@@ -21,6 +22,7 @@
         >
           <template #clientName>{{ ticket.clientName }}</template>
           <template #description>{{ ticket.description }}</template>
+          <template #priority>{{ ticket.priority }}</template>
           <template #status>{{ ticket.status }}</template>
           <template #reccurrent v-if="ticket.reccurrent">
             {{ ticket.reccurrent }}
@@ -39,11 +41,12 @@
 import Navbar from "../components/Navbar.vue";
 import Ticket from "../components/Ticket.vue";
 import { baseUrl } from "../../conf";
-import { onBeforeMount, ref } from "vue";
+import { onBeforeMount, ref, getCurrentInstance } from "vue";
 import router from "../router";
 
+const instance = getCurrentInstance();
+
 const tickets = ref([]);
-const total = ref(tickets.value.length);
 
 const token = localStorage.getItem("token");
 if (!token) {
@@ -64,6 +67,7 @@ onBeforeMount(async () => {
 
   const data = await res.json();
   tickets.value = data;
+  instance.appContext.config.globalProperties.$tickets = data;
 });
 
 function formatDate(date) {
@@ -74,6 +78,8 @@ function formatDate(date) {
 
   return `${day}/${month}/${year}`;
 }
+
+const removeTicketFromArray = () => {};
 </script>
 
 <style scoped>

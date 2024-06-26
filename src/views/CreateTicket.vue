@@ -49,7 +49,7 @@
           @click.prevent="createTicket"
         />
       </form>
-      <Popup class="popup">
+      <Popup class="popup" v-if="popup">
         <template #msg>{{ msg }}</template>
         <template #type>{{ type }}</template>
       </Popup>
@@ -63,6 +63,8 @@ import Popup from "@/components/Popup.vue";
 import { onBeforeMount, ref } from "vue";
 import { baseUrl } from "../../conf";
 import router from "@/router";
+
+const popup = ref(false);
 
 const clients = ref();
 
@@ -113,6 +115,20 @@ async function createTicket() {
   clientName.value = "";
   priority.value = "";
   description.value = "";
+
+  popup.value = true;
+  if (res.status == 201) {
+    msg.value = "Ticket criado com sucesso!";
+    type.value = "success";
+  } else {
+    msg.value = "Ops! algo deu errado.";
+    type.value = "error";
+    console.error(data);
+  }
+
+  setTimeout(() => {
+    popup.value = false;
+  }, 1000 * 3);
 }
 </script>
 

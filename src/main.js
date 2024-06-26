@@ -6,7 +6,7 @@ import router from "./router";
 
 const app = createApp(App);
 
-app.config.globalProperties.$tech = {};
+app.config.globalProperties.$tickets = [];
 
 app.use(router);
 
