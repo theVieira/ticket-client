@@ -33,16 +33,25 @@
           <template #createdAt>{{ formatDate(ticket.createdAt) }}</template>
         </Ticket>
       </div>
+      <Popup v-if="popup" class="popup">
+        <template #msg>{{ msg }}</template>
+        <template #type>{{ type }}</template>
+      </Popup>
     </section>
   </main>
 </template>
 
 <script setup>
+import Popup from "@/components/Popup.vue";
 import Navbar from "../components/Navbar.vue";
 import Ticket from "../components/Ticket.vue";
 import { baseUrl } from "../../conf";
 import { onBeforeMount, ref } from "vue";
 import router from "../router";
+
+const popup = ref(false);
+const msg = ref("");
+const type = ref("");
 
 const tickets = ref([]);
 
@@ -79,6 +88,14 @@ function formatDate(date) {
 function removeTicketFromArray(id) {
   const ticketIndex = tickets.value.findIndex((ticket) => ticket.id == id);
   tickets.value.splice(ticketIndex, 1);
+  msg.value = "Ticket deletado com sucesso!";
+  type.value = "success";
+  popup.value = true;
+  setTimeout(() => {
+    popup.value = false;
+    msg.value = "";
+    type.value = "";
+  }, 1000 * 3);
 }
 </script>
 
@@ -95,7 +112,7 @@ function removeTicketFromArray(id) {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  align-items: start;
+  align-items: center;
   justify-content: center;
 }
 
@@ -108,5 +125,15 @@ function removeTicketFromArray(id) {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+}
+
+.tickets-section p {
+  width: 100%;
+  text-align: start;
+}
+
+.popup {
+  position: absolute;
+  top: 3rem;
 }
 </style>

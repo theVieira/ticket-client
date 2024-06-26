@@ -30,10 +30,6 @@
         <p><slot name="createdAt"></slot></p>
       </section>
     </div>
-    <Popup v-if="popup" class="popup">
-      <template #msg>{{ msg }}</template>
-      <template #type>{{ type }}</template>
-    </Popup>
     <div class="ticket-actions" v-show="ticketFocus">
       <div
         class="action"
@@ -64,7 +60,6 @@
 </template>
 
 <script setup>
-import Popup from "./Popup.vue";
 import { ref, defineProps, defineEmits, computed } from "vue";
 import { baseUrl } from "../../conf";
 
@@ -120,18 +115,10 @@ async function deleteTicket() {
 
   const data = await res.json();
 
-  popup.value = true;
-
-  setTimeout(() => {
-    popup.value = false;
-    msg.value = "";
-    type.value = "";
-  }, 1000 * 3);
-
-  emit("ticket_deleted");
   if (res.status == 200) {
     msg.value = "Ticket deletado com sucesso";
     type.value = "success";
+    emit("ticket_deleted");
   } else if (res.status == 401) {
     msg.value = "Ops! algo deu errado.";
     type.value = "error";

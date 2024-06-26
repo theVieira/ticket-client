@@ -27,7 +27,9 @@
         <h2 class="hover">Clientes</h2>
         <ul v-if="listIndex[2]">
           <li class="hover">Todos</li>
-          <li class="hover" v-if="props.admin">Criar</li>
+          <li class="hover" v-if="props.admin">
+            <RouterLink to="/create/client" class="link">Criar</RouterLink>
+          </li>
         </ul>
       </div>
     </div>
@@ -49,11 +51,12 @@ const props = defineProps({
 <style scoped>
 .navbar-container {
   width: fit-content;
-  height: 100vh;
+  height: 100%;
   padding: 2rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  align-items: center;
   background: var(--dark-background);
   color: var(--light-color);
 }
