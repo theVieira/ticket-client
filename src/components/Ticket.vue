@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="ticket-container" @click="ticketActions">
+    <div class="ticket-container" @click="ticketFocus = !ticketFocus">
       <section class="info-section">
         <h4>Cliente</h4>
         <p><slot name="clientName"></slot></p>
@@ -11,11 +11,11 @@
       </section>
       <section class="info-section">
         <h4>Prioridade</h4>
-        <p><slot name="priority"></slot></p>
+        <p :class="priority" class="priority"><slot name="priority"></slot></p>
       </section>
       <section class="info-section">
         <h4>Status</h4>
-        <p><slot name="status"></slot></p>
+        <p :class="status" class="status"><slot name="status"></slot></p>
       </section>
       <section class="info-section" v-if="$slots.reccurrent">
         <h4>Recorrente</h4>
@@ -65,14 +65,8 @@
 
 <script setup>
 import Popup from "./Popup.vue";
-import { ref, defineProps, defineEmits } from "vue";
+import { ref, defineProps, defineEmits, computed } from "vue";
 import { baseUrl } from "../../conf";
-
-const emit = defineEmits(["teste"]);
-
-const popup = ref(false);
-const msg = ref("");
-const type = ref("");
 
 const props = defineProps({
   ticket: {},
@@ -80,13 +74,39 @@ const props = defineProps({
   delete_ticket: Boolean,
 });
 
+const emit = defineEmits(["ticket_deleted"]);
+
+const popup = ref(false);
+const msg = ref("");
+const type = ref("");
+
 const ticketFocus = ref(false);
 
-function ticketActions() {
-  ticketFocus.value = !ticketFocus.value;
-}
+const priority = computed(() => {
+  switch (props.ticket.priority) {
+    case "urgent":
+      return "urgent-priority";
+    case "high":
+      return "high-priority";
+    case "medium":
+      return "medium-priority";
+    case "low":
+      return "low-priority";
+  }
+});
 
-const deleteTicket = async () => {
+const status = computed(() => {
+  switch (props.ticket.status) {
+    case "open":
+      return "open-status";
+    case "progress":
+      return "progress-status";
+    case "finished":
+      return "finished-status";
+  }
+});
+
+async function deleteTicket() {
   const res = await fetch(baseUrl + "/ticket/delete", {
     method: "DELETE",
     headers: {
@@ -108,17 +128,16 @@ const deleteTicket = async () => {
     type.value = "";
   }, 1000 * 3);
 
-  emit("teste");
+  emit("ticket_deleted");
   if (res.status == 200) {
     msg.value = "Ticket deletado com sucesso";
     type.value = "success";
-    console.log("emited");
   } else if (res.status == 401) {
     msg.value = "Ops! algo deu errado.";
     type.value = "error";
     console.error(data);
   }
-};
+}
 </script>
 
 <style scoped>
@@ -176,5 +195,43 @@ const deleteTicket = async () => {
 .popup {
   position: absolute;
   top: 3rem;
+}
+
+.status {
+  padding: 0.3rem 0.7rem;
+  border-radius: 1.2rem;
+}
+
+.priority {
+  padding: 0.3rem 0.7rem;
+  border-radius: 1.2rem;
+}
+
+.urgent-priority {
+  background: #d83f3f94;
+}
+
+.high-priority {
+  background: #d89b3f94;
+}
+
+.medium-priority {
+  background: #3fd8b794;
+}
+
+.low-priority {
+  background: #59d83f94;
+}
+
+.open-status {
+  background: #d83f3f94;
+}
+
+.progress-status {
+  background: #d89b3f94;
+}
+
+.finished-status {
+  background: #59d83f94;
 }
 </style>

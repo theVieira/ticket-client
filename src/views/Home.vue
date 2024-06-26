@@ -13,17 +13,17 @@
       </p>
       <div class="tickets">
         <Ticket
-          @teste="removeTicketFromArray"
           v-for="ticket in tickets"
           :key="ticket.id"
           :ticket="ticket"
           :admin="admin"
           :delete_ticket="delete_ticket"
+          @ticket_deleted="removeTicketFromArray(ticket.id)"
         >
-          <template #clientName>{{ ticket.clientName }}</template>
+          <template #clientName>{{ ticket.clientName.toUpperCase() }}</template>
           <template #description>{{ ticket.description }}</template>
-          <template #priority>{{ ticket.priority }}</template>
-          <template #status>{{ ticket.status }}</template>
+          <template #priority>{{ ticket.priority.toUpperCase() }}</template>
+          <template #status>{{ ticket.status.toUpperCase() }}</template>
           <template #reccurrent v-if="ticket.reccurrent">
             {{ ticket.reccurrent }}
           </template>
@@ -41,10 +41,8 @@
 import Navbar from "../components/Navbar.vue";
 import Ticket from "../components/Ticket.vue";
 import { baseUrl } from "../../conf";
-import { onBeforeMount, ref, getCurrentInstance } from "vue";
+import { onBeforeMount, ref } from "vue";
 import router from "../router";
-
-const instance = getCurrentInstance();
 
 const tickets = ref([]);
 
@@ -67,7 +65,6 @@ onBeforeMount(async () => {
 
   const data = await res.json();
   tickets.value = data;
-  instance.appContext.config.globalProperties.$tickets = data;
 });
 
 function formatDate(date) {
@@ -79,7 +76,10 @@ function formatDate(date) {
   return `${day}/${month}/${year}`;
 }
 
-const removeTicketFromArray = () => {};
+function removeTicketFromArray(id) {
+  const ticketIndex = tickets.value.findIndex((ticket) => ticket.id == id);
+  tickets.value.splice(ticketIndex, 1);
+}
 </script>
 
 <style scoped>
