@@ -17,7 +17,7 @@
         <h4>Status</h4>
         <p :class="status" class="status"><slot name="status"></slot></p>
       </section>
-      <section class="info-section" v-if="$slots.reccurrent">
+      <section class="info-section" v-if="$slots.reccurrent == true">
         <h4>Recorrente</h4>
         <p><slot name="reccurrent"></slot></p>
       </section>
@@ -33,7 +33,7 @@
     <div class="ticket-actions" v-show="ticketFocus">
       <div
         class="action"
-        v-if="props.admin || props.delete_ticket"
+        v-if="props.admin == 'true' || props.delete_ticket == 'true'"
         @click="deleteTicket"
       >
         <label>Deletar</label>

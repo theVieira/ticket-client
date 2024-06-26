@@ -53,17 +53,17 @@ const popup = ref(false);
 const msg = ref("");
 const type = ref("");
 
-const tickets = ref([]);
+const tickets = ref();
 
 const token = localStorage.getItem("token");
 if (!token) {
   router.push("/");
 }
 
-const admin = Boolean(localStorage.getItem("admin"));
-const create_ticket = Boolean(localStorage.getItem("create_ticket"));
+const admin = localStorage.getItem("admin");
+const create_ticket = localStorage.getItem("create_ticket");
 const techName = localStorage.getItem("techName");
-const delete_ticket = Boolean(localStorage.getItem("delete_ticket"));
+const delete_ticket = localStorage.getItem("delete_ticket");
 
 onBeforeMount(async () => {
   const res = await fetch(baseUrl + "/ticket/list", {
@@ -102,6 +102,7 @@ function removeTicketFromArray(id) {
 <style scoped>
 .home-main {
   display: flex;
+  height: 100vh;
 }
 
 .tickets-section {

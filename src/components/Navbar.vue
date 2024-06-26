@@ -5,11 +5,10 @@
         <h2 class="hover">Chamados</h2>
         <ul v-show="listIndex[0]">
           <li class="hover">
-            <RouterLink to="/home" class="link">Todos</RouterLink>
+            <RouterLink to="/home" class="link">Abertos</RouterLink>
           </li>
-          <li class="hover">Abertos</li>
-          <li class="hover">Finalizados</li>
-          <li class="hover" v-if="props.admin">
+          <li class="hover" v-if="props.admin == 'true'">Finalizados</li>
+          <li class="hover" v-if="props.admin == 'true'">
             <RouterLink to="/create/ticket" class="link">Criar</RouterLink>
           </li>
         </ul>
@@ -17,10 +16,10 @@
       <div class="list" @click="listIndex[1] = !listIndex[1]">
         <h2 class="hover">Técnicos</h2>
         <ul v-if="listIndex[1]">
-          <li class="hover" v-if="props.admin">Criar</li>
+          <li class="hover" v-if="props.admin == 'true'">Criar</li>
           <li class="hover">Seus chamados</li>
-          <li class="hover" v-if="props.admin">Ver Relatório</li>
-          <li class="hover" v-if="props.admin">Gerenciar</li>
+          <li class="hover" v-if="props.admin == 'true'">Ver Relatório</li>
+          <li class="hover" v-if="props.admin == 'true'">Gerenciar</li>
         </ul>
       </div>
       <div class="list" @click="listIndex[2] = !listIndex[2]">
@@ -43,8 +42,8 @@ const listIndex = ref([false, false, false]);
 
 const props = defineProps({
   techName: String,
-  admin: Boolean,
-  create_ticket: Boolean,
+  admin: String,
+  create_ticket: String,
 });
 </script>
 

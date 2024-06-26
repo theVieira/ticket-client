@@ -80,8 +80,8 @@ if (!token) {
   router.push("/");
 }
 
-const admin = Boolean(localStorage.getItem("admin"));
-const create_ticket = Boolean(localStorage.getItem("create_ticket"));
+const admin = localStorage.getItem("admin");
+const create_ticket = localStorage.getItem("create_ticket");
 const techName = localStorage.getItem("techName");
 
 onBeforeMount(async () => {

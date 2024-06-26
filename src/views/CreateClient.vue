@@ -2,7 +2,7 @@
   <main class="create-client-container">
     <Navbar :admin="admin" :techName="techName" />
     <section class="form-section">
-      <form action="" class="create-client-form" @submit="createClient">
+      <form action="" class="create-client-form" @submit.prevent="createClient">
         <div class="form-data">
           <label for="name">Nome</label>
           <input
@@ -10,22 +10,68 @@
             name="name"
             id="name"
             placeholder="Insira o nome do cliente"
+            v-model="name"
           />
         </div>
         <div class="form-data">
           <input type="submit" value="Salvar" />
         </div>
       </form>
+      <Popup v-if="popup" class="popup">
+        <template #msg>{{ msg }}</template>
+        <template #type>{{ type }}</template>
+      </Popup>
     </section>
   </main>
 </template>
 
 <script setup>
 import Navbar from "@/components/Navbar.vue";
+import Popup from "@/components/Popup.vue";
+import { baseUrl } from "../../conf";
+import { ref } from "vue";
+
+const popup = ref(false);
+const msg = ref("teste");
+const type = ref("success");
 
 const token = localStorage.getItem("token");
-const admin = localStorage.getItem("admin");
+const admin = Boolean(localStorage.getItem("admin"));
 const techName = localStorage.getItem("techName");
+const name = ref("");
+
+async function createClient() {
+  const res = await fetch(baseUrl + "/client/create", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      name: name.value,
+    }),
+  });
+
+  const data = await res.json();
+
+  name.value = "";
+
+  if (res.status == 201) {
+    msg.value = "Cliente criado com sucesso";
+    type.value = "success";
+  } else {
+    msg.value = "Ops! ocorreu algum erro.";
+    type.value = "error";
+    console.error(data);
+  }
+
+  popup.value = true;
+  setTimeout(() => {
+    popup.value = false;
+    msg.value = "";
+    type.value = "";
+  }, 1000 * 3);
+}
 </script>
 
 <style scoped>
@@ -41,6 +87,7 @@ const techName = localStorage.getItem("techName");
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
 }
 
 .create-client-form {
@@ -80,5 +127,10 @@ const techName = localStorage.getItem("techName");
 
 .create-client-form .form-data input[type="submit"]:hover {
   filter: brightness(130%);
+}
+
+.popup {
+  position: absolute;
+  top: 3rem;
 }
 </style>
