@@ -20,18 +20,21 @@
           :delete_ticket="delete_ticket"
           @ticket_deleted="removeTicketFromArray(ticket.id)"
           @ticket_progress="setProgressTicket(ticket.id)"
+          @ticket_finished="setFinishedTicket(ticket.id)"
         >
           <template #clientName>{{ ticket.clientName.toUpperCase() }}</template>
           <template #description>{{ ticket.description }}</template>
           <template #priority>{{ ticket.priority.toUpperCase() }}</template>
           <template #status>{{ ticket.status.toUpperCase() }}</template>
-          <template #reccurrent v-if="ticket.reccurrent">
+          <template #reccurrent v-if="ticket.reccurrent == true">
             {{ ticket.reccurrent }}
           </template>
           <template #techName v-if="ticket.techName">
-            {{ ticket.techName }}
+            <span :style="{ color: ticket.techColor }">{{
+              ticket.techName.toUpperCase()
+            }}</span>
           </template>
-          <template #createdAt>{{ formatDate(ticket.createdAt) }}</template>
+          <template #createdAt>{{ format_date(ticket.createdAt) }}</template>
         </Ticket>
       </div>
       <Popup v-if="popup" class="popup">
@@ -49,6 +52,7 @@ import Ticket from "../components/Ticket.vue";
 import { baseUrl } from "../../conf";
 import { onBeforeMount, ref } from "vue";
 import router from "../router";
+import { format_date } from "@/assets/utils/FormatDate";
 
 const popup = ref(false);
 const msg = ref("");
@@ -64,7 +68,7 @@ if (!token) {
 
 const admin = localStorage.getItem("admin");
 const create_ticket = localStorage.getItem("create_ticket");
-const techName = localStorage.getItem("techName").toUpperCase();
+const techName = localStorage.getItem("techName");
 const delete_ticket = localStorage.getItem("delete_ticket");
 
 onBeforeMount(async () => {
@@ -75,18 +79,14 @@ onBeforeMount(async () => {
   });
 
   const data = await res.json();
-  tickets.value = data;
-  total.value = data.lenght;
+
+  tickets.value = data.filter((ticket) => ticket.status != "finished");
+  total.value = tickets.value.length;
+
+  if (res.status != 200) {
+    console.error(data);
+  }
 });
-
-function formatDate(date) {
-  const newDate = new Date(date);
-  const day = newDate.getUTCDate();
-  const month = newDate.getUTCMonth();
-  const year = newDate.getUTCFullYear();
-
-  return `${day}/${month}/${year}`;
-}
 
 function removeTicketFromArray(id) {
   const ticketIndex = tickets.value.findIndex((ticket) => ticket.id == id);
@@ -114,12 +114,26 @@ function setProgressTicket(id) {
     type.value = "";
   }, 1000 * 3);
 }
+
+function setFinishedTicket(id) {
+  const ticketIndex = tickets.value.findIndex((ticket) => ticket.id == id);
+  tickets.value.splice(ticketIndex, 1);
+  msg.value = "Ticket finalizado!";
+  type.value = "success";
+  popup.value = true;
+  setTimeout(() => {
+    popup.value = false;
+    msg.value = "";
+    type.value = "";
+  }, 1000 * 3);
+}
 </script>
 
 <style scoped>
 .home-main {
   display: flex;
-  height: 100vh;
+  min-height: 100vh;
+  height: 100%;
 }
 
 .tickets-section {
@@ -131,12 +145,10 @@ function setProgressTicket(id) {
   flex-direction: column;
   gap: 1rem;
   align-items: center;
-  justify-content: center;
 }
 
 .tickets {
   width: 100%;
-  height: 100%;
   background: var(--medium-background);
   border-radius: 1.2rem;
   padding: 2rem;

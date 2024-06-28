@@ -17,13 +17,20 @@
         <h4>Status</h4>
         <p :class="status" class="status"><slot name="status"></slot></p>
       </section>
-      <section class="info-section" v-if="$slots.reccurrent == true">
+      <section class="info-section" v-if="$slots.reccurrent">
         <h4>Recorrente</h4>
-        <p><slot name="reccurrent"></slot></p>
+        <p v-show="false">
+          <slot name="reccurrent"></slot>
+        </p>
+        <img
+          src="../assets/icons/check.png"
+          alt="check icon"
+          class="checkReccurrent"
+        />
       </section>
       <section class="info-section" v-if="$slots.techName">
         <h4>Técnico</h4>
-        <p><slot name="techName"></slot></p>
+        <p :style="{ color: tech_color }"><slot name="techName"></slot></p>
       </section>
       <section class="info-section">
         <h4>Criado em</h4>
@@ -39,11 +46,19 @@
         <p>Deletar</p>
         <img src="../assets/icons/trash.png" alt="trash icon" id="delete" />
       </div>
-      <div class="action" v-if="props.ticket.status != 'finished'">
+      <div
+        class="action"
+        v-if="props.ticket.status != 'finished'"
+        @click="setFinishedTicket(ticket.id)"
+      >
         <p>Finalizar</p>
         <img src="../assets/icons/check.png" alt="check icon" />
       </div>
-      <div class="action" v-if="props.ticket.status == 'finished'">
+      <div
+        class="action"
+        v-if="props.ticket.status == 'finished'"
+        @click="reopen(ticket.id)"
+      >
         <p>Abrir novamente</p>
         <img src="../assets/icons/reload.png" alt="reload icon" />
       </div>
@@ -73,13 +88,20 @@ if (!token) {
   router.push("/");
 }
 
+const tech_color = localStorage.getItem("color");
+
 const props = defineProps({
   ticket: {},
   admin: String,
   delete_ticket: String,
 });
 
-const emit = defineEmits(["ticket_deleted", "ticket_progress"]);
+const emit = defineEmits([
+  "ticket_deleted",
+  "ticket_progress",
+  "ticket_finished",
+  "ticket_reopen",
+]);
 
 const ticketFocus = ref(false);
 
@@ -121,8 +143,9 @@ async function deleteTicket() {
 
   const data = await res.json();
 
-  emit("ticket_deleted");
-  if (res.status != 200) {
+  if (res.status == 200) {
+    emit("ticket_deleted");
+  } else {
     console.error(data);
   }
 }
@@ -142,9 +165,52 @@ async function setProgressTicket(id) {
 
   const data = await res.json();
 
-  emit("ticket_progress");
+  if (res.status == 200) {
+    emit("ticket_progress");
+  } else {
+    console.error(data);
+  }
+}
 
-  if (res.status != 200) {
+async function setFinishedTicket(id) {
+  const res = await fetch(baseUrl + "/ticket/finished", {
+    method: "PUT",
+    headers: {
+      authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      id,
+      techName: localStorage.getItem("techName"),
+    }),
+  });
+
+  const data = await res.json();
+
+  if (res.status == 200) {
+    emit("ticket_finished");
+  } else {
+    console.error(data);
+  }
+}
+
+async function reopen(id) {
+  const res = await fetch(baseUrl + "/ticket/reopen", {
+    method: "PUT",
+    headers: {
+      authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      id,
+    }),
+  });
+
+  const data = await res.json();
+
+  if (res.status == 200) {
+    emit("ticket_reopen");
+  } else {
     console.error(data);
   }
 }
@@ -161,11 +227,13 @@ async function setProgressTicket(id) {
 .ticket-container {
   width: 100%;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  align-items: self-start;
+  justify-content: center;
   background: var(--dark-background);
   padding: 1rem 3rem;
   border-radius: 1.2rem;
+  flex-wrap: wrap;
+  gap: 3rem;
   cursor: pointer;
 }
 
@@ -175,11 +243,9 @@ async function setProgressTicket(id) {
   align-items: center;
   gap: 0.5rem;
   text-align: center;
-  width: 20%;
-}
-
-.large {
-  width: 40%;
+  flex-basis: 10rem;
+  flex-shrink: 0;
+  flex-grow: 1;
 }
 
 .ticket-actions {
@@ -191,7 +257,7 @@ async function setProgressTicket(id) {
   display: flex;
   align-items: center;
   justify-content: end;
-  gap: 5rem;
+  gap: 3rem;
 }
 
 .ticket-actions .action {
@@ -200,6 +266,8 @@ async function setProgressTicket(id) {
   align-items: center;
   gap: 1rem;
   font-weight: 600;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .popup {
@@ -243,5 +311,25 @@ async function setProgressTicket(id) {
 
 .finished-status {
   background: #59d83f94;
+}
+
+.checkReccurrent {
+  width: 2.5rem;
+}
+
+@media (max-width: 900px) {
+  .ticket-container {
+    padding: 3rem;
+  }
+  .ticket-actions {
+    padding: 1rem 0;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .action {
+    gap: 0;
+  }
 }
 </style>

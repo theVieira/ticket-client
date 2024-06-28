@@ -3,6 +3,7 @@ import Login from "@/views/Login.vue";
 import Home from "@/views/Home.vue";
 import CreateTicket from "@/views/CreateTicket.vue";
 import CreateClient from "@/views/CreateClient.vue";
+import FinishedTickets from "@/views/FinishedTickets.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -22,6 +23,10 @@ const router = createRouter({
     {
       path: "/create/client",
       component: CreateClient,
+    },
+    {
+      path: "/finisheds",
+      component: FinishedTickets,
     },
   ],
 });

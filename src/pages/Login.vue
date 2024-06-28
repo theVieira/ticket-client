@@ -81,6 +81,7 @@ async function login() {
     localStorage.setItem("admin", data.admin);
     localStorage.setItem("create_ticket", data.create_ticket);
     localStorage.setItem("delete_ticket", data.delete_ticket);
+    localStorage.setItem("color", data.color);
     router.push("/home");
   } else {
     type.value = "error";
