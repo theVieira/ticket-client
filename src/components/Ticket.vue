@@ -34,21 +34,25 @@
       <div
         class="action"
         v-if="props.admin == 'true' || props.delete_ticket == 'true'"
-        @click="deleteTicket"
+        @click.prevent="deleteTicket"
       >
-        <label>Deletar</label>
-        <img src="../assets/icons/trash.png" alt="trash icon" />
+        <p>Deletar</p>
+        <img src="../assets/icons/trash.png" alt="trash icon" id="delete" />
       </div>
       <div class="action" v-if="props.ticket.status != 'finished'">
-        <label>Finalizar</label>
+        <p>Finalizar</p>
         <img src="../assets/icons/check.png" alt="check icon" />
       </div>
       <div class="action" v-if="props.ticket.status == 'finished'">
-        <label>Abrir novamente</label>
+        <p>Abrir novamente</p>
         <img src="../assets/icons/reload.png" alt="reload icon" />
       </div>
-      <div class="action" v-if="props.ticket.status == 'open'">
-        <label>Marcar em progresso</label>
+      <div
+        class="action"
+        v-if="props.ticket.status == 'open'"
+        @click.prevent="setProgressTicket(ticket.id)"
+      >
+        <p>Marcar em progresso</p>
         <img
           src="../assets/icons/progress.png"
           alt="progress icon"
@@ -62,18 +66,20 @@
 <script setup>
 import { ref, defineProps, defineEmits, computed } from "vue";
 import { baseUrl } from "../../conf";
+import router from "@/router";
+
+const token = localStorage.getItem("token");
+if (!token) {
+  router.push("/");
+}
 
 const props = defineProps({
   ticket: {},
-  admin: Boolean,
-  delete_ticket: Boolean,
+  admin: String,
+  delete_ticket: String,
 });
 
-const emit = defineEmits(["ticket_deleted"]);
-
-const popup = ref(false);
-const msg = ref("");
-const type = ref("");
+const emit = defineEmits(["ticket_deleted", "ticket_progress"]);
 
 const ticketFocus = ref(false);
 
@@ -105,7 +111,7 @@ async function deleteTicket() {
   const res = await fetch(baseUrl + "/ticket/delete", {
     method: "DELETE",
     headers: {
-      authorization: `Bearer ${localStorage.getItem("token")}`,
+      authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
@@ -115,13 +121,30 @@ async function deleteTicket() {
 
   const data = await res.json();
 
-  if (res.status == 200) {
-    msg.value = "Ticket deletado com sucesso";
-    type.value = "success";
-    emit("ticket_deleted");
-  } else if (res.status == 401) {
-    msg.value = "Ops! algo deu errado.";
-    type.value = "error";
+  emit("ticket_deleted");
+  if (res.status != 200) {
+    console.error(data);
+  }
+}
+
+async function setProgressTicket(id) {
+  const res = await fetch(baseUrl + "/ticket/progress", {
+    method: "PUT",
+    headers: {
+      authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      id,
+      techName: localStorage.getItem("techName"),
+    }),
+  });
+
+  const data = await res.json();
+
+  emit("ticket_progress");
+
+  if (res.status != 200) {
     console.error(data);
   }
 }

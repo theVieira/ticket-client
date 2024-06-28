@@ -32,11 +32,11 @@ import { baseUrl } from "../../conf";
 import { ref } from "vue";
 
 const popup = ref(false);
-const msg = ref("teste");
-const type = ref("success");
+const msg = ref("");
+const type = ref("");
 
 const token = localStorage.getItem("token");
-const admin = Boolean(localStorage.getItem("admin"));
+const admin = localStorage.getItem("admin");
 const techName = localStorage.getItem("techName");
 const name = ref("");
 

@@ -9,7 +9,7 @@
     </section>
     <section class="tickets-section">
       <p>
-        <strong>Total {{ tickets.length }}</strong>
+        <strong>Total: {{ total }}</strong>
       </p>
       <div class="tickets">
         <Ticket
@@ -19,6 +19,7 @@
           :admin="admin"
           :delete_ticket="delete_ticket"
           @ticket_deleted="removeTicketFromArray(ticket.id)"
+          @ticket_progress="setProgressTicket(ticket.id)"
         >
           <template #clientName>{{ ticket.clientName.toUpperCase() }}</template>
           <template #description>{{ ticket.description }}</template>
@@ -54,6 +55,7 @@ const msg = ref("");
 const type = ref("");
 
 const tickets = ref();
+const total = ref();
 
 const token = localStorage.getItem("token");
 if (!token) {
@@ -62,7 +64,7 @@ if (!token) {
 
 const admin = localStorage.getItem("admin");
 const create_ticket = localStorage.getItem("create_ticket");
-const techName = localStorage.getItem("techName");
+const techName = localStorage.getItem("techName").toUpperCase();
 const delete_ticket = localStorage.getItem("delete_ticket");
 
 onBeforeMount(async () => {
@@ -74,6 +76,7 @@ onBeforeMount(async () => {
 
   const data = await res.json();
   tickets.value = data;
+  total.value = data.lenght;
 });
 
 function formatDate(date) {
@@ -89,6 +92,20 @@ function removeTicketFromArray(id) {
   const ticketIndex = tickets.value.findIndex((ticket) => ticket.id == id);
   tickets.value.splice(ticketIndex, 1);
   msg.value = "Ticket deletado com sucesso!";
+  type.value = "success";
+  popup.value = true;
+  setTimeout(() => {
+    popup.value = false;
+    msg.value = "";
+    type.value = "";
+  }, 1000 * 3);
+}
+
+function setProgressTicket(id) {
+  const ticketIndex = tickets.value.findIndex((ticket) => ticket.id == id);
+  tickets.value[ticketIndex].status = "progress";
+  tickets.value[ticketIndex].techName = techName;
+  msg.value = "Ticket em progresso!";
   type.value = "success";
   popup.value = true;
   setTimeout(() => {
