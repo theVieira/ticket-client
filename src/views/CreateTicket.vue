@@ -60,7 +60,7 @@
 <script setup>
 import Navbar from "@/components/Navbar.vue";
 import Popup from "@/components/Popup.vue";
-import { onBeforeMount, ref } from "vue";
+import { onBeforeMount, ref, onMounted } from "vue";
 import { baseUrl } from "../../conf";
 import router from "@/router";
 
@@ -83,6 +83,10 @@ if (!token) {
 const admin = localStorage.getItem("admin");
 const create_ticket = localStorage.getItem("create_ticket");
 const techName = localStorage.getItem("techName");
+
+onMounted(() => {
+  document.title = "Criar Ticket";
+});
 
 onBeforeMount(async () => {
   const res = await fetch(baseUrl + "/client/list", {

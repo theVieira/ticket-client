@@ -29,7 +29,7 @@
 import Navbar from "@/components/Navbar.vue";
 import Popup from "@/components/Popup.vue";
 import { baseUrl } from "../../conf";
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 
 const popup = ref(false);
 const msg = ref("");
@@ -39,6 +39,10 @@ const token = localStorage.getItem("token");
 const admin = localStorage.getItem("admin");
 const techName = localStorage.getItem("techName");
 const name = ref("");
+
+onMounted(() => {
+  document.title = "Criar Cliente";
+});
 
 async function createClient() {
   const res = await fetch(baseUrl + "/client/create", {

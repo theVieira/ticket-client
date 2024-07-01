@@ -43,7 +43,7 @@ import Navbar from "@/components/Navbar.vue";
 import Ticket from "@/components/Ticket.vue";
 import Popup from "@/components/Popup.vue";
 import router from "../router/index.js";
-import { onBeforeMount, ref } from "vue";
+import { onBeforeMount, onMounted, ref } from "vue";
 import { baseUrl } from "../../conf.js";
 import { format_date } from "@/assets/utils/FormatDate.js";
 
@@ -60,6 +60,10 @@ const admin = localStorage.getItem("admin");
 const techName = localStorage.getItem("techName");
 const create_ticket = localStorage.getItem("create_ticket");
 const delete_ticket = localStorage.getItem("delete_ticket");
+
+onMounted(() => {
+  document.title = "Finalizados";
+});
 
 onBeforeMount(async () => {
   const res = await fetch(baseUrl + "/ticket/list", {
