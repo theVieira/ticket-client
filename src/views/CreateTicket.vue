@@ -61,7 +61,7 @@
 import Navbar from "@/components/Navbar.vue";
 import Popup from "@/components/Popup.vue";
 import { onBeforeMount, ref, onMounted } from "vue";
-import { baseUrl } from "../../conf";
+import { baseUrl } from "../../conf.js";
 import router from "@/router";
 
 const popup = ref(false);

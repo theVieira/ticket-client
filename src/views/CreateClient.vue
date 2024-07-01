@@ -28,8 +28,8 @@
 <script setup>
 import Navbar from "@/components/Navbar.vue";
 import Popup from "@/components/Popup.vue";
-import { baseUrl } from "../../conf";
 import { onMounted, ref } from "vue";
+import { baseUrl } from "../../conf.js";
 
 const popup = ref(false);
 const msg = ref("");

@@ -49,10 +49,10 @@
 import Popup from "@/components/Popup.vue";
 import Navbar from "../components/Navbar.vue";
 import Ticket from "../components/Ticket.vue";
-import { baseUrl } from "../../conf";
 import { onBeforeMount, onMounted, ref } from "vue";
 import router from "../router";
 import { format_date } from "@/assets/utils/FormatDate";
+import { baseUrl } from "../../conf.js";
 
 const popup = ref(false);
 const msg = ref("");

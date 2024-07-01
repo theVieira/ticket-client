@@ -44,8 +44,8 @@ import Ticket from "@/components/Ticket.vue";
 import Popup from "@/components/Popup.vue";
 import router from "../router/index.js";
 import { onBeforeMount, onMounted, ref } from "vue";
-import { baseUrl } from "../../conf.js";
 import { format_date } from "@/assets/utils/FormatDate.js";
+import { baseUrl } from "../../conf.js";
 
 const tickets = ref();
 const popup = ref(false);
