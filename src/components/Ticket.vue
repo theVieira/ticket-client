@@ -17,62 +17,66 @@
         <h4>Status</h4>
         <p :class="status" class="status"><slot name="status"></slot></p>
       </section>
-      <section class="info-section" v-if="$slots.reccurrent">
-        <h4>Recorrente</h4>
-        <p v-show="false">
-          <slot name="reccurrent"></slot>
-        </p>
-        <img
-          src="../assets/icons/check.png"
-          alt="check icon"
-          class="checkReccurrent"
-        />
-      </section>
-      <section class="info-section" v-if="$slots.techName">
-        <h4>Técnico</h4>
-        <p :style="{ color: tech_color }"><slot name="techName"></slot></p>
-      </section>
-      <section class="info-section">
-        <h4>Criado em</h4>
-        <p><slot name="createdAt"></slot></p>
-      </section>
     </div>
     <div class="ticket-actions" v-show="ticketFocus">
-      <div
-        class="action"
-        v-if="props.admin == 'true' || props.delete_ticket == 'true'"
-        @click.prevent="deleteTicket"
-      >
-        <p>Deletar</p>
-        <img src="../assets/icons/trash.png" alt="trash icon" id="delete" />
+      <div class="more-infos">
+        <section class="more-info" v-if="$slots.reccurrent">
+          <h4>Recorrente</h4>
+          <p v-show="false">
+            <slot name="reccurrent"></slot>
+          </p>
+          <img
+            src="../assets/icons/check.png"
+            alt="check icon"
+            class="checkReccurrent"
+          />
+        </section>
+        <section class="more-info" v-if="$slots.techName">
+          <h4>Técnico</h4>
+          <p :style="{ color: tech_color }"><slot name="techName"></slot></p>
+        </section>
+        <section class="more-info">
+          <h4>Criado em</h4>
+          <p><slot name="createdAt"></slot></p>
+        </section>
       </div>
-      <div
-        class="action"
-        v-if="props.ticket.status != 'finished'"
-        @click="setFinishedTicket(ticket.id)"
-      >
-        <p>Finalizar</p>
-        <img src="../assets/icons/check.png" alt="check icon" />
-      </div>
-      <div
-        class="action"
-        v-if="props.ticket.status == 'finished'"
-        @click="reopen(ticket.id)"
-      >
-        <p>Abrir novamente</p>
-        <img src="../assets/icons/reload.png" alt="reload icon" />
-      </div>
-      <div
-        class="action"
-        v-if="props.ticket.status == 'open'"
-        @click.prevent="setProgressTicket(ticket.id)"
-      >
-        <p>Marcar em progresso</p>
-        <img
-          src="../assets/icons/progress.png"
-          alt="progress icon"
-          style="width: 4rem"
-        />
+      <div class="actions">
+        <div
+          class="action"
+          v-if="props.admin == 'true' || props.delete_ticket == 'true'"
+          @click.prevent="deleteTicket"
+        >
+          <p>Deletar</p>
+          <img src="../assets/icons/trash.png" alt="trash icon" />
+        </div>
+        <div
+          class="action"
+          v-if="props.ticket.status != 'finished'"
+          @click="setFinishedTicket(ticket.id)"
+        >
+          <p>Finalizar</p>
+          <img src="../assets/icons/check.png" alt="check icon" />
+        </div>
+        <div
+          class="action"
+          v-if="props.ticket.status == 'finished'"
+          @click="reopen(ticket.id)"
+        >
+          <p>Abrir novamente</p>
+          <img src="../assets/icons/reload.png" alt="reload icon" />
+        </div>
+        <div
+          class="action"
+          v-if="props.ticket.status == 'open'"
+          @click.prevent="setProgressTicket(ticket.id)"
+        >
+          <p>Marcar em progresso</p>
+          <img
+            src="../assets/icons/progress.png"
+            alt="progress icon"
+            style="width: 4rem"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -251,12 +255,21 @@ async function reopen(id) {
 .ticket-actions {
   margin-top: -1rem;
   width: 100%;
-  background: var(--medium-background);
+  background: var(--light-background);
   padding: 1rem 3rem;
   border-radius: 1.2rem;
   display: flex;
   align-items: center;
-  justify-content: end;
+  justify-content: space-between;
+}
+
+.ticket-actions .actions {
+  display: flex;
+  gap: 3rem;
+}
+
+.ticket-actions .more-infos {
+  display: flex;
   gap: 3rem;
 }
 
@@ -268,6 +281,12 @@ async function reopen(id) {
   font-weight: 600;
   flex-wrap: wrap;
   justify-content: center;
+}
+
+.more-info {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
 }
 
 .popup {
