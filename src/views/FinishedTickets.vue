@@ -116,6 +116,9 @@ function reopenTicket(id) {
   background: var(--medium-background);
   padding: 3rem;
   border-radius: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .tickets-section {

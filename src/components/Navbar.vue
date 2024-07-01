@@ -1,4 +1,10 @@
 <template>
+  <img
+    src="../assets/icons/menu.svg"
+    alt="menu icon"
+    class="menu"
+    @click="showMenu"
+  />
   <nav class="navbar-container">
     <div class="lists">
       <div class="list" @click="listIndex[0] = !listIndex[0]">
@@ -65,6 +71,22 @@ function quit() {
   localStorage.clear();
   router.push("/");
 }
+
+function showMenu() {
+  const navbar = document.querySelector(".navbar-container");
+  let display = navbar.style.display;
+
+  if (display == "") {
+    navbar.style.display = "flex";
+    display = "flex";
+  } else if (display == "flex") {
+    navbar.style.display = "none";
+    display = "none";
+  } else {
+    navbar.style.display = "flex";
+    display = "flex";
+  }
+}
 </script>
 
 <style scoped>
@@ -126,5 +148,21 @@ function quit() {
   font-weight: 600;
   cursor: pointer;
   padding: 1rem;
+}
+
+.menu {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 1rem;
+}
+
+@media (max-width: 800px) {
+  .navbar-container {
+    display: none;
+  }
+  .menu {
+    display: block;
+  }
 }
 </style>
