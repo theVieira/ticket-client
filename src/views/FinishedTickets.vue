@@ -1,11 +1,7 @@
 <template>
   <main class="finished-tickets-container">
     <section class="nav-section">
-      <Navbar
-        :admin="admin"
-        :tech-name="techName"
-        :create_ticket="create_ticket"
-      />
+      <Navbar />
     </section>
     <section class="tickets-section">
       <div class="tickets">
@@ -13,8 +9,6 @@
           class="ticket"
           v-for="ticket in tickets"
           :key="ticket.id"
-          :admin="admin"
-          :delete_ticket="delete_ticket"
           :ticket="ticket"
           @ticket_deleted="removeTicketFomFinisheds(ticket.id)"
           @ticket_reopen="reopenTicket(ticket.id)"
@@ -42,12 +36,13 @@
 import Navbar from "@/components/Navbar.vue";
 import Ticket from "@/components/Ticket.vue";
 import Popup from "@/components/Popup.vue";
-import router from "../router/index.js";
+import router from "@/router";
 import { onBeforeMount, onMounted, ref } from "vue";
 import { format_date } from "@/assets/utils/FormatDate.js";
-import { baseUrl } from "../../conf.js";
+import { baseUrl } from "@/../conf.js";
 
 const tickets = ref();
+
 const popup = ref(false);
 const msg = ref("");
 const type = ref("");
@@ -56,10 +51,6 @@ const token = localStorage.getItem("token");
 if (!token) {
   router.push("/");
 }
-const admin = localStorage.getItem("admin");
-const techName = localStorage.getItem("techName");
-const create_ticket = localStorage.getItem("create_ticket");
-const delete_ticket = localStorage.getItem("delete_ticket");
 
 onMounted(() => {
   document.title = "Finalizados";

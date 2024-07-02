@@ -1,11 +1,7 @@
 <template>
   <main class="home-main">
     <section class="navbar-section">
-      <Navbar
-        :admin="admin"
-        :create_ticket="create_ticket"
-        :techName="techName"
-      />
+      <Navbar />
     </section>
     <section class="tickets-section">
       <p>
@@ -16,8 +12,6 @@
           v-for="ticket in tickets"
           :key="ticket.id"
           :ticket="ticket"
-          :admin="admin"
-          :delete_ticket="delete_ticket"
           @ticket_deleted="removeTicketFromArray(ticket.id)"
           @ticket_progress="setProgressTicket(ticket.id)"
           @ticket_finished="setFinishedTicket(ticket.id)"
@@ -65,11 +59,7 @@ const token = localStorage.getItem("token");
 if (!token) {
   router.push("/");
 }
-
-const admin = localStorage.getItem("admin");
-const create_ticket = localStorage.getItem("create_ticket");
 const techName = localStorage.getItem("techName");
-const delete_ticket = localStorage.getItem("delete_ticket");
 
 onMounted(() => {
   document.title = "Home";

@@ -43,7 +43,7 @@
       <div class="actions">
         <div
           class="action"
-          v-if="props.admin == 'true' || props.delete_ticket == 'true'"
+          v-if="admin == 'true' || delete_ticket == 'true'"
           @click.prevent="deleteTicket"
         >
           <p>Deletar</p>
@@ -85,19 +85,17 @@
 <script setup>
 import { ref, defineProps, defineEmits, computed } from "vue";
 import { baseUrl } from "../../conf";
-import router from "@/router";
+
+const ticketFocus = ref(false);
 
 const token = localStorage.getItem("token");
-if (!token) {
-  router.push("/");
-}
 
+const admin = localStorage.getItem("admin");
+const delete_ticket = localStorage.getItem("delete_ticket");
 const tech_color = localStorage.getItem("color");
 
 const props = defineProps({
   ticket: {},
-  admin: String,
-  delete_ticket: String,
 });
 
 const emit = defineEmits([
@@ -106,8 +104,6 @@ const emit = defineEmits([
   "ticket_finished",
   "ticket_reopen",
 ]);
-
-const ticketFocus = ref(false);
 
 const priority = computed(() => {
   switch (props.ticket.priority) {

@@ -13,10 +13,10 @@
           <li class="hover">
             <RouterLink to="/home" class="link">Abertos</RouterLink>
           </li>
-          <li class="hover" v-if="props.admin == 'true'">
+          <li class="hover" v-if="admin == 'true'">
             <RouterLink to="/finisheds" class="link">Finalizados</RouterLink>
           </li>
-          <li class="hover" v-if="props.admin == 'true'">
+          <li class="hover" v-if="admin == 'true' || create_ticket == 'true'">
             <RouterLink to="/create/ticket" class="link">Criar</RouterLink>
           </li>
         </ul>
@@ -24,16 +24,16 @@
       <div class="list" @click="listIndex[1] = !listIndex[1]">
         <h2 class="hover">Técnicos</h2>
         <ul v-if="listIndex[1]">
-          <li class="hover" v-if="props.admin == 'true'">Criar</li>
+          <li class="hover" v-if="admin == 'true'">Criar</li>
           <li class="hover">Seus chamados</li>
-          <li class="hover" v-if="props.admin == 'true'">Ver Relatório</li>
-          <li class="hover" v-if="props.admin == 'true'">Gerenciar</li>
+          <li class="hover" v-if="admin == 'true'">Ver Relatório</li>
+          <li class="hover" v-if="admin == 'true'">Gerenciar</li>
         </ul>
       </div>
       <div
         class="list"
         @click="listIndex[2] = !listIndex[2]"
-        v-if="props.admin == 'true'"
+        v-if="admin == 'true'"
       >
         <h2 class="hover">Clientes</h2>
         <ul v-if="listIndex[2]">
@@ -46,7 +46,7 @@
     </div>
     <div class="techControl">
       <p class="tech-name" :style="{ color: techColor }">
-        {{ props.techName.toUpperCase() }}
+        {{ techName.toUpperCase() }}
       </p>
       <p class="quit" @click="quit">Sair</p>
     </div>
@@ -55,17 +55,14 @@
 
 <script setup>
 import router from "@/router";
-import { ref, defineProps } from "vue";
+import { ref } from "vue";
 
 const listIndex = ref([false, false, false]);
 
+const admin = localStorage.getItem("admin");
+const techName = localStorage.getItem("techName");
+const create_ticket = localStorage.getItem("create_ticket");
 const techColor = localStorage.getItem("color");
-
-const props = defineProps({
-  techName: String,
-  admin: String,
-  create_ticket: String,
-});
 
 function quit() {
   localStorage.clear();
@@ -100,6 +97,7 @@ function showMenu() {
   align-items: center;
   background: var(--dark-background);
   color: var(--light-color);
+  user-select: none;
 }
 
 .navbar-container .lists {

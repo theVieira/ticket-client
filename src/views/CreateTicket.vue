@@ -1,11 +1,7 @@
 <template>
   <main class="create-ticket-container">
     <section class="navbar-section">
-      <Navbar
-        :admin="admin"
-        :create_ticket="create_ticket"
-        :techName="techName"
-      />
+      <Navbar />
     </section>
     <section class="form-section">
       <form class="form">
@@ -60,13 +56,11 @@
 <script setup>
 import Navbar from "@/components/Navbar.vue";
 import Popup from "@/components/Popup.vue";
-import { onBeforeMount, ref, onMounted } from "vue";
-import { baseUrl } from "../../conf.js";
 import router from "@/router";
+import { onBeforeMount, ref, onMounted } from "vue";
+import { baseUrl } from "@/../conf.js";
 
 const popup = ref(false);
-
-const clients = ref();
 
 const clientName = ref("");
 const priority = ref("");
@@ -80,9 +74,7 @@ if (!token) {
   router.push("/");
 }
 
-const admin = localStorage.getItem("admin");
-const create_ticket = localStorage.getItem("create_ticket");
-const techName = localStorage.getItem("techName");
+const clients = ref();
 
 onMounted(() => {
   document.title = "Criar Ticket";

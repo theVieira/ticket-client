@@ -1,6 +1,6 @@
 <template>
   <main class="create-client-container">
-    <Navbar :admin="admin" :techName="techName" />
+    <Navbar />
     <section class="form-section">
       <form action="" class="create-client-form" @submit.prevent="createClient">
         <div class="form-data">
@@ -28,16 +28,19 @@
 <script setup>
 import Navbar from "@/components/Navbar.vue";
 import Popup from "@/components/Popup.vue";
+import router from "@/router/index.js";
+import { baseUrl } from "@/../conf.js";
 import { onMounted, ref } from "vue";
-import { baseUrl } from "../../conf.js";
 
 const popup = ref(false);
 const msg = ref("");
 const type = ref("");
 
 const token = localStorage.getItem("token");
-const admin = localStorage.getItem("admin");
-const techName = localStorage.getItem("techName");
+if (!token) {
+  router.push("/");
+}
+
 const name = ref("");
 
 onMounted(() => {
