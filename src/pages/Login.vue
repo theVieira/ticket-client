@@ -31,9 +31,9 @@
 
 <script setup>
 import router from "@/router/index.js";
-import { onBeforeMount, ref } from "vue";
-import { baseUrl } from "../../conf.js";
 import Popup from "../components/Popup.vue";
+import { onBeforeMount, ref } from "vue";
+import { baseUrl } from "../../conf";
 
 const name = ref("");
 const password = ref("");
