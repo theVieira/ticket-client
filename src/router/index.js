@@ -4,6 +4,7 @@ import Home from "@/views/Home.vue";
 import CreateTicket from "@/views/CreateTicket.vue";
 import CreateClient from "@/views/CreateClient.vue";
 import FinishedTickets from "@/views/FinishedTickets.vue";
+import ListClients from "@/views/ListClients.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -27,6 +28,10 @@ const router = createRouter({
     {
       path: "/finisheds",
       component: FinishedTickets,
+    },
+    {
+      path: "/list/clients",
+      component: ListClients,
     },
   ],
 });

@@ -37,7 +37,9 @@
       >
         <h2 class="hover">Clientes</h2>
         <ul v-if="listIndex[2]">
-          <li class="hover">Todos</li>
+          <li class="hover">
+            <RouterLink to="/list/clients" class="link">Todos</RouterLink>
+          </li>
           <li class="hover">
             <RouterLink to="/create/client" class="link">Criar</RouterLink>
           </li>
