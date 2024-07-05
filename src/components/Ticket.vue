@@ -83,7 +83,7 @@
 </template>
 
 <script setup>
-import { ref, defineProps, defineEmits, computed } from "vue";
+import { ref, defineEmits, computed } from "vue";
 import { baseUrl } from "../../conf";
 
 const ticketFocus = ref(false);
