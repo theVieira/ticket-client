@@ -25,6 +25,9 @@
         <h2 class="hover">Técnicos</h2>
         <ul v-if="listIndex[1]">
           <li class="hover" v-if="admin == 'true'">Criar</li>
+          <li class="hover">
+            <RouterLink to="/account" class="link">Sua conta</RouterLink>
+          </li>
           <li class="hover">Seus chamados</li>
           <li class="hover" v-if="admin == 'true'">Ver Relatório</li>
           <li class="hover" v-if="admin == 'true'">Gerenciar</li>
