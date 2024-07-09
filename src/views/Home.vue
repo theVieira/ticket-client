@@ -173,7 +173,7 @@ function setFinishedTicket(id) {
   width: 100%;
   background: var(--medium-background);
   border-radius: 1.2rem;
-  padding: 2rem;
+  padding: 3rem;
   display: flex;
   flex-direction: column;
   gap: 1rem;
