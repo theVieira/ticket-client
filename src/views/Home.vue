@@ -6,20 +6,7 @@
     <section class="tickets-section">
       <div class="header">
         <strong>Total: {{ total }}</strong>
-        <div class="filter">
-          <select name="order" id="order" v-model="order">
-            <option value="all" selected>Todos</option>
-            <option value="daily">Diários</option>
-            <option value="delivery">Entregas</option>
-            <option value="budget">Orçamentos</option>
-          </select>
-          <input
-            type="button"
-            value="Buscar"
-            class="search"
-            @click.prevent="getTickets"
-          />
-        </div>
+        <Filter @search="getTickets" />
       </div>
       <div class="tickets">
         <Ticket
@@ -64,6 +51,7 @@
 import Popup from "@/components/Popup.vue";
 import Navbar from "../components/Navbar.vue";
 import Ticket from "../components/Ticket.vue";
+import Filter from "@/components/Filter.vue";
 import { onBeforeMount, onMounted, ref } from "vue";
 import router from "../router";
 import { format_date } from "@/assets/utils/FormatDate";
@@ -76,8 +64,8 @@ const popup = ref(false);
 const msg = ref("");
 const type = ref("");
 
-const tickets = ref();
-const total = ref();
+const tickets = ref([]);
+const total = ref(0);
 
 const token = localStorage.getItem("token");
 if (!token) {
@@ -90,10 +78,6 @@ onMounted(() => {
 });
 
 onBeforeMount(async () => {
-  await getTickets(order);
-});
-
-async function getTickets() {
   const res = await fetch(baseUrl + "/ticket/list/" + order.value, {
     headers: {
       authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -102,6 +86,22 @@ async function getTickets() {
 
   const data = await res.json();
 
+  tickets.value = data.filter((ticket) => ticket.status != "finished");
+  total.value = tickets.value.length;
+
+  if (res.status != 200) {
+    console.error(data);
+  }
+});
+
+async function getTickets(order) {
+  const res = await fetch(baseUrl + "/ticket/list/" + order.order, {
+    headers: {
+      authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  });
+
+  const data = await res.json();
   tickets.value = data.filter((ticket) => ticket.status != "finished");
   total.value = tickets.value.length;
 
@@ -191,36 +191,6 @@ function setFinishedTicket(id) {
   flex-wrap: wrap;
   align-items: center;
   gap: 3rem;
-}
-
-.header .filter {
-  display: flex;
-  gap: 2rem;
-  width: fit-content;
-}
-
-.header .filter .search {
-  padding: 0 2rem;
-  border-radius: 1.2rem;
-  border: none;
-  background: var(--dark-background);
-  color: var(--light-color);
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.header .filter .search:hover {
-  filter: brightness(120%);
-}
-
-.header select {
-  background: var(--dark-background);
-  border: none;
-  border-radius: 1.2rem;
-  padding: 1rem 2rem;
-  color: var(--light-color);
-  font-weight: 600;
 }
 
 @media (max-width: 800px) {

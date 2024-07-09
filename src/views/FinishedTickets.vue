@@ -4,6 +4,14 @@
       <Navbar />
     </section>
     <section class="tickets-section">
+      <div class="header">
+        <p>
+          <strong>Total: {{ total }}</strong>
+        </p>
+        <div class="filter">
+          <Filter @search="filterTickets" />
+        </div>
+      </div>
       <div class="tickets">
         <Ticket
           class="ticket"
@@ -15,8 +23,15 @@
         >
           <template #clientName>{{ ticket.clientName }}</template>
           <template #description>{{ ticket.description }}</template>
-          <template #priority>{{ ticket.priority }}</template>
-          <template #status>{{ ticket.status }}</template>
+          <template #priority>{{
+            Translate(ticket.priority).toUpperCase()
+          }}</template>
+          <template #category>{{
+            Translate(ticket.category).toUpperCase()
+          }}</template>
+          <template #status>{{
+            Translate(ticket.status).toUpperCase()
+          }}</template>
           <template #reccurrent v-if="ticket.reccurrent == 'true'">{{
             ticket.reccurrent
           }}</template>
@@ -36,12 +51,16 @@
 import Navbar from "@/components/Navbar.vue";
 import Ticket from "@/components/Ticket.vue";
 import Popup from "@/components/Popup.vue";
+import Filter from "@/components/Filter.vue";
 import router from "@/router";
+import { Translate } from "@/assets/utils/Translate.js";
 import { onBeforeMount, onMounted, ref } from "vue";
 import { format_date } from "@/assets/utils/FormatDate.js";
 import { baseUrl } from "@/../conf.js";
 
-const tickets = ref();
+const tickets = ref([]);
+
+const total = ref();
 
 const popup = ref(false);
 const msg = ref("");
@@ -57,7 +76,7 @@ onMounted(() => {
 });
 
 onBeforeMount(async () => {
-  const res = await fetch(baseUrl + "/ticket/list", {
+  const res = await fetch(baseUrl + "/ticket/list/all", {
     headers: {
       authorization: `Bearer ${token}`,
     },
@@ -67,6 +86,8 @@ onBeforeMount(async () => {
   tickets.value = data
     .filter((ticket) => ticket.status == "finished")
     .reverse();
+
+  total.value = tickets.value.length;
 });
 
 function removeTicketFomFinisheds(id) {
@@ -95,6 +116,19 @@ function reopenTicket(id) {
     msg.value = "";
     type.value = "";
   }, 1000 * 3);
+}
+
+async function filterTickets(order) {
+  const res = await fetch(baseUrl + "/ticket/list/" + order.order, {
+    headers: {
+      authorization: `Bearer ${token}`,
+    },
+  });
+
+  const data = await res.json();
+  tickets.value = data
+    .filter((ticket) => ticket.status == "finished")
+    .reverse();
 }
 </script>
 
@@ -133,5 +167,13 @@ function reopenTicket(id) {
 .popup {
   position: absolute;
   top: 3rem;
+}
+
+.header {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: -3rem;
 }
 </style>
