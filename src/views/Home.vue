@@ -4,9 +4,23 @@
       <Navbar />
     </section>
     <section class="tickets-section">
-      <p>
+      <div class="header">
         <strong>Total: {{ total }}</strong>
-      </p>
+        <div class="filter">
+          <select name="order" id="order" v-model="order">
+            <option value="all" selected>Todos</option>
+            <option value="daily">Diários</option>
+            <option value="delivery">Entregas</option>
+            <option value="budget">Orçamentos</option>
+          </select>
+          <input
+            type="button"
+            value="Buscar"
+            class="search"
+            @click.prevent="getTickets"
+          />
+        </div>
+      </div>
       <div class="tickets">
         <Ticket
           v-for="ticket in tickets"
@@ -18,8 +32,15 @@
         >
           <template #clientName>{{ ticket.clientName.toUpperCase() }}</template>
           <template #description>{{ ticket.description }}</template>
-          <template #priority>{{ ticket.priority.toUpperCase() }}</template>
-          <template #status>{{ ticket.status.toUpperCase() }}</template>
+          <template #priority>{{
+            Translate(ticket.priority).toUpperCase()
+          }}</template>
+          <template #category>{{
+            Translate(ticket.category).toUpperCase()
+          }}</template>
+          <template #status>{{
+            Translate(ticket.status).toUpperCase()
+          }}</template>
           <template #reccurrent v-if="ticket.reccurrent == true">
             {{ ticket.reccurrent }}
           </template>
@@ -47,6 +68,9 @@ import { onBeforeMount, onMounted, ref } from "vue";
 import router from "../router";
 import { format_date } from "@/assets/utils/FormatDate";
 import { baseUrl } from "../../conf.js";
+import { Translate } from "@/assets/utils/Translate";
+
+const order = ref("all");
 
 const popup = ref(false);
 const msg = ref("");
@@ -66,7 +90,11 @@ onMounted(() => {
 });
 
 onBeforeMount(async () => {
-  const res = await fetch(baseUrl + "/ticket/list", {
+  await getTickets(order);
+});
+
+async function getTickets() {
+  const res = await fetch(baseUrl + "/ticket/list/" + order.value, {
     headers: {
       authorization: `Bearer ${localStorage.getItem("token")}`,
     },
@@ -80,7 +108,7 @@ onBeforeMount(async () => {
   if (res.status != 200) {
     console.error(data);
   }
-});
+}
 
 function removeTicketFromArray(id) {
   const ticketIndex = tickets.value.findIndex((ticket) => ticket.id == id);
@@ -151,13 +179,53 @@ function setFinishedTicket(id) {
   gap: 1rem;
 }
 
-.tickets-section p {
-  width: 100%;
-  text-align: start;
-}
-
 .popup {
   position: absolute;
   top: 3rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 3rem;
+}
+
+.header .filter {
+  display: flex;
+  gap: 2rem;
+  width: fit-content;
+}
+
+.header .filter .search {
+  padding: 0 2rem;
+  border-radius: 1.2rem;
+  border: none;
+  background: var(--dark-background);
+  color: var(--light-color);
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.header .filter .search:hover {
+  filter: brightness(120%);
+}
+
+.header select {
+  background: var(--dark-background);
+  border: none;
+  border-radius: 1.2rem;
+  padding: 1rem 2rem;
+  color: var(--light-color);
+  font-weight: 600;
+}
+
+@media (max-width: 800px) {
+  .header {
+    padding: 0 6rem 0 0;
+  }
 }
 </style>

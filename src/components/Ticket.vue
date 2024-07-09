@@ -14,6 +14,10 @@
         <p :class="priority" class="priority"><slot name="priority"></slot></p>
       </section>
       <section class="info-section">
+        <h4>Categoria</h4>
+        <p class="category"><slot name="category"></slot></p>
+      </section>
+      <section class="info-section">
         <h4>Status</h4>
         <p :class="status" class="status"><slot name="status"></slot></p>
       </section>

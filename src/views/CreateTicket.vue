@@ -29,6 +29,15 @@
           </select>
         </div>
         <div class="form-data">
+          <label for="category">Categoria</label>
+          <select name="category" id="category" v-model="category">
+            <option value="" selected disabled>Selecione</option>
+            <option value="daily">Diário</option>
+            <option value="delivery">Entrega</option>
+            <option value="budget">Orçamento</option>
+          </select>
+        </div>
+        <div class="form-data">
           <label for="description">Descrição</label>
           <textarea
             name="description"
@@ -64,6 +73,7 @@ const popup = ref(false);
 
 const clientName = ref("");
 const priority = ref("");
+const category = ref("");
 const description = ref("");
 
 const msg = ref("Ticket criado com sucesso!");
@@ -103,6 +113,7 @@ async function createTicket() {
       clientName: clientName.value,
       description: description.value,
       priority: priority.value,
+      category: category.value,
     }),
   });
 
