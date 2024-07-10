@@ -139,7 +139,8 @@ async function filterTickets(order) {
 <style scoped>
 .finished-tickets-container {
   display: flex;
-  height: 100vh;
+  min-height: 100vh;
+  height: 100%;
   background: var(--light-background);
 }
 
