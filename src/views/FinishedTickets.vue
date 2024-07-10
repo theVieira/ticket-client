@@ -35,7 +35,11 @@
           <template #reccurrent v-if="ticket.reccurrent == 'true'">{{
             ticket.reccurrent
           }}</template>
-          <template #techName>{{ ticket.techName.toUpperCase() }}</template>
+          <template #techName>
+            <span :style="{ color: ticket.techColor }">{{
+              ticket.techName.toUpperCase()
+            }}</span>
+          </template>
           <template #createdAt>{{ format_date(ticket.createdAt) }}</template>
         </Ticket>
       </div>
