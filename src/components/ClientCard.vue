@@ -9,7 +9,7 @@
     <h4>
       {{ props.name.toUpperCase() }}
     </h4>
-    <div class="info">
+    <div class="length-info">
       <p>
         <strong>Chamados: {{ props.tickets.length }}</strong>
       </p>
@@ -22,6 +22,8 @@ import { ref } from "vue";
 
 const showInfo = ref(false);
 
+const emit = defineEmits(["showClientInfo"]);
+
 const props = defineProps({
   name: String,
   tickets: {},
@@ -29,6 +31,7 @@ const props = defineProps({
 
 function openInfo() {
   showInfo.value = !showInfo.value;
+  emit("showClientInfo");
 }
 </script>
 
@@ -49,8 +52,9 @@ function openInfo() {
   text-align: center;
 }
 
-.info {
+.length-info {
   text-align: center;
+  filter: brightness(80%);
 }
 
 .zoom {
