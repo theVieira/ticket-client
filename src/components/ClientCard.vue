@@ -1,7 +1,7 @@
 <template>
   <div class="client-card">
     <img
-      src="@/assets/icons/zoom.png"
+      src="@/assets/icons/zoom.svg"
       alt="zoom icon"
       class="zoom"
       @click="openInfo"
@@ -13,21 +13,6 @@
       <p>
         <strong>Chamados: {{ props.tickets.length }}</strong>
       </p>
-    </div>
-    <div
-      class="client-info"
-      v-show="showInfo"
-      v-for="ticket in props.tickets"
-      :key="ticket.id"
-    >
-      <div class="info">
-        <p class="top">Descrição</p>
-        <p>{{ ticket.description }}</p>
-      </div>
-      <div class="info">
-        <div class="top">Status</div>
-        <p>{{ ticket.status }}</p>
-      </div>
     </div>
   </div>
 </template>
@@ -54,7 +39,7 @@ function openInfo() {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  background: var(--light-background);
+  background: var(--medium-background);
   padding: 5rem 3rem;
   border-radius: 1.2rem;
   position: relative;
@@ -64,28 +49,8 @@ function openInfo() {
   text-align: center;
 }
 
-.client-info {
-  width: 100%;
+.info {
   text-align: center;
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  padding: 1rem;
-  color: var(--light-color);
-  background: rgb(41, 41, 41);
-  border-radius: 1.2rem;
-  display: flex;
-}
-
-.client-info .info {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.client-info .info .top {
-  font-weight: 600;
 }
 
 .zoom {

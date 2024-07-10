@@ -46,7 +46,7 @@ onBeforeMount(async () => {
   width: 100vw;
   min-height: 100vh;
   height: 100%;
-  background: var(--medium-background);
+  background: var(--light-background);
   display: flex;
 }
 
