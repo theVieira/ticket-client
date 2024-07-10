@@ -16,7 +16,7 @@
 </template>
 
 <script setup>
-import { ref, defineEmits } from "vue";
+import { ref } from "vue";
 
 const order = ref("all");
 const emit = defineEmits(["search"]);
