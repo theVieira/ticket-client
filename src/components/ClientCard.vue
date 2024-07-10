@@ -37,7 +37,7 @@ function openInfo() {
 
 <style scoped>
 .client-card {
-  width: 20rem;
+  width: fit-content;
   height: fit-content;
   display: flex;
   flex-direction: column;
