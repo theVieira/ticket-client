@@ -117,11 +117,12 @@ async function createTicket() {
     }),
   });
 
-  const data = await res.json();
-
   clientName.value = "";
   priority.value = "";
   description.value = "";
+  category.value = "";
+
+  const data = await res.json();
 
   popup.value = true;
   if (res.status == 201) {
