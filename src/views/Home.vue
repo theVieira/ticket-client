@@ -86,15 +86,6 @@ onBeforeMount(async () => {
 
   const data = await res.json();
 
-  const urgents = data.filter((ticket) => ticket.priority == "urgent");
-  data.filter((ticket, i) => {
-    if (ticket.priority == "urgent") {
-      data.splice(i, 1);
-    }
-  });
-
-  urgents.forEach((ticket) => data.unshift(ticket));
-
   tickets.value = data.filter((ticket) => ticket.status != "finished");
   total.value = tickets.value.length;
 
