@@ -13,6 +13,9 @@
           <li class="hover">
             <RouterLink to="/home" class="link">Abertos</RouterLink>
           </li>
+          <li class="hover">
+            <RouterLink to="/progress" class="link">Em Progresso</RouterLink>
+          </li>
           <li class="hover" v-if="admin == 'true'">
             <RouterLink to="/finisheds" class="link">Finalizados</RouterLink>
           </li>
@@ -101,7 +104,7 @@ function showMenu() {
 
 <style scoped>
 .navbar-container {
-  width: fit-content;
+  width: max-content;
   height: 100%;
   padding: 3rem 2rem;
   display: flex;

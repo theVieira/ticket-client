@@ -11,7 +11,7 @@ export function Translate(string) {
     case "high":
       return "Alta";
     case "medium":
-      return "Média";
+      return "Normal";
     case "low":
       return "Baixa";
     case "daily":
