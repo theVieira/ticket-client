@@ -24,13 +24,21 @@
       <div class="list" @click="listIndex[1] = !listIndex[1]">
         <h2 class="hover">Técnicos</h2>
         <ul v-if="listIndex[1]">
-          <li class="hover" v-if="admin == 'true'">Criar</li>
+          <li class="hover" v-if="admin == 'true'">
+            <RouterLink to="/create/tech" class="link">Criar</RouterLink>
+          </li>
           <li class="hover">
             <RouterLink to="/account" class="link">Sua conta</RouterLink>
           </li>
-          <li class="hover">Seus chamados</li>
-          <li class="hover" v-if="admin == 'true'">Ver Relatório</li>
-          <li class="hover" v-if="admin == 'true'">Gerenciar</li>
+          <li class="hover">
+            <RouterLink to="yourTickets" class="link">Seus Chamados</RouterLink>
+          </li>
+          <li class="hover" v-if="admin == 'true'">
+            <RouterLink to="yourTickets" class="link">Ver Relatório</RouterLink>
+          </li>
+          <li class="hover" v-if="admin == 'true'">
+            <RouterLink to="manage/tech" class="link">Gerenciar</RouterLink>
+          </li>
         </ul>
       </div>
       <div
@@ -139,6 +147,8 @@ function showMenu() {
 
 .link {
   color: var(--light-color);
+  font-size: 1.9rem;
+  filter: brightness(85%);
 }
 
 .techControl {
