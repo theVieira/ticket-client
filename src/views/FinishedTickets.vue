@@ -64,7 +64,7 @@ import { baseUrl } from "@/../conf.js";
 
 const tickets = ref([]);
 
-const total = ref();
+const total = ref(0);
 
 const popup = ref(false);
 const msg = ref("");
