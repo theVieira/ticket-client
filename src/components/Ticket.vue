@@ -285,7 +285,7 @@ async function reopen(id) {
 .ticket-actions .more-infos {
   display: flex;
   gap: 3rem;
-  text-wrap: nowrap;
+  white-space: nowrap;
   padding: 0 2rem;
 }
 
