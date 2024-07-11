@@ -48,7 +48,7 @@
         <div
           class="action"
           v-if="admin == 'true' || delete_ticket == 'true'"
-          @click.prevent="deleteTicket"
+          @click.prevent="deleteTicket(ticket)"
         >
           <p>Deletar</p>
           <img src="../assets/icons/trash.png" alt="trash icon" />
@@ -89,6 +89,7 @@
 <script setup>
 import { ref, computed } from "vue";
 import { baseUrl } from "../../conf";
+import { Translate } from "@/assets/utils/Translate";
 
 const ticketFocus = ref(false);
 
@@ -133,24 +134,33 @@ const status = computed(() => {
   }
 });
 
-async function deleteTicket() {
-  const res = await fetch(baseUrl + "/ticket/delete", {
-    method: "DELETE",
-    headers: {
-      authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      id: props.ticket.id,
-    }),
-  });
+async function deleteTicket(ticket) {
+  const confirmation = confirm(
+    `Deseja realmente deletar este chamado?\n\nCliente: ${
+      ticket.clientName
+    }\nDescrição: ${ticket.description}\nPrioridade: ${Translate(
+      ticket.priority
+    )}`
+  );
+  if (confirmation == true) {
+    const res = await fetch(baseUrl + "/ticket/delete", {
+      method: "DELETE",
+      headers: {
+        authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: props.ticket.id,
+      }),
+    });
 
-  const data = await res.json();
+    const data = await res.json();
 
-  if (res.status == 200) {
-    emit("ticket_deleted");
-  } else {
-    console.error(data);
+    if (res.status == 200) {
+      emit("ticket_deleted");
+    } else {
+      console.error(data);
+    }
   }
 }
 
@@ -256,7 +266,7 @@ async function reopen(id) {
   margin-top: -1rem;
   width: 100%;
   background: var(--light-background);
-  padding: 1rem 3rem;
+  padding: 2rem;
   border-radius: 1.2rem;
   display: flex;
   align-items: center;
@@ -265,12 +275,18 @@ async function reopen(id) {
 
 .ticket-actions .actions {
   display: flex;
-  gap: 3rem;
+  gap: 4rem;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
 .ticket-actions .more-infos {
   display: flex;
   gap: 3rem;
+  text-wrap: nowrap;
+  padding: 0 2rem;
 }
 
 .ticket-actions .action {
@@ -341,8 +357,7 @@ async function reopen(id) {
     padding: 3rem;
   }
   .ticket-actions {
-    padding: 1rem 0;
-    gap: 1rem;
+    gap: 3rem;
     flex-wrap: wrap;
     justify-content: center;
   }
