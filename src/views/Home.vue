@@ -87,6 +87,7 @@ onBeforeMount(async () => {
   const data = await res.json();
 
   tickets.value = data.filter((ticket) => ticket.status != "finished");
+
   total.value = tickets.value.length;
 
   if (res.status != 200) {
@@ -102,7 +103,7 @@ async function getTickets(order) {
   });
 
   const data = await res.json();
-  tickets.value = data.filter((ticket) => ticket.status != "finished");
+  tickets.value = data.filter((ticket) => ticket.status !== "finished");
   total.value = tickets.value.length;
 
   if (res.status != 200) {

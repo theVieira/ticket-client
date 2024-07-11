@@ -72,7 +72,7 @@ if (!token) {
 }
 
 onMounted(() => {
-  document.title = "Home";
+  document.title = "Em progresso";
 });
 
 onBeforeMount(async () => {
@@ -100,7 +100,7 @@ async function getTickets(order) {
   });
 
   const data = await res.json();
-  tickets.value = data.filter((ticket) => ticket.status != "finished");
+  tickets.value = data.filter((ticket) => ticket.status == "progress");
   total.value = tickets.value.length;
 
   if (res.status != 200) {

@@ -87,10 +87,7 @@ onBeforeMount(async () => {
   });
 
   const data = await res.json();
-  tickets.value = data
-    .filter((ticket) => ticket.status == "finished")
-    .reverse();
-
+  tickets.value = data.filter((ticket) => ticket.status == "finished");
   total.value = tickets.value.length;
 });
 
@@ -130,9 +127,7 @@ async function filterTickets(order) {
   });
 
   const data = await res.json();
-  tickets.value = data
-    .filter((ticket) => ticket.status == "finished")
-    .reverse();
+  tickets.value = data.filter((ticket) => ticket.status == "finished");
 }
 </script>
 
@@ -176,9 +171,16 @@ async function filterTickets(order) {
 
 .header {
   display: flex;
-  width: 100%;
-  align-items: center;
   justify-content: space-between;
-  margin-bottom: -3rem;
+  width: 100%;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 3rem;
+}
+
+@media (max-width: 800px) {
+  .header {
+    padding: 0 6rem 0 0;
+  }
 }
 </style>

@@ -84,8 +84,7 @@ async function createClient() {
 <style scoped>
 .create-client-container {
   width: 100%;
-  min-height: 100vh;
-  height: 100%;
+  height: 100vh;
   background: var(--medium-background);
   display: flex;
 }
