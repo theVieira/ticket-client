@@ -9,7 +9,7 @@
           <strong>Total: {{ total }}</strong>
         </p>
         <div class="filter">
-          <Filter @search="filterTickets" />
+          <Filter @search="getTickets" @findClient="findClientByName" />
         </div>
       </div>
       <div class="tickets">
@@ -119,15 +119,38 @@ function reopenTicket(id) {
   }, 1000 * 3);
 }
 
-async function filterTickets(order) {
+async function getTickets(order) {
   const res = await fetch(baseUrl + "/ticket/list/" + order.order, {
     headers: {
-      authorization: `Bearer ${token}`,
+      authorization: `Bearer ${localStorage.getItem("token")}`,
     },
   });
 
   const data = await res.json();
+  console.log(data);
   tickets.value = data.filter((ticket) => ticket.status == "finished");
+  total.value = tickets.value.length;
+
+  if (res.status != 200) {
+    console.error(data);
+  }
+
+  return tickets.value;
+}
+
+async function findClientByName({ name, order }) {
+  if (name == "") {
+    const data = await getTickets({ order });
+    tickets.value = data;
+    total.value = tickets.value.length;
+  } else {
+    const filter = tickets.value.filter((ticket) =>
+      ticket.clientName.toLowerCase().includes(name.toLowerCase())
+    );
+
+    tickets.value = filter;
+    total.value = tickets.value.length;
+  }
 }
 </script>
 

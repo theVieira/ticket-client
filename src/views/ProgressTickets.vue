@@ -6,7 +6,7 @@
     <section class="tickets-section">
       <div class="header">
         <strong>Total: {{ total }}</strong>
-        <Filter @search="getTickets" />
+        <Filter @search="getTickets" @findClient="findClientByName" />
       </div>
       <div class="tickets">
         <Ticket
@@ -57,8 +57,6 @@ import { format_date } from "@/assets/utils/FormatDate";
 import { baseUrl } from "../../conf.js";
 import { Translate } from "@/assets/utils/Translate";
 
-const order = ref("all");
-
 const popup = ref(false);
 const msg = ref("");
 const type = ref("");
@@ -76,7 +74,7 @@ onMounted(() => {
 });
 
 onBeforeMount(async () => {
-  const res = await fetch(baseUrl + "/ticket/list/" + order.value, {
+  const res = await fetch(baseUrl + "/ticket/list/all", {
     headers: {
       authorization: `Bearer ${localStorage.getItem("token")}`,
     },
@@ -106,6 +104,8 @@ async function getTickets(order) {
   if (res.status != 200) {
     console.error(data);
   }
+
+  return tickets.value;
 }
 
 function removeTicketFromArray(id) {
@@ -132,6 +132,21 @@ function setFinishedTicket(id) {
     msg.value = "";
     type.value = "";
   }, 1000 * 3);
+}
+
+async function findClientByName({ name, order }) {
+  if (name == "") {
+    const data = await getTickets({ order });
+    tickets.value = data;
+    total.value = tickets.value.length;
+  } else {
+    const filter = tickets.value.filter((ticket) =>
+      ticket.clientName.toLowerCase().includes(name.toLowerCase())
+    );
+
+    tickets.value = filter;
+    total.value = tickets.value.length;
+  }
 }
 </script>
 
