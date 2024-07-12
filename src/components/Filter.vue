@@ -38,7 +38,6 @@ const emit = defineEmits(["search", "findClient"]);
 
 function search() {
   emit("search", { order: order.value });
-  order.value = "all";
 }
 
 function findClient() {
