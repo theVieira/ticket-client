@@ -355,6 +355,7 @@ async function reopen(id) {
 @media (max-width: 900px) {
   .ticket-container {
     padding: 3rem;
+    border: 1px solid #c25005;
   }
   .ticket-actions {
     gap: 3rem;
