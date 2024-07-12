@@ -51,6 +51,14 @@
       <div class="actions">
         <div
           class="action"
+          v-if="admin == 'true'"
+          @click="editTicket(ticket.id)"
+        >
+          <p>Editar</p>
+          <img src="../assets/icons/pencil.png" alt="pencil icon" />
+        </div>
+        <div
+          class="action"
           v-if="admin == 'true' || delete_ticket == 'true'"
           @click.prevent="deleteTicket(ticket)"
         >
@@ -112,6 +120,7 @@ const emit = defineEmits([
   "ticket_progress",
   "ticket_finished",
   "ticket_reopen",
+  "ticket_edited",
 ]);
 
 const priority = computed(() => {
@@ -230,6 +239,29 @@ async function reopen(id) {
     emit("ticket_reopen");
   } else {
     console.error(data);
+  }
+}
+
+async function editTicket(id) {
+  const description = prompt("Insira a descrição");
+  const res = await fetch(baseUrl + "/ticket/edit", {
+    method: "PUT",
+    headers: {
+      authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      id,
+      description,
+    }),
+  });
+
+  const data = await res.json();
+
+  if (res.status != 200) {
+    console.error(data);
+  } else {
+    emit("ticket_edited", { id: data.id, description: data.description });
   }
 }
 </script>

@@ -16,6 +16,7 @@
           @ticket_deleted="removeTicketFromArray(ticket.id)"
           @ticket_progress="setProgressTicket(ticket.id)"
           @ticket_finished="setFinishedTicket(ticket.id)"
+          @ticket_edited="setEditedTicket"
         >
           <template #clientName>{{ ticket.clientName.toUpperCase() }}</template>
           <template #description>{{ ticket.description }}</template>
@@ -167,6 +168,19 @@ async function findClientByName({ name, order }) {
     tickets.value = filter;
     total.value = tickets.value.length;
   }
+}
+
+function setEditedTicket({ id, description }) {
+  const ticketIndex = tickets.value.findIndex((ticket) => ticket.id == id);
+  tickets.value[ticketIndex].description = description;
+  msg.value = "Ticket editado!";
+  type.value = "success";
+  popup.value = true;
+  setTimeout(() => {
+    popup.value = false;
+    msg.value = "";
+    type.value = "";
+  }, 1000 * 3);
 }
 </script>
 
