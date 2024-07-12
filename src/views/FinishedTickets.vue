@@ -40,7 +40,8 @@
               ticket.techName.toUpperCase()
             }}</span>
           </template>
-          <template #createdAt>{{ format_date(ticket.createdAt) }}</template>
+          <template #createdAt>{{ FormatDate(ticket.createdAt) }}</template>
+          <template #updatedAt>{{ FormatDate(ticket.updatedAt) }}</template>
         </Ticket>
       </div>
       <Popup v-if="popup" class="popup">
@@ -59,7 +60,7 @@ import Filter from "@/components/Filter.vue";
 import router from "@/router";
 import { Translate } from "@/assets/utils/Translate.js";
 import { onBeforeMount, onMounted, ref } from "vue";
-import { format_date } from "@/assets/utils/FormatDate.js";
+import { FormatDate } from "@/assets/utils/FormatDate.js";
 import { baseUrl } from "@/../conf.js";
 
 const tickets = ref([]);

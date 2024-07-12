@@ -42,7 +42,10 @@
             Translate(ticket.category).toUpperCase()
           }}</template>
           <template #clientName>{{ ticket.clientName }}</template>
-          <template #createdAt>{{ format_date(ticket.createdAt) }}</template>
+          <template #createdAt>{{ FormatDate(ticket.createdAt) }}</template>
+          <template #updatedAt v-if="ticket.status != 'open'">{{
+            FormatDate(ticket.updatedAt)
+          }}</template>
           <template #description>{{ ticket.description }}</template>
           <template #priority>{{
             Translate(ticket.priority).toUpperCase()
@@ -77,7 +80,7 @@ import router from "@/router";
 import { onBeforeMount, ref } from "vue";
 import { baseUrl } from "../../conf";
 import { Translate } from "@/assets/utils/Translate";
-import { format_date } from "@/assets/utils/FormatDate";
+import { FormatDate } from "@/assets/utils/FormatDate";
 
 const token = localStorage.getItem("token");
 if (!token) {
