@@ -156,18 +156,14 @@ function setFinishedTicket(id) {
 }
 
 async function findClientByName({ name, order }) {
-  if (name == "") {
-    const data = await getTickets({ order });
-    tickets.value = data;
-    total.value = tickets.value.length;
-  } else {
-    const filter = tickets.value.filter((ticket) =>
-      ticket.clientName.toLowerCase().includes(name.toLowerCase())
-    );
+  const data = await getTickets({ order });
 
-    tickets.value = filter;
-    total.value = tickets.value.length;
-  }
+  const filter = data.filter((ticket) =>
+    ticket.clientName.toLowerCase().includes(name.toLowerCase())
+  );
+
+  tickets.value = filter;
+  total.value = tickets.value.length;
 }
 
 function setEditedTicket({ id, description }) {
