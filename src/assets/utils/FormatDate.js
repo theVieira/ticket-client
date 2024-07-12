@@ -1,4 +1,4 @@
-export function format_date(date) {
+export function FormatDate(date) {
   const newDate = new Date(date);
   const day = newDate.getUTCDate();
   const month = newDate.getUTCMonth() + 1;
