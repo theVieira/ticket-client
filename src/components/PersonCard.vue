@@ -22,7 +22,7 @@ import { ref } from "vue";
 
 const showInfo = ref(false);
 
-const emit = defineEmits(["showClientInfo"]);
+const emit = defineEmits(["showInfo"]);
 
 const props = defineProps({
   name: String,
@@ -31,7 +31,7 @@ const props = defineProps({
 
 function openInfo() {
   showInfo.value = !showInfo.value;
-  emit("showClientInfo");
+  emit("showInfo");
 }
 </script>
 

@@ -4,12 +4,12 @@
       <Navbar />
     </section>
     <section class="list-clients-section" v-if="!showClientDialog">
-      <ClientCard
+      <PersonCard
         v-for="client in clients"
         :key="client.id"
         :name="client.name"
         :tickets="client.tickets"
-        @showClientInfo="showClient(client)"
+        @showInfo="showClient(client)"
       />
     </section>
     <div class="client-info" v-if="showClientDialog">
@@ -72,7 +72,7 @@
 import Popup from "@/components/Popup.vue";
 import Ticket from "@/components/Ticket.vue";
 import Navbar from "@/components/Navbar.vue";
-import ClientCard from "@/components/ClientCard.vue";
+import PersonCard from "@/components/PersonCard.vue";
 import router from "@/router";
 import { onBeforeMount, ref } from "vue";
 import { baseUrl } from "../../conf";
