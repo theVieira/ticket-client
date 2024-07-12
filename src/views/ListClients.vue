@@ -89,7 +89,6 @@ const techName = localStorage.getItem("techName");
 const clients = ref([]);
 
 const client = ref({});
-const tickets = ref([]);
 
 const showClientDialog = ref(false);
 
@@ -116,7 +115,6 @@ onBeforeMount(async () => {
 function showClient(info) {
   showClientDialog.value = true;
   client.value = info;
-  tickets.value = info.tickets;
 }
 
 function removeTicketFromArray(id) {
