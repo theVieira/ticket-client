@@ -43,6 +43,10 @@
           <h4>Criado em</h4>
           <p><slot name="createdAt"></slot></p>
         </section>
+        <section class="more-info" v-if="ticket.status != 'open'">
+          <h4>Atualizado em</h4>
+          <p><slot name="updatedAt"></slot></p>
+        </section>
       </div>
       <div class="actions">
         <div
