@@ -291,6 +291,9 @@ async function reopen(id) {
   gap: 3rem;
   white-space: nowrap;
   padding: 0 2rem;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
 }
 
 .ticket-actions .action {
