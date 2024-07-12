@@ -7,6 +7,7 @@ import FinishedTickets from "@/views/FinishedTickets.vue";
 import ListClients from "@/views/ListClients.vue";
 import Account from "@/views/Account.vue";
 import ProgressTickets from "@/views/ProgressTickets.vue";
+import ListTech from "@/views/ListTech.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -42,6 +43,10 @@ const router = createRouter({
     {
       path: "/progress",
       component: ProgressTickets,
+    },
+    {
+      path: "/manage/tech",
+      component: ListTech,
     },
   ],
 });

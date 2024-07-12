@@ -34,13 +34,15 @@
             <RouterLink to="/account" class="link">Sua conta</RouterLink>
           </li>
           <li class="hover">
-            <RouterLink to="yourTickets" class="link">Seus Chamados</RouterLink>
+            <RouterLink to="/yourTickets" class="link"
+              >Seus Chamados</RouterLink
+            >
           </li>
           <li class="hover" v-if="admin == 'true'">
-            <RouterLink to="yourTickets" class="link">Ver Relatório</RouterLink>
+            <RouterLink to="/dash/tech" class="link">Ver Relatório</RouterLink>
           </li>
           <li class="hover" v-if="admin == 'true'">
-            <RouterLink to="manage/tech" class="link">Gerenciar</RouterLink>
+            <RouterLink to="/manage/tech" class="link">Gerenciar</RouterLink>
           </li>
         </ul>
       </div>
