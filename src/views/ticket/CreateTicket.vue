@@ -1,8 +1,5 @@
 <template>
   <main class="create-ticket-container">
-    <section class="navbar-section">
-      <Navbar />
-    </section>
     <section class="form-section">
       <form class="form">
         <div class="form-data">

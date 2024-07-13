@@ -7,9 +7,14 @@
         id="find"
         class="search"
         placeholder="Buscar por cliente"
-        v-model="nameFind"
+        v-model="clientName"
       />
-      <input type="button" value="Buscar" class="search" @click="findClient" />
+      <input
+        type="button"
+        value="Buscar"
+        class="search"
+        @click.prevent="searchByClient"
+      />
     </div>
     <div class="filter-input">
       <select name="order" id="order" v-model="order">
@@ -22,27 +27,34 @@
         type="button"
         value="Buscar"
         class="search"
-        @click.prevent="search"
+        @click.prevent="searchByOrder"
       />
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { GetTickets } from "@/assets/utils/GetTickets";
+import { InitializeVars } from "@/assets/utils/InitializeVars";
 
-const nameFind = ref("");
+const { order, clientName, token } = InitializeVars();
 
-const order = ref("all");
-const emit = defineEmits(["search", "findClient"]);
+const emit = defineEmits(["searchByOrder", "searchByClient"]);
 
-function search() {
-  emit("search", { order: order.value });
+async function searchByOrder() {
+  const data = await GetTickets("/ticket/list/" + order.value, token);
+  emit("searchByOrder", { data });
 }
 
-function findClient() {
-  emit("findClient", { name: nameFind.value, order: order.value });
-  nameFind.value = "";
+async function searchByClient() {
+  const res = await GetTickets("/ticket/list/" + order.value, token);
+  const data = res.filter((ticket) =>
+    ticket.clientName.toLowerCase().includes(clientName.value.toLowerCase())
+  );
+
+  clientName.value = "";
+
+  emit("searchByClient", { data });
 }
 </script>
 

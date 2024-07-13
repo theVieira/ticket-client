@@ -3,49 +3,46 @@
     <div class="ticket-container" @click="ticketFocus = !ticketFocus">
       <section class="info-section">
         <h4>Cliente</h4>
-        <p><slot name="clientName"></slot></p>
+        <p>{{ ticket.clientName }}</p>
       </section>
       <section class="info-section large">
         <h4>Descrição</h4>
-        <p><slot name="description"></slot></p>
+        <p>{{ ticket.description }}</p>
       </section>
       <section class="info-section">
         <h4>Prioridade</h4>
-        <p :class="priority" class="priority"><slot name="priority"></slot></p>
+        <p :class="priority" class="priority">{{ Translate(ticket.priority).toUpperCase() }}</p>
       </section>
       <section class="info-section">
         <h4>Categoria</h4>
-        <p class="category"><slot name="category"></slot></p>
+        <p class="category">{{ Translate(ticket.category).toUpperCase() }}</p>
       </section>
       <section class="info-section">
         <h4>Status</h4>
-        <p :class="status" class="status"><slot name="status"></slot></p>
+        <p :class="status" class="status">{{ Translate(ticket.status).toUpperCase() }}</p>
       </section>
     </div>
     <div class="ticket-actions" v-show="ticketFocus">
       <div class="more-infos">
-        <section class="more-info" v-if="$slots.reccurrent">
+        <section class="more-info" v-if="ticket.reccurrent">
           <h4>Recorrente</h4>
-          <p v-show="false">
-            <slot name="reccurrent"></slot>
-          </p>
           <img
             src="../assets/icons/check.png"
             alt="check icon"
             class="checkReccurrent"
           />
         </section>
-        <section class="more-info" v-if="$slots.techName">
+        <section class="more-info" v-if="ticket.techName">
           <h4>Técnico</h4>
-          <p :style="{ color: tech_color }"><slot name="techName"></slot></p>
+          <section :style="{ color: ticket.techColor }">{{ ticket.techName.toUpperCase() }}</section>
         </section>
         <section class="more-info">
           <h4>Criado em</h4>
-          <p><slot name="createdAt"></slot></p>
+          <p>{{ FormatDate(ticket.createdAt) }}</p>
         </section>
         <section class="more-info" v-if="ticket.status != 'open'">
           <h4>Atualizado em</h4>
-          <p><slot name="updatedAt"></slot></p>
+          <p>{{ FormatDate(ticket.updatedAt) }}</p>
         </section>
       </div>
       <div class="actions">
@@ -67,7 +64,7 @@
         </div>
         <div
           class="action"
-          v-if="props.ticket.status != 'finished'"
+          v-if="ticket.status != 'finished'"
           @click="setFinishedTicket(ticket.id)"
         >
           <p>Finalizar</p>
@@ -75,7 +72,7 @@
         </div>
         <div
           class="action"
-          v-if="props.ticket.status == 'finished'"
+          v-if="ticket.status == 'finished'"
           @click="reopen(ticket.id)"
         >
           <p>Abrir novamente</p>
@@ -83,7 +80,7 @@
         </div>
         <div
           class="action"
-          v-if="props.ticket.status == 'open'"
+          v-if="ticket.status == 'open'"
           @click.prevent="setProgressTicket(ticket.id)"
         >
           <p>Marcar em progresso</p>
@@ -102,6 +99,7 @@
 import { ref, computed } from "vue";
 import { baseUrl } from "../../conf";
 import { Translate } from "@/assets/utils/Translate";
+import { FormatDate } from "@/assets/utils/FormatDate";
 
 const ticketFocus = ref(false);
 
@@ -109,7 +107,6 @@ const token = localStorage.getItem("token");
 
 const admin = localStorage.getItem("admin");
 const delete_ticket = localStorage.getItem("delete_ticket");
-const tech_color = localStorage.getItem("color");
 
 const props = defineProps({
   ticket: {},

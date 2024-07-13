@@ -1,6 +1,5 @@
 <template>
   <main class="create-client-container">
-    <Navbar />
     <section class="form-section">
       <form action="" class="create-client-form" @submit.prevent="createClient">
         <div class="form-data">
@@ -26,26 +25,16 @@
 </template>
 
 <script setup>
-import Navbar from "@/components/Navbar.vue";
+import { InitializeVars } from "@/assets/utils/InitializeVars";
+import { SetTitle } from "@/assets/utils/SetTitle";
 import Popup from "@/components/Popup.vue";
-import router from "@/router/index.js";
-import { baseUrl } from "@/../conf.js";
-import { onMounted, ref } from "vue";
+import { ref } from "vue";
 
-const popup = ref(false);
-const msg = ref("");
-const type = ref("");
-
-const token = localStorage.getItem("token");
-if (!token) {
-  router.push("/");
-}
+const { popup, msg, type, token } = InitializeVars();
 
 const name = ref("");
 
-onMounted(() => {
-  document.title = "Criar Cliente";
-});
+SetTitle("Criar Cliente");
 
 async function createClient() {
   const res = await fetch(baseUrl + "/client/create", {

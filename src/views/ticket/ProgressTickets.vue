@@ -10,9 +10,7 @@
         :key="ticket.id"
         :ticket="ticket"
         @ticket_deleted="removeTicketFromArray(ticket.id)"
-        @ticket_progress="setProgressTicket(ticket.id)"
         @ticket_finished="setFinishedTicket(ticket.id)"
-        @ticket_edited="setEditedTicket"
       />
     </div>
     <Popup v-if="popup" class="popup" :msg="msg" :type="type" />
@@ -21,40 +19,27 @@
 
 <script setup>
 import Popup from "@/components/Popup.vue";
-import Ticket from "../components/Ticket.vue";
+import Ticket from "../../components/Ticket.vue";
 import Filter from "@/components/Filter.vue";
 import { onBeforeMount } from "vue";
-import { GetTickets } from "@/assets/utils/GetTickets";
-import { SetTitle } from "@/assets/utils/SetTitle";
+import { SetTitle } from "@/assets/utils/SetTitle.js";
 import { InitializeVars } from "@/assets/utils/InitializeVars";
+import { GetTickets } from "@/assets/utils/GetTickets";
 
-const { tickets, total, token, popup, msg, type, techName } = InitializeVars();
+const { popup, token, tickets, msg, type, total } = InitializeVars();
 
-SetTitle("Home");
+SetTitle("Em progresso");
 
 onBeforeMount(async () => {
   const data = await GetTickets("/ticket/list/all", token);
-  tickets.value = data.filter((ticket) => ticket.status != "finished");
+  tickets.value = data.filter((ticket) => ticket.status == "progress");
+  total.value = tickets.value.length;
 });
 
 function removeTicketFromArray(id) {
   const ticketIndex = tickets.value.findIndex((ticket) => ticket.id == id);
   tickets.value.splice(ticketIndex, 1);
   msg.value = "Ticket deletado com sucesso!";
-  type.value = "success";
-  popup.value = true;
-  setTimeout(() => {
-    popup.value = false;
-    msg.value = "";
-    type.value = "";
-  }, 1000 * 3);
-}
-
-function setProgressTicket(id) {
-  const ticketIndex = tickets.value.findIndex((ticket) => ticket.id == id);
-  tickets.value[ticketIndex].status = "progress";
-  tickets.value[ticketIndex].techName = techName;
-  msg.value = "Ticket em progresso!";
   type.value = "success";
   popup.value = true;
   setTimeout(() => {
@@ -77,26 +62,13 @@ function setFinishedTicket(id) {
   }, 1000 * 3);
 }
 
-function setEditedTicket({ id, description }) {
-  const ticketIndex = tickets.value.findIndex((ticket) => ticket.id == id);
-  tickets.value[ticketIndex].description = description;
-  msg.value = "Ticket editado!";
-  type.value = "success";
-  popup.value = true;
-  setTimeout(() => {
-    popup.value = false;
-    msg.value = "";
-    type.value = "";
-  }, 1000 * 3);
-}
-
 async function searchByClient({ data }) {
-  tickets.value = data.filter((ticket) => ticket.status != "finished");
+  tickets.value = data.filter((ticket) => ticket.status == "progress");
   total.value = tickets.value.length;
 }
 
 async function searchByOrder({ data }) {
-  tickets.value = data.filter((ticket) => ticket.status != "finished");
+  tickets.value = data.filter((ticket) => ticket.status == "progress");
   total.value = tickets.value.length;
 }
 </script>

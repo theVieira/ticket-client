@@ -1,69 +1,42 @@
 <template>
-  <main class="list-clients-container">
-    <section class="navbar-section">
-      <Navbar />
-    </section>
-    <section class="list-clients-section" v-if="!showClientDialog">
+  <main class="list-tech-container">
+    <section class="techs-container" v-if="!techDialog">
       <PersonCard
-        v-for="client in clients"
-        :key="client.id"
-        :name="client.name"
-        :tickets="client.tickets"
-        @showInfo="showClient(client)"
+        v-for="tech in techs"
+        :key="tech.id"
+        :name="tech.name"
+        :tickets="tech.tickets"
+        @showInfo="showTech(tech)"
       />
     </section>
-    <div class="client-info" v-if="showClientDialog">
-      <span id="close-button" @click="showClientDialog = false">X</span>
+    <div class="tech-info" v-if="techDialog">
       <div class="top-info">
-        <h3><span>Cliente</span> {{ client.name }}</h3>
-        <h3><span>Chamados</span>{{ client.tickets.length }}</h3>
+        <h3><span>Nome</span>{{ tech.name.toUpperCase() }}</h3>
+        <h3><span>Chamados</span>{{ tech.tickets.length }}</h3>
+        <span id="close-button" @click="techDialog = false">X</span>
       </div>
       <div class="actions">
+        <div class="action">
+          <img src="@/assets/icons/block.svg" alt="block icon" />
+          <p><strong>Inativar</strong></p>
+        </div>
         <div class="action">
           <img src="@/assets/icons/trash.png" alt="trash icon" />
           <p><strong>Deletar</strong></p>
         </div>
-        <div class="action">
-          <img src="@/assets/icons/pencil.png" alt="pencil icon" />
-          <p><strong>Editar</strong></p>
-        </div>
       </div>
       <div class="tickets">
         <Ticket
-          v-for="ticket in client.tickets"
+          v-for="ticket in tech.tickets"
           :key="ticket.id"
           :ticket="ticket"
           @ticket_deleted="removeTicketFromArray(ticket.id)"
           @ticket_progress="setProgressTicket(ticket.id)"
           @ticket_finished="setFinishedTicket(ticket.id)"
           @ticket_reopen="setReopenTicket(ticket.id)"
-        >
-          <template #category>{{
-            Translate(ticket.category).toUpperCase()
-          }}</template>
-          <template #clientName>{{ ticket.clientName }}</template>
-          <template #createdAt>{{ FormatDate(ticket.createdAt) }}</template>
-          <template #updatedAt v-if="ticket.status != 'open'">{{
-            FormatDate(ticket.updatedAt)
-          }}</template>
-          <template #description>{{ ticket.description }}</template>
-          <template #priority>{{
-            Translate(ticket.priority).toUpperCase()
-          }}</template>
-          <template #reccurrent v-if="ticket.reccurrent">{{
-            ticket.reccurrent
-          }}</template>
-          <template #status>{{
-            Translate(ticket.status).toUpperCase()
-          }}</template>
-          <template #techName v-if="ticket.techName"
-            ><span :style="{ color: ticket.techColor }">{{
-              ticket.techName.toUpperCase()
-            }}</span></template
-          >
-        </Ticket>
+        />
       </div>
-      <Popup v-if="popup" class="popup">
+      <Popup class="popup" v-if="popup">
         <template #msg>{{ msg }}</template>
         <template #type>{{ type }}</template>
       </Popup>
@@ -72,54 +45,45 @@
 </template>
 
 <script setup>
-import Popup from "@/components/Popup.vue";
-import Ticket from "@/components/Ticket.vue";
-import Navbar from "@/components/Navbar.vue";
 import PersonCard from "@/components/PersonCard.vue";
+import Ticket from "@/components/Ticket.vue";
+import Popup from "@/components/Popup.vue";
 import router from "@/router";
 import { onBeforeMount, ref } from "vue";
-import { baseUrl } from "../../conf";
-import { Translate } from "@/assets/utils/Translate";
-import { FormatDate } from "@/assets/utils/FormatDate";
+import { baseUrl } from "../../../conf";
 
 const token = localStorage.getItem("token");
 if (!token) {
   router.push("/");
 }
-
 const techName = localStorage.getItem("techName");
-
-const clients = ref([]);
-
-const client = ref({});
-const tickets = ref([]);
-
-const showClientDialog = ref(false);
 
 const popup = ref(false);
 const msg = ref("");
 const type = ref("");
 
+const techDialog = ref(false);
+
+const techs = ref([]);
+
+const tech = ref({});
+const tickets = ref([]);
+
 onBeforeMount(async () => {
-  const res = await fetch(baseUrl + "/client/list", {
+  const res = await fetch(baseUrl + "/tech/list", {
     headers: {
       authorization: `Bearer ${token}`,
     },
   });
 
   const data = await res.json();
-
-  if (res.status != 200) {
-    console.error(data);
-  } else {
-    clients.value = data;
-  }
+  techs.value = data;
 });
 
-function showClient(info) {
-  showClientDialog.value = true;
-  client.value = info;
+function showTech(info) {
+  tech.value = info;
   tickets.value = info.tickets;
+  techDialog.value = true;
 }
 
 function removeTicketFromArray(id) {
@@ -177,84 +141,85 @@ function setReopenTicket(id) {
 </script>
 
 <style scoped>
-.list-clients-container {
-  width: 100vw;
-  min-height: 100vh;
-  height: 100%;
+.list-tech-container {
   background: var(--light-background);
-  display: flex;
-}
-
-.list-clients-section {
-  height: fit-content;
-  color: var(--light-color);
-  padding: 5rem;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4rem;
-}
-
-.client-info {
   width: 100%;
+  height: 100%;
+  display: flex;
+}
+
+.techs-container {
   color: var(--light-color);
+  display: flex;
+  gap: 4rem;
+  padding: 5rem;
+  flex-wrap: wrap;
+  height: fit-content;
+}
+
+.tech-info {
+  width: 100%;
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 4rem;
+  color: var(--light-color);
+  gap: 3rem;
 }
 
-.client-info .top-info {
+.tech-info .tickets {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.tech-info .top-info {
   display: flex;
   align-items: center;
   gap: 3rem;
 }
 
-.client-info h3 {
+.tech-info .top-info h3 {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.client-info h3 span {
+.tech-info .top-info h3 span {
   filter: brightness(80%);
 }
 
-.client-info .actions {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 2rem;
-  margin-top: 2rem;
-}
-
-.client-info .actions .action {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+#close-button {
+  color: #b93737;
+  font-weight: 800;
+  font-size: 2.6rem;
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
   cursor: pointer;
 }
 
-.client-info .tickets {
+.actions {
   display: flex;
-  flex-direction: column;
-  width: 100%;
+  align-items: center;
+  gap: 3rem;
+}
+
+.action {
+  display: flex;
+  align-items: center;
   gap: 1rem;
-  margin-top: 4rem;
+  cursor: pointer;
+}
+
+.action img {
+  width: 3.2rem;
 }
 
 .popup {
   position: absolute;
   top: 3rem;
-}
-
-#close-button {
-  position: absolute;
-  top: 1rem;
-  left: 1rem;
-  color: #b93737;
-  font-weight: 800;
-  font-size: 2.6rem;
-  cursor: pointer;
 }
 </style>

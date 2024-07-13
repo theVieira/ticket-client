@@ -1,8 +1,5 @@
 <template>
   <main class="account-container">
-    <section class="navbar-section">
-      <Navbar />
-    </section>
     <section class="settings-container">
       <form class="form-account" @submit.prevent="replacePassword">
         <h3>Trocar senha</h3>
@@ -34,21 +31,17 @@
 </template>
 
 <script setup>
-import Navbar from "@/components/Navbar.vue";
-import router from "@/router";
+import { InitializeVars } from "@/assets/utils/InitializeVars";
+import { SetTitle } from "@/assets/utils/SetTitle";
+import { baseUrl } from "../../../conf";
 import { ref } from "vue";
-import { baseUrl } from "../../conf";
 
-const token = localStorage.getItem("token");
-if (!token) {
-  router.push("/");
-}
+SetTitle("Sua Conta");
+const { msg, type, token, techName } = InitializeVars();
 
 const message = ref("");
 const showMessage = ref(false);
 const messageClass = ref("");
-
-const techName = localStorage.getItem("techName");
 
 const password = ref("");
 const newPassword = ref("");

@@ -1,13 +1,13 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Login from "@/views/Login.vue";
 import Home from "@/views/Home.vue";
-import CreateTicket from "@/views/CreateTicket.vue";
-import CreateClient from "@/views/CreateClient.vue";
-import FinishedTickets from "@/views/FinishedTickets.vue";
-import ListClients from "@/views/ListClients.vue";
-import Account from "@/views/Account.vue";
-import ProgressTickets from "@/views/ProgressTickets.vue";
-import ListTech from "@/views/ListTech.vue";
+import CreateTicket from "@/views/ticket/CreateTicket.vue";
+import CreateClient from "@/views/client/CreateClient.vue";
+import FinishedTickets from "@/views/ticket/FinishedTickets.vue";
+import ListClients from "@/views/client/ListClients.vue";
+import Account from "@/views/tech/Account.vue";
+import ProgressTickets from "@/views/ticket/ProgressTickets.vue";
+import ListTech from "@/views/tech/ListTech.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
