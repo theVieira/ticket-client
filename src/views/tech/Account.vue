@@ -85,7 +85,6 @@ async function replacePassword() {
 
 <style scoped>
 .account-container {
-  background: var(--medium-background);
   min-height: 100vh;
   height: 100%;
   display: flex;
@@ -103,6 +102,9 @@ async function replacePassword() {
   flex-direction: column;
   gap: 2rem;
   align-items: center;
+  background: var(--medium-background);
+  padding: 3rem;
+  border-radius: 1.2rem;
   color: var(--light-color);
 }
 

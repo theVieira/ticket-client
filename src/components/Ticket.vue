@@ -3,7 +3,7 @@
     <div class="ticket-container" @click="ticketFocus = !ticketFocus">
       <section class="info-section">
         <h4>Cliente</h4>
-        <p>{{ ticket.clientName }}</p>
+        <p>{{ ticket.clientName.toUpperCase() }}</p>
       </section>
       <section class="info-section large">
         <h4>Descrição</h4>
@@ -11,7 +11,9 @@
       </section>
       <section class="info-section">
         <h4>Prioridade</h4>
-        <p :class="priority" class="priority">{{ Translate(ticket.priority).toUpperCase() }}</p>
+        <p :class="priority" class="priority">
+          {{ Translate(ticket.priority).toUpperCase() }}
+        </p>
       </section>
       <section class="info-section">
         <h4>Categoria</h4>
@@ -19,7 +21,9 @@
       </section>
       <section class="info-section">
         <h4>Status</h4>
-        <p :class="status" class="status">{{ Translate(ticket.status).toUpperCase() }}</p>
+        <p :class="status" class="status">
+          {{ Translate(ticket.status).toUpperCase() }}
+        </p>
       </section>
     </div>
     <div class="ticket-actions" v-show="ticketFocus">
@@ -34,7 +38,9 @@
         </section>
         <section class="more-info" v-if="ticket.techName">
           <h4>Técnico</h4>
-          <section :style="{ color: ticket.techColor }">{{ ticket.techName.toUpperCase() }}</section>
+          <section :style="{ color: ticket.techColor }">
+            {{ ticket.techName.toUpperCase() }}
+          </section>
         </section>
         <section class="more-info">
           <h4>Criado em</h4>

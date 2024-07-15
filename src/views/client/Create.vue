@@ -72,9 +72,7 @@ async function createClient() {
 
 <style scoped>
 .create-client-container {
-  width: 100%;
-  height: 100vh;
-  background: var(--medium-background);
+  height: 100%;
   display: flex;
 }
 
@@ -123,10 +121,5 @@ async function createClient() {
 
 .create-client-form .form-data input[type="submit"]:hover {
   filter: brightness(130%);
-}
-
-.popup {
-  position: absolute;
-  top: 3rem;
 }
 </style>

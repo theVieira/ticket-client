@@ -1,47 +1,45 @@
 <template>
-  <main class="list-clients-container">
-    <section class="list-clients-section" v-if="!showClientDialog">
-      <PersonCard
-        v-for="client in clients"
-        :key="client.id"
-        :name="client.name"
-        :tickets="client.tickets"
-        @showInfo="showClient(client)"
-      />
-    </section>
-    <div class="client-info" v-if="showClientDialog">
-      <span id="close-button" @click="showClientDialog = false">X</span>
-      <div class="top-info">
-        <h3><span>Cliente</span> {{ client.name }}</h3>
-        <h3><span>Chamados</span>{{ client.tickets.length }}</h3>
-      </div>
-      <div class="actions">
-        <div class="action">
-          <img src="@/assets/icons/trash.png" alt="trash icon" />
-          <p><strong>Deletar</strong></p>
-        </div>
-        <div class="action">
-          <img src="@/assets/icons/pencil.png" alt="pencil icon" />
-          <p><strong>Editar</strong></p>
-        </div>
-      </div>
-      <div class="tickets">
-        <Ticket
-          v-for="ticket in client.tickets"
-          :key="ticket.id"
-          :ticket="ticket"
-          @ticket_deleted="removeTicketFromArray(ticket.id)"
-          @ticket_progress="setProgressTicket(ticket.id)"
-          @ticket_finished="setFinishedTicket(ticket.id)"
-          @ticket_reopen="setReopenTicket(ticket.id)"
-        />
-      </div>
-      <Popup v-if="popup" class="popup">
-        <template #msg>{{ msg }}</template>
-        <template #type>{{ type }}</template>
-      </Popup>
+  <section class="list-clients-container" v-if="!showClientDialog">
+    <PersonCard
+      v-for="client in clients"
+      :key="client.id"
+      :name="client.name"
+      :tickets="client.tickets"
+      @showInfo="showClient(client)"
+    />
+  </section>
+  <div class="client-info" v-if="showClientDialog">
+    <span id="close-button" @click="showClientDialog = false">X</span>
+    <div class="top-info">
+      <h3><span>Cliente</span> {{ client.name }}</h3>
+      <h3><span>Chamados</span>{{ client.tickets.length }}</h3>
     </div>
-  </main>
+    <div class="actions">
+      <div class="action">
+        <img src="@/assets/icons/trash.png" alt="trash icon" />
+        <p><strong>Deletar</strong></p>
+      </div>
+      <div class="action">
+        <img src="@/assets/icons/pencil.png" alt="pencil icon" />
+        <p><strong>Editar</strong></p>
+      </div>
+    </div>
+    <div class="tickets">
+      <Ticket
+        v-for="ticket in client.tickets"
+        :key="ticket.id"
+        :ticket="ticket"
+        @ticket_deleted="removeTicketFromArray(ticket.id)"
+        @ticket_progress="setProgressTicket(ticket.id)"
+        @ticket_finished="setFinishedTicket(ticket.id)"
+        @ticket_reopen="setReopenTicket(ticket.id)"
+      />
+    </div>
+    <Popup v-if="popup" class="popup">
+      <template #msg>{{ msg }}</template>
+      <template #type>{{ type }}</template>
+    </Popup>
+  </div>
 </template>
 
 <script setup>
@@ -137,18 +135,10 @@ function setReopenTicket(id) {
 
 <style scoped>
 .list-clients-container {
-  width: 100vw;
-  min-height: 100vh;
-  height: 100%;
-  background: var(--light-background);
-  display: flex;
-}
-
-.list-clients-section {
-  height: fit-content;
   color: var(--light-color);
-  padding: 5rem;
+  padding: 3rem;
   display: flex;
+  justify-content: center;
   flex-wrap: wrap;
   gap: 4rem;
 }

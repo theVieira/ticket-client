@@ -1,10 +1,10 @@
 <template>
-  <main class="tickets-section">
-    <div class="header">
+  <main class="tickets-container">
+    <div class="tickets-header">
       <strong>Total: {{ total }}</strong>
       <Filter @searchByOrder="searchByOrder" @searchByClient="searchByClient" />
     </div>
-    <div class="tickets">
+    <div class="tickets-list">
       <Ticket
         v-for="ticket in tickets"
         :key="ticket.id"
@@ -72,46 +72,3 @@ async function searchByOrder({ data }) {
   total.value = tickets.value.length;
 }
 </script>
-
-<style scoped>
-.tickets-section {
-  height: 100%;
-  padding: 3rem;
-  background: var(--light-background);
-  color: var(--light-color);
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  align-items: center;
-}
-
-.tickets {
-  width: 100%;
-  background: var(--medium-background);
-  border-radius: 1.2rem;
-  padding: 3rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.popup {
-  position: absolute;
-  top: 3rem;
-}
-
-.header {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 3rem;
-}
-
-@media (max-width: 800px) {
-  .header {
-    padding: 0 6rem 0 0;
-  }
-}
-</style>

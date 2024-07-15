@@ -1,13 +1,13 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Login from "@/views/Login.vue";
 import Home from "@/views/Home.vue";
-import CreateTicket from "@/views/ticket/CreateTicket.vue";
-import CreateClient from "@/views/client/CreateClient.vue";
-import FinishedTickets from "@/views/ticket/FinishedTickets.vue";
-import ListClients from "@/views/client/ListClients.vue";
+import CreateTicket from "@/views/ticket/Create.vue";
+import CreateClient from "@/views/client/Create.vue";
+import Finished from "@/views/ticket/Finished.vue";
+import Clients from "@/views/client/List.vue";
 import Account from "@/views/tech/Account.vue";
-import ProgressTickets from "@/views/ticket/ProgressTickets.vue";
-import ListTech from "@/views/tech/ListTech.vue";
+import Progress from "@/views/ticket/Progress.vue";
+import Techs from "@/views/tech/List.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -30,11 +30,11 @@ const router = createRouter({
     },
     {
       path: "/finisheds",
-      component: FinishedTickets,
+      component: Finished,
     },
     {
       path: "/list/clients",
-      component: ListClients,
+      component: Clients,
     },
     {
       path: "/account",
@@ -42,11 +42,11 @@ const router = createRouter({
     },
     {
       path: "/progress",
-      component: ProgressTickets,
+      component: Progress,
     },
     {
       path: "/manage/tech",
-      component: ListTech,
+      component: Techs,
     },
   ],
 });

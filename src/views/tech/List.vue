@@ -1,47 +1,45 @@
 <template>
-  <main class="list-tech-container">
-    <section class="techs-container" v-if="!techDialog">
-      <PersonCard
-        v-for="tech in techs"
-        :key="tech.id"
-        :name="tech.name"
-        :tickets="tech.tickets"
-        @showInfo="showTech(tech)"
-      />
-    </section>
-    <div class="tech-info" v-if="techDialog">
-      <div class="top-info">
-        <h3><span>Nome</span>{{ tech.name.toUpperCase() }}</h3>
-        <h3><span>Chamados</span>{{ tech.tickets.length }}</h3>
-        <span id="close-button" @click="techDialog = false">X</span>
-      </div>
-      <div class="actions">
-        <div class="action">
-          <img src="@/assets/icons/block.svg" alt="block icon" />
-          <p><strong>Inativar</strong></p>
-        </div>
-        <div class="action">
-          <img src="@/assets/icons/trash.png" alt="trash icon" />
-          <p><strong>Deletar</strong></p>
-        </div>
-      </div>
-      <div class="tickets">
-        <Ticket
-          v-for="ticket in tech.tickets"
-          :key="ticket.id"
-          :ticket="ticket"
-          @ticket_deleted="removeTicketFromArray(ticket.id)"
-          @ticket_progress="setProgressTicket(ticket.id)"
-          @ticket_finished="setFinishedTicket(ticket.id)"
-          @ticket_reopen="setReopenTicket(ticket.id)"
-        />
-      </div>
-      <Popup class="popup" v-if="popup">
-        <template #msg>{{ msg }}</template>
-        <template #type>{{ type }}</template>
-      </Popup>
+  <div class="techs-container" v-if="!techDialog">
+    <PersonCard
+      v-for="tech in techs"
+      :key="tech.id"
+      :name="tech.name"
+      :tickets="tech.tickets"
+      @showInfo="showTech(tech)"
+    />
+  </div>
+  <div class="tech-info" v-if="techDialog">
+    <div class="top-info">
+      <h3><span>Nome</span>{{ tech.name.toUpperCase() }}</h3>
+      <h3><span>Chamados</span>{{ tech.tickets.length }}</h3>
+      <span id="close-button" @click="techDialog = false">X</span>
     </div>
-  </main>
+    <div class="actions">
+      <div class="action">
+        <img src="@/assets/icons/block.svg" alt="block icon" />
+        <p><strong>Inativar</strong></p>
+      </div>
+      <div class="action">
+        <img src="@/assets/icons/trash.png" alt="trash icon" />
+        <p><strong>Deletar</strong></p>
+      </div>
+    </div>
+    <div class="tickets">
+      <Ticket
+        v-for="ticket in tech.tickets"
+        :key="ticket.id"
+        :ticket="ticket"
+        @ticket_deleted="removeTicketFromArray(ticket.id)"
+        @ticket_progress="setProgressTicket(ticket.id)"
+        @ticket_finished="setFinishedTicket(ticket.id)"
+        @ticket_reopen="setReopenTicket(ticket.id)"
+      />
+    </div>
+    <Popup class="popup" v-if="popup">
+      <template #msg>{{ msg }}</template>
+      <template #type>{{ type }}</template>
+    </Popup>
+  </div>
 </template>
 
 <script setup>
@@ -141,13 +139,6 @@ function setReopenTicket(id) {
 </script>
 
 <style scoped>
-.list-tech-container {
-  background: var(--light-background);
-  width: 100%;
-  height: 100%;
-  display: flex;
-}
-
 .techs-container {
   color: var(--light-color);
   display: flex;

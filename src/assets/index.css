@@ -21,3 +21,43 @@ body {
   font-size: 1.6rem;
   overflow-x: hidden;
 }
+
+.tickets-container {
+  color: var(--light-color);
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.tickets-list {
+  width: 100%;
+  height: fit-content;
+  background: var(--medium-background);
+  padding: 3rem;
+  border-radius: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.tickets-header {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 3rem;
+}
+
+.popup {
+  position: absolute;
+  top: 3rem;
+}
+
+@media (max-width: 800px) {
+  .header {
+    padding: 0 6rem 0 0;
+  }
+}

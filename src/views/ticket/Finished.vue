@@ -1,6 +1,6 @@
 <template>
-  <main class="tickets-section">
-    <div class="header">
+  <main class="tickets-container">
+    <div class="tickets-header">
       <p>
         <strong>Total: {{ total }}</strong>
       </p>
@@ -11,7 +11,7 @@
         />
       </div>
     </div>
-    <div class="tickets">
+    <div class="tickets-list">
       <Ticket
         class="ticket"
         v-for="ticket in tickets"
@@ -72,51 +72,3 @@ function reopenTicket(id) {
   }, 1000 * 3);
 }
 </script>
-
-<style scoped>
-.tickets {
-  margin: 3.5rem 0;
-  width: 100%;
-  background: var(--light-background);
-  padding: 3rem;
-  border-radius: 1.2rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.tickets-section {
-  background: var(--medium-background);
-  color: var(--light-color);
-  width: 100%;
-  padding: 3rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  align-items: center;
-}
-
-.ticket {
-  width: 100%;
-}
-
-.popup {
-  position: absolute;
-  top: 3rem;
-}
-
-.header {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 3rem;
-}
-
-@media (max-width: 800px) {
-  .header {
-    padding: 0 6rem 0 0;
-  }
-}
-</style>
