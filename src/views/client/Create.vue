@@ -27,6 +27,7 @@
 <script setup>
 import { InitializeVars } from "@/assets/utils/InitializeVars";
 import { SetTitle } from "@/assets/utils/SetTitle";
+import { baseUrl } from "../../../conf";
 import Popup from "@/components/Popup.vue";
 import { ref } from "vue";
 
