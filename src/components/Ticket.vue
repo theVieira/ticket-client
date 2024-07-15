@@ -108,7 +108,6 @@ import { baseUrl } from "../../conf";
 import { Translate } from "@/assets/utils/Translate";
 import { FormatDate } from "@/assets/utils/FormatDate";
 import { InitializeVars } from "@/assets/utils/InitializeVars";
-import Filter from "./Filter.vue";
 
 const { token, admin, delete_ticket } = InitializeVars();
 
