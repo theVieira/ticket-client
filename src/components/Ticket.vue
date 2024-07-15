@@ -15,10 +15,7 @@
           {{ Translate(ticket.priority).toUpperCase() }}
         </p>
       </section>
-      <section class="info-section">
-        <h4>Categoria</h4>
-        <p class="category">{{ Translate(ticket.category).toUpperCase() }}</p>
-      </section>
+
       <section class="info-section">
         <h4>Status</h4>
         <p :class="status" class="status">
@@ -28,6 +25,10 @@
     </div>
     <div class="ticket-actions" v-show="ticketFocus">
       <div class="more-infos">
+        <section class="more-info">
+          <h4>Categoria</h4>
+          <p class="category">{{ Translate(ticket.category).toUpperCase() }}</p>
+        </section>
         <section class="more-info" v-if="ticket.reccurrent">
           <h4>Recorrente</h4>
           <img
@@ -36,15 +37,15 @@
             class="checkReccurrent"
           />
         </section>
+        <section class="more-info">
+          <h4>Criado em</h4>
+          <p>{{ FormatDate(ticket.createdAt) }}</p>
+        </section>
         <section class="more-info" v-if="ticket.techName">
           <h4>Técnico</h4>
           <section :style="{ color: ticket.techColor }">
             {{ ticket.techName.toUpperCase() }}
           </section>
-        </section>
-        <section class="more-info">
-          <h4>Criado em</h4>
-          <p>{{ FormatDate(ticket.createdAt) }}</p>
         </section>
         <section class="more-info" v-if="ticket.status != 'open'">
           <h4>Atualizado em</h4>
@@ -106,13 +107,11 @@ import { ref, computed } from "vue";
 import { baseUrl } from "../../conf";
 import { Translate } from "@/assets/utils/Translate";
 import { FormatDate } from "@/assets/utils/FormatDate";
+import { InitializeVars } from "@/assets/utils/InitializeVars";
+
+const { token, admin, delete_ticket } = InitializeVars();
 
 const ticketFocus = ref(false);
-
-const token = localStorage.getItem("token");
-
-const admin = localStorage.getItem("admin");
-const delete_ticket = localStorage.getItem("delete_ticket");
 
 const props = defineProps({
   ticket: {},
@@ -247,24 +246,26 @@ async function reopen(id) {
 
 async function editTicket(id) {
   const description = prompt("Insira a descrição");
-  const res = await fetch(baseUrl + "/ticket/edit", {
-    method: "PUT",
-    headers: {
-      authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      id,
-      description,
-    }),
-  });
+  if (description != null) {
+    const res = await fetch(baseUrl + "/ticket/edit", {
+      method: "PUT",
+      headers: {
+        authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id,
+        description,
+      }),
+    });
 
-  const data = await res.json();
+    const data = await res.json();
 
-  if (res.status != 200) {
-    console.error(data);
-  } else {
-    emit("ticket_edited", { id: data.id, description: data.description });
+    if (res.status != 200) {
+      console.error(data);
+    } else {
+      emit("ticket_edited", { id: data.id, description: data.description });
+    }
   }
 }
 </script>
@@ -322,13 +323,11 @@ async function editTicket(id) {
 }
 
 .ticket-actions .more-infos {
-  display: flex;
-  gap: 3rem;
   white-space: nowrap;
-  padding: 0 2rem;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
 .ticket-actions .action {
@@ -347,11 +346,6 @@ async function editTicket(id) {
   align-items: center;
 }
 
-.popup {
-  position: absolute;
-  top: 3rem;
-}
-
 .status {
   padding: 0.3rem 0.7rem;
   border-radius: 1.2rem;
@@ -360,34 +354,6 @@ async function editTicket(id) {
 .priority {
   padding: 0.3rem 0.7rem;
   border-radius: 1.2rem;
-}
-
-.urgent-priority {
-  background: #d83f3f94;
-}
-
-.high-priority {
-  background: #d89b3f94;
-}
-
-.medium-priority {
-  background: #3fd8b794;
-}
-
-.low-priority {
-  background: #59d83f94;
-}
-
-.open-status {
-  background: #d83f3f94;
-}
-
-.progress-status {
-  background: #d89b3f94;
-}
-
-.finished-status {
-  background: #59d83f94;
 }
 
 .checkReccurrent {

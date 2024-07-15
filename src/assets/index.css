@@ -56,6 +56,34 @@ body {
   top: 3rem;
 }
 
+.urgent-priority {
+  background: #d83f3f94;
+}
+
+.high-priority {
+  background: #d89b3f94;
+}
+
+.medium-priority {
+  background: #3fd8b794;
+}
+
+.low-priority {
+  background: #59d83f94;
+}
+
+.open-status {
+  background: #d83f3f94;
+}
+
+.progress-status {
+  background: #d89b3f94;
+}
+
+.finished-status {
+  background: #59d83f94;
+}
+
 @media (max-width: 800px) {
   .header {
     padding: 0 6rem 0 0;

@@ -2,6 +2,9 @@ import { ref } from "vue";
 import router from "@/router";
 
 export function InitializeVars() {
+  const admin = localStorage.getItem("admin");
+  const create_ticket = localStorage.getItem("create_ticket");
+  const delete_ticket = localStorage.getItem("delete_ticket");
   const token = localStorage.getItem("token");
   const techName = localStorage.getItem("techName");
   const techColor = localStorage.getItem("techColor");
@@ -32,5 +35,8 @@ export function InitializeVars() {
     total,
     clientName,
     order,
+    admin,
+    create_ticket,
+    delete_ticket,
   };
 }
