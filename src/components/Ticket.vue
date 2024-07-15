@@ -326,6 +326,7 @@ async function editTicket(id) {
   white-space: nowrap;
   padding: 2rem;
   display: flex;
+  flex-wrap: wrap;
   flex-direction: column;
   gap: 1.5rem;
 }
@@ -343,6 +344,7 @@ async function editTicket(id) {
 .more-info {
   display: flex;
   gap: 1rem;
+  flex-wrap: wrap;
   align-items: center;
 }
 
@@ -373,6 +375,10 @@ async function editTicket(id) {
 
   .action {
     gap: 0;
+  }
+
+  .more-info {
+    justify-content: center;
   }
 }
 </style>
