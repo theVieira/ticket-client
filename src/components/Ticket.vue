@@ -108,6 +108,7 @@ import { baseUrl } from "../../conf";
 import { Translate } from "@/assets/utils/Translate";
 import { FormatDate } from "@/assets/utils/FormatDate";
 import { InitializeVars } from "@/assets/utils/InitializeVars";
+import Filter from "./Filter.vue";
 
 const { token, admin, delete_ticket } = InitializeVars();
 
@@ -311,11 +312,12 @@ async function editTicket(id) {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 7rem;
 }
 
 .ticket-actions .actions {
   display: flex;
-  gap: 4rem;
+  gap: 3rem;
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
