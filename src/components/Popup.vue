@@ -11,15 +11,15 @@ import { onMounted } from "vue";
 
 const props = defineProps({
   msg: String,
-  type: String
-})
+  type: String,
+});
 
 onMounted(() => {
   const popup = document.querySelector(".popup-container");
 
-  if (type === "error") {
+  if (props.type === "error") {
     popup.style.background = "#d34242";
-  } else if (type === "success") {
+  } else if (props.type === "success") {
     popup.style.background = "#4ed16b";
   }
 });
