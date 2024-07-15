@@ -9,12 +9,6 @@
         placeholder="Buscar por cliente"
         v-model="clientName"
       />
-      <input
-        type="button"
-        value="Buscar"
-        class="search"
-        @click.prevent="searchByClient"
-      />
     </div>
     <div class="filter-input">
       <select name="order" id="order" v-model="order">
@@ -27,7 +21,7 @@
         type="button"
         value="Buscar"
         class="search"
-        @click.prevent="searchByOrder"
+        @click.prevent="search"
       />
     </div>
   </div>
@@ -39,14 +33,9 @@ import { InitializeVars } from "@/assets/utils/InitializeVars";
 
 const { order, clientName, token } = InitializeVars();
 
-const emit = defineEmits(["searchByOrder", "searchByClient"]);
+const emit = defineEmits(["search"]);
 
-async function searchByOrder() {
-  const data = await GetTickets("/ticket/list/" + order.value, token);
-  emit("searchByOrder", { data });
-}
-
-async function searchByClient() {
+async function search() {
   const res = await GetTickets("/ticket/list/" + order.value, token);
   const data = res.filter((ticket) =>
     ticket.clientName.toLowerCase().includes(clientName.value.toLowerCase())
@@ -54,14 +43,14 @@ async function searchByClient() {
 
   clientName.value = "";
 
-  emit("searchByClient", { data });
+  emit("search", { data });
 }
 </script>
 
 <style scoped>
 .filter {
   display: flex;
-  gap: 3rem;
+  gap: 2rem;
   height: max-content;
   width: fit-content;
   flex-wrap: wrap;

@@ -2,7 +2,7 @@
   <main class="tickets-container">
     <div class="tickets-header">
       <strong>Total: {{ total }}</strong>
-      <Filter @searchByOrder="searchByOrder" @searchByClient="searchByClient" />
+      <Filter @search="search" />
     </div>
     <div class="tickets-list">
       <Ticket
@@ -91,12 +91,7 @@ function setEditedTicket({ id, description }) {
   }, 1000 * 3);
 }
 
-async function searchByClient({ data }) {
-  tickets.value = data.filter((ticket) => ticket.status != "finished");
-  total.value = tickets.value.length;
-}
-
-async function searchByOrder({ data }) {
+async function search({ data }) {
   tickets.value = data.filter((ticket) => ticket.status != "finished");
   total.value = tickets.value.length;
 }

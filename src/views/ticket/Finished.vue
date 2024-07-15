@@ -5,10 +5,7 @@
         <strong>Total: {{ total }}</strong>
       </p>
       <div class="filter">
-        <Filter
-          @searchByOrder="searchByOrder"
-          @searchByClient="searchByClient"
-        />
+        <Filter @search="search" />
       </div>
     </div>
     <div class="tickets-list">
@@ -40,7 +37,7 @@ SetTitle("Finalizados");
 
 onBeforeMount(async () => {
   const data = await GetTickets("/ticket/list/all", token);
-  tickets.value = data.filter((ticket) => ticket.status == "finished");
+  tickets.value = data.filter((ticket) => ticket.status === "finished");
   total.value = tickets.value.length;
 });
 
@@ -70,5 +67,10 @@ function reopenTicket(id) {
     msg.value = "";
     type.value = "";
   }, 1000 * 3);
+}
+
+async function search({ data }) {
+  tickets.value = data.filter((ticket) => ticket.status == "finished");
+  total.value = tickets.value.length;
 }
 </script>
