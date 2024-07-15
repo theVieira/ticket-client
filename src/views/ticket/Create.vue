@@ -51,41 +51,25 @@
           @click.prevent="createTicket"
         />
       </form>
-      <Popup class="popup" v-if="popup">
-        <template #msg>{{ msg }}</template>
-        <template #type>{{ type }}</template>
-      </Popup>
+      <Popup class="popup" v-if="popup" :msg="msg" :type="type" />
     </section>
   </main>
 </template>
 
 <script setup>
-import Navbar from "@/components/Navbar.vue";
 import Popup from "@/components/Popup.vue";
-import router from "@/router";
-import { onBeforeMount, ref, onMounted } from "vue";
+import { onBeforeMount, ref } from "vue";
 import { baseUrl } from "@/../conf.js";
+import { InitializeVars } from "@/assets/utils/InitializeVars";
+import { SetTitle } from "@/assets/utils/SetTitle";
 
-const popup = ref(false);
+const { popup, clientName, msg, type, token, clients } = InitializeVars();
 
-const clientName = ref("");
 const priority = ref("");
 const category = ref("");
 const description = ref("");
 
-const msg = ref("Ticket criado com sucesso!");
-const type = ref("success");
-
-const token = localStorage.getItem("token");
-if (!token) {
-  router.push("/");
-}
-
-const clients = ref();
-
-onMounted(() => {
-  document.title = "Criar Ticket";
-});
+SetTitle("Criar Ticket");
 
 onBeforeMount(async () => {
   const res = await fetch(baseUrl + "/client/list", {
@@ -121,7 +105,6 @@ async function createTicket() {
 
   const data = await res.json();
 
-  popup.value = true;
   if (res.status == 201) {
     msg.value = "Ticket criado com sucesso!";
     type.value = "success";
@@ -131,6 +114,7 @@ async function createTicket() {
     console.error(data);
   }
 
+  popup.value = true;
   setTimeout(() => {
     popup.value = false;
   }, 1000 * 3);
