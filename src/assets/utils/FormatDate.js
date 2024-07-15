@@ -1,10 +1,5 @@
-export function FormatDate(date) {
-  const newDate = new Date(date);
-  const day = newDate.getUTCDate();
-  const month = newDate.getUTCMonth() + 1;
-  const year = newDate.getUTCFullYear();
-  const hours = newDate.getUTCHours() - 4;
-  const minutes = newDate.getUTCMinutes();
+import dayjs from "dayjs";
 
-  return `${day}/${month}/${year} ${hours}:${minutes}`;
+export function FormatDate(date) {
+  return dayjs(date).format("MM/DD/YYYY H:mm");
 }
