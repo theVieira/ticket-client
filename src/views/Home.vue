@@ -78,9 +78,10 @@ function setFinishedTicket(id) {
   }, 1000 * 3);
 }
 
-function setEditedTicket({ id, description }) {
-  const ticketIndex = tickets.value.findIndex((ticket) => ticket.id == id);
-  tickets.value[ticketIndex].description = description;
+function setEditedTicket({ data }) {
+  const ticketIndex = tickets.value.findIndex((ticket) => ticket.id == data.id);
+  tickets.value[ticketIndex].description = data.description;
+  tickets.value[ticketIndex].category = data.category;
   msg.value = "Ticket editado!";
   type.value = "success";
   popup.value = true;

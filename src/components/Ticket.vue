@@ -1,13 +1,22 @@
 <template>
   <div class="container">
-    <div class="ticket-container" @click="ticketFocus = !ticketFocus">
+    <div class="ticket-container" @click="showTicketInfos">
       <section class="info-section">
         <h4>Cliente</h4>
         <p>{{ ticket.clientName.toUpperCase() }}</p>
       </section>
       <section class="info-section large">
         <h4>Descrição</h4>
-        <p>{{ ticket.description }}</p>
+        <p v-show="!editShow">{{ ticket.description }}</p>
+        <input
+          placeholder="Insira a nova descrição"
+          type="text"
+          name="editDescription"
+          id="editDescription"
+          v-show="editShow"
+          v-model="description"
+          class="edit"
+        />
       </section>
       <section class="info-section">
         <h4>Prioridade</h4>
@@ -27,7 +36,21 @@
       <div class="more-infos">
         <section class="more-info">
           <h4>Categoria</h4>
-          <p class="category">{{ Translate(ticket.category).toUpperCase() }}</p>
+          <p class="category" v-show="!editShow">
+            {{ Translate(ticket.category).toUpperCase() }}
+          </p>
+          <select
+            name="edit"
+            id="editCategory"
+            v-show="editShow"
+            v-model="category"
+            class="edit"
+          >
+            <option value="" selected>Selectione</option>
+            <option value="daily">Diário</option>
+            <option value="delivery">Entrega</option>
+            <option value="budget">Orçamento</option>
+          </select>
         </section>
         <section class="more-info" v-if="ticket.reccurrent">
           <h4>Recorrente</h4>
@@ -55,11 +78,29 @@
       <div class="actions">
         <div
           class="action"
-          v-if="admin == 'true'"
-          @click="editTicket(ticket.id)"
+          v-if="admin == 'true' && !editShow"
+          @click="editShow = true"
         >
           <p>Editar</p>
           <img src="../assets/icons/pencil.png" alt="pencil icon" />
+        </div>
+        <div class="editActions">
+          <div
+            class="action"
+            v-if="editShow && admin == 'true'"
+            @click="saveEdited(ticket.id)"
+          >
+            <p>Salvar</p>
+            <img src="../assets/icons/save.png" alt="save icon" />
+          </div>
+          <div class="action" v-if="editShow" @click="editShow = false">
+            <p>Cancelar</p>
+            <img
+              src="../assets/icons/block.svg"
+              alt="cancel icon"
+              style="width: 3.2rem"
+            />
+          </div>
         </div>
         <div
           class="action"
@@ -112,6 +153,9 @@ import { InitializeVars } from "@/assets/utils/InitializeVars";
 const { token, admin, delete_ticket } = InitializeVars();
 
 const ticketFocus = ref(false);
+const editShow = ref(false);
+const category = ref("");
+const description = ref("");
 
 const props = defineProps({
   ticket: {},
@@ -148,6 +192,14 @@ const status = computed(() => {
       return "finished-status";
   }
 });
+
+function showTicketInfos() {
+  if (editShow.value) {
+    ticketFocus.value = true;
+  } else {
+    ticketFocus.value = !ticketFocus.value;
+  }
+}
 
 async function deleteTicket(ticket) {
   const confirmation = confirm(
@@ -237,16 +289,19 @@ async function reopen(id) {
 
   const data = await res.json();
 
-  if (res.status == 200) {
-    emit("ticket_reopen");
-  } else {
+  if (res.status != 200) {
     console.error(data);
   }
+  emit("ticket_reopen", { data });
 }
 
-async function editTicket(id) {
-  const description = prompt("Insira a descrição");
-  if (description != null) {
+async function saveEdited(id) {
+  const confirmation = confirm(
+    `Deseja salvar estas informações?\nDescrição: ${
+      description.value
+    }\nCategoria: ${Translate(category.value)}`
+  );
+  if (confirmation) {
     const res = await fetch(baseUrl + "/ticket/edit", {
       method: "PUT",
       headers: {
@@ -255,7 +310,8 @@ async function editTicket(id) {
       },
       body: JSON.stringify({
         id,
-        description,
+        description: description.value,
+        category: category.value,
       }),
     });
 
@@ -263,9 +319,13 @@ async function editTicket(id) {
 
     if (res.status != 200) {
       console.error(data);
-    } else {
-      emit("ticket_edited", { id: data.id, description: data.description });
     }
+
+    description.value = "";
+    category.value = "";
+
+    editShow.value = false;
+    emit("ticket_edited", { data });
   }
 }
 </script>
@@ -342,6 +402,14 @@ async function editTicket(id) {
   justify-content: center;
 }
 
+.editActions {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  justify-content: center;
+  align-items: center;
+}
+
 .more-info {
   display: flex;
   gap: 1rem;
@@ -361,6 +429,17 @@ async function editTicket(id) {
 
 .checkReccurrent {
   width: 2.5rem;
+}
+
+.edit {
+  padding: 1rem 2rem;
+  border-radius: 1.2rem;
+  border: none;
+  background: var(--medium-background);
+  color: var(--light-color);
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
 }
 
 @media (max-width: 900px) {
