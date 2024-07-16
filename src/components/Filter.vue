@@ -50,15 +50,12 @@ async function search() {
 <style scoped>
 .filter {
   display: flex;
-  gap: 2rem;
-  height: max-content;
-  width: fit-content;
   flex-wrap: wrap;
 }
 
 .filter .filter-input {
   display: flex;
-  gap: 1rem;
+  gap: 4rem;
   height: 4rem;
 }
 
@@ -88,5 +85,15 @@ select {
   padding: 1rem 2rem;
   color: var(--light-color);
   font-weight: 600;
+}
+
+@media (max-width: 900px) {
+  .filter {
+    gap: 1rem;
+  }
+
+  .filter .filter-input {
+    gap: 1rem;
+  }
 }
 </style>
