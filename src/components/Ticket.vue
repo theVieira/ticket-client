@@ -108,7 +108,7 @@
         </div>
         <div
           class="action"
-          v-if="ticket.status != 'finished'"
+          v-if="ticket.status == 'progress'"
           @click="setFinishedTicket(ticket.id)"
         >
           <p>Finalizar</p>
