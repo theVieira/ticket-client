@@ -84,16 +84,12 @@
           <p>Editar</p>
           <img src="../assets/icons/pencil.png" alt="pencil icon" />
         </div>
-        <div class="editActions">
-          <div
-            class="action"
-            v-if="editShow && admin == 'true'"
-            @click="saveEdited(ticket.id)"
-          >
+        <div class="editActions" v-if="editShow && admin == 'true'">
+          <div class="action" @click="saveEdited(ticket.id)">
             <p>Salvar</p>
             <img src="../assets/icons/save.png" alt="save icon" />
           </div>
-          <div class="action" v-if="editShow" @click="editShow = false">
+          <div class="action" v-show="editShow" @click="editShow = false">
             <p>Cancelar</p>
             <img
               src="../assets/icons/block.svg"
@@ -376,7 +372,7 @@ async function saveEdited(id) {
 
 .ticket-actions .actions {
   display: flex;
-  gap: 3rem;
+  gap: 2.4rem;
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
@@ -405,7 +401,7 @@ async function saveEdited(id) {
 .editActions {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 2.2rem;
   justify-content: center;
   align-items: center;
 }
