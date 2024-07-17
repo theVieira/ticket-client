@@ -8,14 +8,14 @@
       <section class="info-section large">
         <h4>Descrição</h4>
         <p v-show="!editShow">{{ ticket.description }}</p>
-        <input
+        <textarea
           placeholder="Insira a nova descrição"
           type="text"
           name="editDescription"
           id="editDescription"
           v-show="editShow"
           v-model="description"
-          class="edit"
+          class="edit textarea"
         />
       </section>
       <section class="info-section">
@@ -148,14 +148,14 @@ import { InitializeVars } from "@/assets/utils/InitializeVars";
 
 const { token, admin, delete_ticket, techName } = InitializeVars();
 
-const ticketFocus = ref(false);
-const editShow = ref(false);
-const category = ref("");
-const description = ref("");
-
 const props = defineProps({
   ticket: {},
 });
+
+const ticketFocus = ref(false);
+const editShow = ref(false);
+const category = ref(props.ticket.category);
+const description = ref(props.ticket.description);
 
 const emit = defineEmits([
   "deleted",
@@ -318,9 +318,6 @@ async function saveEdited(id) {
       console.error(data);
     }
 
-    description.value = "";
-    category.value = "";
-
     editShow.value = false;
 
     emit("edited", { id, status: res.status, data });
@@ -438,6 +435,10 @@ async function saveEdited(id) {
   font-weight: 600;
   cursor: pointer;
   transition: 0.3s;
+}
+
+.textarea {
+  height: 10rem;
 }
 
 @media (max-width: 900px) {
