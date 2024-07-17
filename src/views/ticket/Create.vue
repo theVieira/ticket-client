@@ -20,9 +20,7 @@
           <select name="priority" id="priority" v-model="priority">
             <option value="" selected disabled>Selecione</option>
             <option value="urgent">URGENTE</option>
-            <option value="high">ALTA</option>
-            <option value="medium">MÉDIA</option>
-            <option value="low">BAIXA</option>
+            <option value="medium">NORMAL</option>
           </select>
         </div>
         <div class="form-data">

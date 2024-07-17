@@ -33,6 +33,7 @@ import { baseUrl } from "../../conf";
 import { SetTitle } from "@/assets/utils/SetTitle";
 import { InitializeVars } from "@/assets/utils/InitializeVars";
 import { ShowPopup } from "@/assets/utils/ShowPopup";
+import router from "@/router";
 
 SetTitle("Login");
 
