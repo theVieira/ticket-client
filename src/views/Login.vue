@@ -22,30 +22,24 @@
       />
       <input type="submit" value="Entrar" />
     </form>
-    <Popup class="popup" v-if="popup">
-      <template #msg="">{{ msg }}</template>
-      <template #type="">{{ type }}</template>
-    </Popup>
+    <Popup class="popup" v-if="popup" :msg="msg" :type="type" />
   </div>
 </template>
 
 <script setup>
-import router from "@/router/index.js";
 import Popup from "../components/Popup.vue";
-import { computed, onBeforeMount, ref } from "vue";
+import { onBeforeMount, ref } from "vue";
 import { baseUrl } from "../../conf";
+import { SetTitle } from "@/assets/utils/SetTitle";
+import { InitializeVars } from "@/assets/utils/InitializeVars";
+import { ShowPopup } from "@/assets/utils/ShowPopup";
 
-computed(() => {
-  document.title = 'Login'
-})
+SetTitle("Login");
+
+const { msg, type, popup } = InitializeVars();
 
 const name = ref("");
 const password = ref("");
-
-const msg = ref("");
-const type = ref("");
-
-const popup = ref(false);
 
 onBeforeMount(() => {
   const token = localStorage.getItem("token");
@@ -77,8 +71,7 @@ async function login() {
   }, 1000 * 3);
 
   if (res.status === 200) {
-    type.value = "success";
-    msg.value = "Logado com sucesso";
+    ShowPopup(popup, msg, type, "Logado com sucesso", "success");
 
     localStorage.setItem("token", data.token);
     localStorage.setItem("techName", data.name);
@@ -88,8 +81,8 @@ async function login() {
     localStorage.setItem("color", data.color);
     router.push("/home");
   } else {
-    type.value = "error";
-    msg.value = "Ops! algo deu errado";
+    ShowPopup(popup, msg, type, "Ops! Ocorreu algum erro!", "error");
+
     console.error(data);
 
     const inputs = document.querySelectorAll(".form-input");

@@ -62,6 +62,7 @@ import { onBeforeMount, ref } from "vue";
 import { baseUrl } from "@/../conf.js";
 import { InitializeVars } from "@/assets/utils/InitializeVars";
 import { SetTitle } from "@/assets/utils/SetTitle";
+import { ShowPopup } from "@/assets/utils/ShowPopup";
 
 const { popup, clientName, msg, type, token, clients } = InitializeVars();
 
@@ -106,18 +107,11 @@ async function createTicket() {
   const data = await res.json();
 
   if (res.status == 201) {
-    msg.value = "Ticket criado com sucesso!";
-    type.value = "success";
+    ShowPopup(popup, msg, type, "Ticket criado com sucesso", "success");
   } else {
-    msg.value = "Ops! algo deu errado.";
-    type.value = "error";
+    ShowPopup(popup, msg, type, "Ops! Ocorreu algum erro!", "error");
     console.error(data);
   }
-
-  popup.value = true;
-  setTimeout(() => {
-    popup.value = false;
-  }, 1000 * 3);
 }
 </script>
 

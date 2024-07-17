@@ -14,8 +14,9 @@
         v-for="ticket in tickets"
         :key="ticket.id"
         :ticket="ticket"
-        @ticket_deleted="removeTicketFomFinished(ticket.id)"
-        @ticket_reopen="reopenTicket(ticket.id)"
+        @deleted="_deleteTicket"
+        @reopen="_reopenTicket"
+        @edited="_editTicket"
       />
     </div>
     <Popup v-if="popup" class="popup" :msg="msg" :type="type" />
@@ -30,6 +31,7 @@ import { onBeforeMount } from "vue";
 import { InitializeVars } from "@/assets/utils/InitializeVars";
 import { SetTitle } from "@/assets/utils/SetTitle";
 import { GetTickets } from "@/assets/utils/GetTickets";
+import { reopenTicket } from "@/assets/utils/TicketActions";
 
 const { tickets, total, popup, msg, type, token } = InitializeVars();
 
@@ -41,32 +43,25 @@ onBeforeMount(async () => {
   total.value = tickets.value.length;
 });
 
-function removeTicketFomFinished(id) {
-  const ticketIndex = tickets.value.findIndex((ticket) => (ticket.id = id));
-  tickets.value.splice(ticketIndex, 1);
-
-  popup.value = true;
-  msg.value = "Ticket deletado com sucesso!";
-  type.value = "success";
-  setTimeout(() => {
-    popup.value = false;
-    msg.value = "";
-    type.value = "";
-  }, 1000 * 3);
+function _deleteTicket({ id, status }) {
+  deleteTicket(tickets, id, popup, msg, type, status);
 }
 
-function reopenTicket(id) {
-  const ticketIndex = tickets.value.findIndex((ticket) => (ticket.id = id));
-  tickets.value.splice(ticketIndex, 1);
+function _reopenTicket({ id, status }) {
+  reopenTicket(tickets, id, popup, msg, type, status, true);
+}
 
-  popup.value = true;
-  msg.value = "Ticket reaberto!";
-  type.value = "success";
-  setTimeout(() => {
-    popup.value = false;
-    msg.value = "";
-    type.value = "";
-  }, 1000 * 3);
+function _editTicket({ id, status, data }) {
+  editTicket(
+    tickets,
+    id,
+    popup,
+    msg,
+    type,
+    data.description,
+    data.category,
+    status
+  );
 }
 
 async function search({ data }) {

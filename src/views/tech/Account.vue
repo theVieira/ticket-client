@@ -24,7 +24,7 @@
         <div class="input-form">
           <input type="submit" value="Alterar senha" />
         </div>
-        <div class="message" :class="messageClass">{{ message }}</div>
+        <Popup v-if="popup" class="popup" :msg="msg" :type="type" />
       </form>
     </section>
   </main>
@@ -35,13 +35,11 @@ import { InitializeVars } from "@/assets/utils/InitializeVars";
 import { SetTitle } from "@/assets/utils/SetTitle";
 import { baseUrl } from "../../../conf";
 import { ref } from "vue";
+import Popup from "@/components/Popup.vue";
+import { ShowPopup } from "@/assets/utils/ShowPopup";
 
 SetTitle("Sua Conta");
-const { msg, type, token, techName } = InitializeVars();
-
-const message = ref("");
-const showMessage = ref(false);
-const messageClass = ref("");
+const { msg, type, popup, token, techName } = InitializeVars();
 
 const password = ref("");
 const newPassword = ref("");
@@ -63,20 +61,11 @@ async function replacePassword() {
   const data = await res.json();
 
   if (res.status != 200) {
+    ShowPopup(popup, msg, type, "Ops! Ocorreu algum erro!", "error");
     console.error(data);
-    message.value = "Ocorreu um erro!";
-    messageClass.value = "errorReplace";
   } else {
-    message.value = "Senha alterada!";
-    messageClass.value = "successReplace";
+    ShowPopup(popup, msg, type, "Senha alterada com sucesso!", "success");
   }
-
-  showMessage.value = true;
-  setTimeout(() => {
-    showMessage.value = false;
-    message.value = "";
-    messageClass.value = "";
-  }, 1000 * 3);
 
   password.value = "";
   newPassword.value = "";
@@ -132,22 +121,5 @@ async function replacePassword() {
 
 .input-form input[type="submit"]:hover {
   filter: brightness(120%);
-}
-
-.message {
-  width: 100%;
-  padding: 0.8rem 2rem;
-  text-align: center;
-  border-radius: 1.2rem;
-  color: var(--dark-background);
-  font-weight: 600;
-}
-
-.successReplace {
-  background: #4ed16b;
-}
-
-.errorReplace {
-  background: #d34242;
 }
 </style>

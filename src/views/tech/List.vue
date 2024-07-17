@@ -29,16 +29,14 @@
         v-for="ticket in tech.tickets"
         :key="ticket.id"
         :ticket="ticket"
-        @ticket_deleted="removeTicketFromArray(ticket.id)"
-        @ticket_progress="setProgressTicket(ticket.id)"
-        @ticket_finished="setFinishedTicket(ticket.id)"
-        @ticket_reopen="setReopenTicket(ticket.id)"
+        @deleted="_deleteTicket"
+        @progress="_progressTicket"
+        @finished="_finishTicket"
+        @reopen="_reopenTicket"
+        @edited="_editTicket"
       />
     </div>
-    <Popup class="popup" v-if="popup">
-      <template #msg>{{ msg }}</template>
-      <template #type>{{ type }}</template>
-    </Popup>
+    <Popup class="popup" v-if="popup" :msg="msg" :type="type" />
   </div>
 </template>
 
@@ -46,26 +44,24 @@
 import PersonCard from "@/components/PersonCard.vue";
 import Ticket from "@/components/Ticket.vue";
 import Popup from "@/components/Popup.vue";
-import router from "@/router";
 import { onBeforeMount, ref } from "vue";
 import { baseUrl } from "../../../conf";
+import { InitializeVars } from "@/assets/utils/InitializeVars";
+import { SetTitle } from "@/assets/utils/SetTitle";
+import {
+  editTicket,
+  deleteTicket,
+  finishedTicket,
+  progressTicket,
+  reopenTicket,
+} from "@/assets/utils/TicketActions";
 
-const token = localStorage.getItem("token");
-if (!token) {
-  router.push("/");
-}
-const techName = localStorage.getItem("techName");
-
-const popup = ref(false);
-const msg = ref("");
-const type = ref("");
+const { token, popup, type, msg, techs, tickets } = InitializeVars();
 
 const techDialog = ref(false);
-
-const techs = ref([]);
-
 const tech = ref({});
-const tickets = ref([]);
+
+SetTitle("Técnicos");
 
 onBeforeMount(async () => {
   const res = await fetch(baseUrl + "/tech/list", {
@@ -84,57 +80,33 @@ function showTech(info) {
   techDialog.value = true;
 }
 
-function removeTicketFromArray(id) {
-  const ticketIndex = tickets.value.findIndex((ticket) => ticket.id == id);
-  tickets.value.splice(ticketIndex, 1);
-  msg.value = "Ticket deletado com sucesso!";
-  type.value = "success";
-  popup.value = true;
-  setTimeout(() => {
-    popup.value = false;
-    msg.value = "";
-    type.value = "";
-  }, 1000 * 3);
+function _deleteTicket({ id, status }) {
+  deleteTicket(tickets, id, popup, msg, type, status);
 }
 
-function setProgressTicket(id) {
-  const ticketIndex = tickets.value.findIndex((ticket) => ticket.id == id);
-  tickets.value[ticketIndex].status = "progress";
-  tickets.value[ticketIndex].techName = techName.value;
-  msg.value = "Ticket em progresso!";
-  type.value = "success";
-  popup.value = true;
-  setTimeout(() => {
-    popup.value = false;
-    msg.value = "";
-    type.value = "";
-  }, 1000 * 3);
+function _progressTicket({ id, status }) {
+  progressTicket(tickets, id, popup, msg, type, status);
 }
 
-function setFinishedTicket(id) {
-  const ticketIndex = tickets.value.findIndex((ticket) => ticket.id == id);
-  tickets.value[ticketIndex].status = "finished";
-  msg.value = "Ticket finalizado!";
-  type.value = "success";
-  popup.value = true;
-  setTimeout(() => {
-    popup.value = false;
-    msg.value = "";
-    type.value = "";
-  }, 1000 * 3);
+function _finishTicket({ id, status }) {
+  finishedTicket(tickets, id, popup, msg, type, status, false);
 }
 
-function setReopenTicket(id) {
-  const ticketIndex = tickets.value.findIndex((ticket) => ticket.id == id);
-  tickets.value[ticketIndex].status = "open";
-  msg.value = "Ticket reaberto!";
-  type.value = "success";
-  popup.value = true;
-  setTimeout(() => {
-    popup.value = false;
-    msg.value = "";
-    type.value = "";
-  }, 1000 * 3);
+function _reopenTicket({ id, status }) {
+  reopenTicket(tickets, id, popup, msg, type, status, false);
+}
+
+function _editTicket({ id, status, data }) {
+  editTicket(
+    tickets,
+    id,
+    popup,
+    msg,
+    type,
+    data.description,
+    data.category,
+    status
+  );
 }
 </script>
 

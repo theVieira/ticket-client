@@ -16,10 +16,7 @@
           <input type="submit" value="Salvar" />
         </div>
       </form>
-      <Popup v-if="popup" class="popup">
-        <template #msg>{{ msg }}</template>
-        <template #type>{{ type }}</template>
-      </Popup>
+      <Popup v-if="popup" class="popup" :msg="msg" :type="type" />
     </section>
   </main>
 </template>
@@ -30,6 +27,7 @@ import { SetTitle } from "@/assets/utils/SetTitle";
 import { baseUrl } from "../../../conf";
 import Popup from "@/components/Popup.vue";
 import { ref } from "vue";
+import { ShowPopup } from "@/assets/utils/ShowPopup";
 
 const { popup, msg, type, token } = InitializeVars();
 
@@ -54,20 +52,11 @@ async function createClient() {
   name.value = "";
 
   if (res.status == 201) {
-    msg.value = "Cliente criado com sucesso";
-    type.value = "success";
+    ShowPopup(popup, msg, type, "Cliente criado com sucesso!", "success");
   } else {
-    msg.value = "Ops! ocorreu algum erro.";
-    type.value = "error";
+    ShowPopup(popup, msg, type, "Ops! Ocorreu algum erro!");
     console.error(data);
   }
-
-  popup.value = true;
-  setTimeout(() => {
-    popup.value = false;
-    msg.value = "";
-    type.value = "";
-  }, 1000 * 3);
 }
 </script>
 

@@ -9,8 +9,9 @@
         v-for="ticket in tickets"
         :key="ticket.id"
         :ticket="ticket"
-        @ticket_deleted="removeTicketFromArray(ticket.id)"
-        @ticket_finished="setFinishedTicket(ticket.id)"
+        @deleted="_deleteTicket"
+        @finished="_finishTicket"
+        @edited="_editTicket"
       />
     </div>
     <Popup v-if="popup" class="popup" :msg="msg" :type="type" />
@@ -36,30 +37,25 @@ onBeforeMount(async () => {
   total.value = tickets.value.length;
 });
 
-function removeTicketFromArray(id) {
-  const ticketIndex = tickets.value.findIndex((ticket) => ticket.id == id);
-  tickets.value.splice(ticketIndex, 1);
-  msg.value = "Ticket deletado com sucesso!";
-  type.value = "success";
-  popup.value = true;
-  setTimeout(() => {
-    popup.value = false;
-    msg.value = "";
-    type.value = "";
-  }, 1000 * 3);
+function _deleteTicket({ id, status }) {
+  deleteTicket(tickets, id, popup, msg, type, status);
 }
 
-function setFinishedTicket(id) {
-  const ticketIndex = tickets.value.findIndex((ticket) => ticket.id == id);
-  tickets.value.splice(ticketIndex, 1);
-  msg.value = "Ticket finalizado!";
-  type.value = "success";
-  popup.value = true;
-  setTimeout(() => {
-    popup.value = false;
-    msg.value = "";
-    type.value = "";
-  }, 1000 * 3);
+function _finishTicket({ id, status }) {
+  finishedTicket(tickets, id, popup, msg, type, status, true);
+}
+
+function _editTicket({ id, status, data }) {
+  editTicket(
+    tickets,
+    id,
+    popup,
+    msg,
+    type,
+    data.description,
+    data.category,
+    status
+  );
 }
 
 async function search({ data }) {

@@ -46,7 +46,7 @@
             v-model="category"
             class="edit"
           >
-            <option value="" selected>Selectione</option>
+            <option value="" selected disabled>Selectione</option>
             <option value="daily">Diário</option>
             <option value="delivery">Entrega</option>
             <option value="budget">Orçamento</option>
@@ -146,7 +146,7 @@ import { Translate } from "@/assets/utils/Translate";
 import { FormatDate } from "@/assets/utils/FormatDate";
 import { InitializeVars } from "@/assets/utils/InitializeVars";
 
-const { token, admin, delete_ticket } = InitializeVars();
+const { token, admin, delete_ticket, techName } = InitializeVars();
 
 const ticketFocus = ref(false);
 const editShow = ref(false);
@@ -158,11 +158,11 @@ const props = defineProps({
 });
 
 const emit = defineEmits([
-  "ticket_deleted",
-  "ticket_progress",
-  "ticket_finished",
-  "ticket_reopen",
-  "ticket_edited",
+  "deleted",
+  "progress",
+  "finished",
+  "reopen",
+  "edited",
 ]);
 
 const priority = computed(() => {
@@ -213,17 +213,17 @@ async function deleteTicket(ticket) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        id: props.ticket.id,
+        id: ticket.id,
       }),
     });
 
     const data = await res.json();
 
-    if (res.status == 200) {
-      emit("ticket_deleted");
-    } else {
+    if (res.status != 200) {
       console.error(data);
     }
+
+    emit("deleted", { id: ticket.id, status: res.status });
   }
 }
 
@@ -236,17 +236,17 @@ async function setProgressTicket(id) {
     },
     body: JSON.stringify({
       id,
-      techName: localStorage.getItem("techName"),
+      techName,
     }),
   });
 
   const data = await res.json();
 
-  if (res.status == 200) {
-    emit("ticket_progress");
-  } else {
+  if (res.status != 200) {
     console.error(data);
   }
+
+  emit("progress", { id, status: res.status });
 }
 
 async function setFinishedTicket(id) {
@@ -258,17 +258,17 @@ async function setFinishedTicket(id) {
     },
     body: JSON.stringify({
       id,
-      techName: localStorage.getItem("techName"),
+      techName,
     }),
   });
 
   const data = await res.json();
 
-  if (res.status == 200) {
-    emit("ticket_finished");
-  } else {
+  if (res.status != 200) {
     console.error(data);
   }
+
+  emit("finished", { id, status: res.status });
 }
 
 async function reopen(id) {
@@ -288,7 +288,8 @@ async function reopen(id) {
   if (res.status != 200) {
     console.error(data);
   }
-  emit("ticket_reopen", { data });
+
+  emit("reopen", { id, status: res.status });
 }
 
 async function saveEdited(id) {
@@ -321,7 +322,8 @@ async function saveEdited(id) {
     category.value = "";
 
     editShow.value = false;
-    emit("ticket_edited", { data });
+
+    emit("edited", { id, status: res.status, data });
   }
 }
 </script>
