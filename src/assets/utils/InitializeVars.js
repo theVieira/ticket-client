@@ -1,5 +1,4 @@
 import { ref } from "vue";
-import router from "@/router";
 
 export function InitializeVars() {
   const admin = localStorage.getItem("admin");
@@ -17,10 +16,6 @@ export function InitializeVars() {
   const total = ref(0);
   const clientName = ref("");
   const order = ref("all");
-
-  if (!token) {
-    router.push("/");
-  }
 
   return {
     token,
