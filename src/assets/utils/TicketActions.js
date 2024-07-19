@@ -89,22 +89,15 @@ const reopenTicket = (array, id, popupRef, msgRef, typeRef, status, remove) => {
   }
 };
 
-const editTicket = (
-  array,
-  id,
-  popupRef,
-  msgRef,
-  typeRef,
-  description,
-  category,
-  status
-) => {
+const editTicket = (array, id, popupRef, msgRef, typeRef, data, status) => {
   if (status != 200) {
     ShowPopup(popupRef, msgRef, typeRef, msgError, "error");
   } else {
     const i = array.value.findIndex((el) => el.id == id);
-    array.value[i].description = description;
-    array.value[i].category = category;
+    array.value[i].description = data.description;
+    array.value[i].category = data.category;
+    array.value[i].status = data.status;
+    array.value[i].techName = data.techName ?? undefined;
     ShowPopup(
       popupRef,
       msgRef,

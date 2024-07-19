@@ -102,16 +102,7 @@ function _reopenTicket({ id, status }) {
 
 function _editTicket({ id, status, data }) {
   console.log(data);
-  editTicket(
-    tickets,
-    id,
-    popup,
-    msg,
-    type,
-    data.description,
-    data.category,
-    status
-  );
+  editTicket(tickets, id, popup, msg, type, data, status);
 }
 </script>
 
