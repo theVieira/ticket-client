@@ -71,8 +71,12 @@
           </section>
         </section>
         <section class="more-info" v-if="ticket.status != 'open'">
-          <h4>Atualizado em</h4>
-          <p>{{ FormatDate(ticket.updatedAt) }}</p>
+          <h4>Progresso em</h4>
+          <p>{{ FormatDate(ticket.progress) }}</p>
+        </section>
+        <section class="more-info" v-if="ticket.status == 'finished'">
+          <h4>Finalizado em</h4>
+          <p>{{ FormatDate(ticket.finished) }}</p>
         </section>
       </div>
       <div class="actions">
