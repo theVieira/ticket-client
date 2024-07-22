@@ -35,6 +35,12 @@ const { order, clientName, token } = InitializeVars();
 
 const emit = defineEmits(["search"]);
 
+addEventListener("keydown", (ev) => {
+  if (ev.key == "Enter") {
+    search();
+  }
+});
+
 async function search() {
   const res = await GetTickets("/ticket/list/" + order.value, token);
   const data = res.filter((ticket) =>
