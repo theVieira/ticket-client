@@ -64,6 +64,8 @@
           <h4>Criado em</h4>
           <p>{{ FormatDate(ticket.createdAt) }}</p>
         </section>
+      </div>
+      <div class="more-infos">
         <section class="more-info" v-if="ticket.techName">
           <h4>Técnico</h4>
           <section :style="{ color: ticket.techColor }">
@@ -77,6 +79,10 @@
         <section class="more-info" v-if="ticket.status == 'finished'">
           <h4>Finalizado em</h4>
           <p>{{ FormatDate(ticket.finished) }}</p>
+        </section>
+        <section class="more-info" v-if="ticket.status == 'finished'">
+          <h4>Feedback do técnico</h4>
+          <p>{{ ticket.report }}</p>
         </section>
       </div>
       <div class="actions">
@@ -123,7 +129,7 @@
           v-if="ticket.status == 'finished'"
           @click="reopen(ticket.id)"
         >
-          <p>Abrir novamente</p>
+          <p>Reabrir</p>
           <img src="../assets/icons/reload.png" alt="reload icon" />
         </div>
         <div
@@ -254,25 +260,29 @@ async function setProgressTicket(id) {
 }
 
 async function setFinishedTicket(id) {
-  const res = await fetch(baseUrl + "/ticket/finished", {
-    method: "PUT",
-    headers: {
-      authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      id,
-      techName,
-    }),
-  });
+  const report = prompt("Insira o feedback do chamado");
+  if (report) {
+    const res = await fetch(baseUrl + "/ticket/finished", {
+      method: "PUT",
+      headers: {
+        authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id,
+        techName,
+        report,
+      }),
+    });
 
-  const data = await res.json();
+    const data = await res.json();
 
-  if (res.status != 200) {
-    console.error(data);
+    if (res.status != 200) {
+      console.error(data);
+    }
+
+    emit("finished", { id, status: res.status });
   }
-
-  emit("finished", { id, status: res.status });
 }
 
 async function reopen(id) {
