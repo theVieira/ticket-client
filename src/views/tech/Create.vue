@@ -94,7 +94,7 @@ async function createTech() {
     body: JSON.stringify({
       name: name.value,
       password: password.value,
-      phone: phone.value,
+      phone: phone.value.replace(/\D/g, ""),
       admin: admin.value,
       create_ticket: create_ticket.value,
       delete_ticket: delete_ticket.value,
@@ -103,7 +103,6 @@ async function createTech() {
   });
 
   const data = await res.json();
-  console.log(data);
 
   if (res.status != 201) {
     console.error(data);
