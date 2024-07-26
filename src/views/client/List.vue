@@ -29,11 +29,13 @@
         v-for="ticket in client.tickets"
         :key="ticket.id"
         :ticket="ticket"
+        :techs="techs"
         @deleted="_deleteTicket"
         @progress="_progressTicket"
         @finished="_finishTicket"
         @reopen="_reopenTicket"
         @edited="_editTicket"
+        @noted="_notedTicket"
       />
     </div>
 
@@ -46,7 +48,6 @@ import Popup from "@/components/Popup.vue";
 import Ticket from "@/components/Ticket.vue";
 import PersonCard from "@/components/PersonCard.vue";
 import { onBeforeMount, ref } from "vue";
-import { baseUrl } from "../../../conf";
 import { InitializeVars } from "@/assets/utils/InitializeVars";
 import {
   editTicket,
@@ -54,28 +55,22 @@ import {
   finishedTicket,
   reopenTicket,
   progressTicket,
+  notedTicket,
 } from "@/assets/utils/TicketActions";
+import { FetchAPI } from "@/assets/utils/FetchAPI";
 
-const { token, clients, tickets, popup, msg, type } = InitializeVars();
+const { token, clients, tickets, popup, msg, type, techs } = InitializeVars();
 
 const client = ref({});
 
 const showClientDialog = ref(false);
 
 onBeforeMount(async () => {
-  const res = await fetch(baseUrl + "/client/list", {
-    headers: {
-      authorization: `Bearer ${token}`,
-    },
-  });
+  const data = await FetchAPI("/client/list", token);
+  clients.value = data;
 
-  const data = await res.json();
-
-  if (res.status != 200) {
-    console.error(data);
-  } else {
-    clients.value = data;
-  }
+  const res = await FetchAPI("/tech/list", token);
+  techs.value = res;
 });
 
 function showClient(info) {
@@ -101,8 +96,11 @@ function _reopenTicket({ id, status }) {
 }
 
 function _editTicket({ id, status, data }) {
-  console.log(data);
   editTicket(tickets, id, popup, msg, type, data, status);
+}
+
+function _notedTicket({ id, status, data }) {
+  notedTicket(tickets, id, popup, msg, type, data, status);
 }
 </script>
 

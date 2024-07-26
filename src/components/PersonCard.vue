@@ -11,7 +11,7 @@
     </h4>
     <div class="length-info">
       <p>
-        <strong>Chamados: {{ props.tickets.length }}</strong>
+        <strong>Chamados: {{ tickets.length }}</strong>
       </p>
     </div>
   </div>
@@ -26,7 +26,10 @@ const emit = defineEmits(["showInfo"]);
 
 const props = defineProps({
   name: String,
-  tickets: {},
+  tickets: {
+    type: Array,
+    default: () => [],
+  },
 });
 
 function openInfo() {

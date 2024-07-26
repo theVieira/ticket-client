@@ -61,23 +61,27 @@
           />
         </section>
         <section class="more-info">
-          <h4>Criado em</h4>
+          <h4>Criado</h4>
           <p>{{ FormatDate(ticket.createdAt) }}</p>
         </section>
-      </div>
-      <div class="more-infos">
         <section class="more-info" v-if="ticket.techName">
           <h4>Técnico</h4>
           <section :style="{ color: ticket.techColor }">
             {{ ticket.techName.toUpperCase() }}
           </section>
         </section>
+      </div>
+      <div class="more-infos">
+        <section class="more-info" v-if="ticket.note">
+          <h4>Anotação</h4>
+          <p>{{ ticket.note }}</p>
+        </section>
         <section class="more-info" v-if="ticket.status != 'open'">
-          <h4>Progresso em</h4>
+          <h4>Progresso</h4>
           <p>{{ FormatDate(ticket.progress) }}</p>
         </section>
         <section class="more-info" v-if="ticket.status == 'finished'">
-          <h4>Finalizado em</h4>
+          <h4>Finalizado</h4>
           <p>{{ FormatDate(ticket.finished) }}</p>
         </section>
         <section class="more-info" v-if="ticket.status == 'finished'">
@@ -144,6 +148,30 @@
             style="width: 4rem"
           />
         </div>
+        <div class="action" @click.prevent="addNote(ticket.id)">
+          <p>Inserir nota</p>
+          <img src="../assets/icons/note.png" alt="note icon" />
+        </div>
+        <div class="action" v-if="admin" @click="msgShow = true">
+          <p>Enviar mensagem</p>
+          <img src="../assets/icons/whatsapp.png" alt="whats icon" />
+        </div>
+      </div>
+      <div class="message" v-if="msgShow">
+        <p id="close" @click="msgShow = false">X</p>
+        <select class="selectTech" v-model="phone">
+          <option value="" disabled selected>Selecione</option>
+          <option v-for="tech in techs" :key="tech.id" :value="tech.phone">
+            {{ tech.name }} | {{ tech.phone }}
+          </option>
+        </select>
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          class="msgLink"
+          @click="sendMsg"
+          >Enviar</a
+        >
       </div>
     </div>
   </div>
@@ -156,11 +184,30 @@ import { Translate } from "@/assets/utils/Translate";
 import { FormatDate } from "@/assets/utils/FormatDate";
 import { InitializeVars } from "@/assets/utils/InitializeVars";
 
-const { token, admin, delete_ticket, techName } = InitializeVars();
+const { token, admin, delete_ticket, techName, msg } = InitializeVars();
 
 const props = defineProps({
   ticket: {},
+  techs: {
+    type: Array,
+    default: () => [],
+  },
 });
+
+const msgShow = ref(false);
+const phone = ref("");
+
+msg.value = `Chamado%0ACliente%3A%20${
+  props.ticket.clientName
+}%2C%0ADescri%C3%A7%C3%A3o%3A%20${
+  props.ticket.description
+}%2C%0APrioridade%3A%20${Translate(
+  props.ticket.priority
+)}%2C%0AStatus%3A%20${Translate(props.ticket.status)}`;
+
+function sendMsg() {
+  open(`https://wa.me/+55${phone.value}?text=${msg.value}`, "_blank");
+}
 
 const ticketFocus = ref(false);
 const editShow = ref(false);
@@ -173,6 +220,7 @@ const emit = defineEmits([
   "finished",
   "reopen",
   "edited",
+  "noted",
 ]);
 
 const priority = computed(() => {
@@ -337,6 +385,31 @@ async function saveEdited(id) {
     emit("edited", { id, status: res.status, data });
   }
 }
+
+async function addNote(id) {
+  const note = prompt("Insira a anotação");
+  if (note) {
+    const res = await fetch(baseUrl + "/ticket/addNote", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        id,
+        note,
+      }),
+    });
+
+    const data = await res.json();
+
+    if (res.status != 200) {
+      console.error(data);
+    }
+
+    emit("noted", { id, status: res.status, data });
+  }
+}
 </script>
 
 <style scoped>
@@ -345,6 +418,7 @@ async function saveEdited(id) {
   align-items: center;
   flex-direction: column;
   gap: 1rem;
+  position: relative;
 }
 
 .ticket-container {
@@ -455,6 +529,45 @@ async function saveEdited(id) {
   height: 10rem;
 }
 
+.message {
+  width: 70%;
+  height: 60%;
+  padding: 2rem;
+  background: var(--dark-background);
+  border-radius: 1.2rem;
+  position: absolute;
+  margin: 0 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.6rem;
+}
+
+#close {
+  font-weight: 800;
+  font-size: 2rem;
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  color: #c25005;
+  cursor: pointer;
+}
+
+.msgLink {
+  color: #cecece;
+  background: rgba(53, 167, 53, 0.589);
+  padding: 1rem 2rem;
+  border-radius: 1.2rem;
+}
+
+.selectTech {
+  background: var(--light-background);
+  color: var(--light-color);
+  padding: 1rem 2rem;
+  border-radius: 1.2rem;
+}
+
 @media (max-width: 900px) {
   .ticket-container {
     padding: 3rem;
@@ -472,6 +585,14 @@ async function saveEdited(id) {
 
   .more-info {
     justify-content: center;
+  }
+
+  .message {
+    flex-direction: column;
+    gap: 3rem;
+    width: 90%;
+    margin: 0;
+    transform: translateX(0);
   }
 }
 </style>

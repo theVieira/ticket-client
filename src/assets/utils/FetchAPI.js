@@ -1,6 +1,6 @@
 import { baseUrl } from "../../../conf";
 
-export async function GetTickets(url, token) {
+export async function FetchAPI(url, token) {
   const res = await fetch(baseUrl + url, {
     headers: {
       authorization: `Bearer ${token}`,

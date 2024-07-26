@@ -28,7 +28,7 @@
 </template>
 
 <script setup>
-import { GetTickets } from "@/assets/utils/GetTickets";
+import { FetchAPI } from "@/assets/utils/FetchAPI";
 import { InitializeVars } from "@/assets/utils/InitializeVars";
 
 const { order, clientName, token } = InitializeVars();
@@ -42,7 +42,7 @@ addEventListener("keydown", (ev) => {
 });
 
 async function search() {
-  const res = await GetTickets("/ticket/list/" + order.value, token);
+  const res = await FetchAPI("/ticket/list/" + order.value, token);
   const data = res.filter((ticket) =>
     ticket.clientName.toLowerCase().includes(clientName.value.toLowerCase())
   );

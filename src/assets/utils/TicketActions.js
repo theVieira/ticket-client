@@ -108,10 +108,21 @@ const editTicket = (array, id, popupRef, msgRef, typeRef, data, status) => {
   }
 };
 
+const notedTicket = (array, id, popupRef, msgRef, typeRef, data, status) => {
+  if (status != 200) {
+    ShowPopup(popupRef, msgRef, typeRef, msgError, "error");
+  } else {
+    const i = array.value.findIndex((el) => el.id == id);
+    array.value[i].note = data.note;
+    ShowPopup(popupRef, msgRef, typeRef, "Anotação salva!", "success");
+  }
+};
+
 export {
   deleteTicket,
   progressTicket,
   finishedTicket,
   reopenTicket,
   editTicket,
+  notedTicket,
 };

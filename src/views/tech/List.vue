@@ -12,6 +12,7 @@
     <div class="top-info">
       <h3><span>Nome</span>{{ tech.name.toUpperCase() }}</h3>
       <h3><span>Chamados</span>{{ tech.tickets.length }}</h3>
+      <h3><span>Telefone</span>{{ tech.phone }}</h3>
       <span id="close-button" @click="techDialog = false">X</span>
     </div>
     <div class="actions">
@@ -29,11 +30,13 @@
         v-for="ticket in tech.tickets"
         :key="ticket.id"
         :ticket="ticket"
+        :techs="techs"
         @deleted="_deleteTicket"
         @progress="_progressTicket"
         @finished="_finishTicket"
         @reopen="_reopenTicket"
         @edited="_editTicket"
+        @noted="_notedTicket"
       />
     </div>
     <Popup class="popup" v-if="popup" :msg="msg" :type="type" />
@@ -45,7 +48,6 @@ import PersonCard from "@/components/PersonCard.vue";
 import Ticket from "@/components/Ticket.vue";
 import Popup from "@/components/Popup.vue";
 import { onBeforeMount, ref } from "vue";
-import { baseUrl } from "../../../conf";
 import { InitializeVars } from "@/assets/utils/InitializeVars";
 import { SetTitle } from "@/assets/utils/SetTitle";
 import {
@@ -54,7 +56,9 @@ import {
   finishedTicket,
   progressTicket,
   reopenTicket,
+  notedTicket,
 } from "@/assets/utils/TicketActions";
+import { FetchAPI } from "@/assets/utils/FetchAPI";
 
 const { token, popup, type, msg, techs, tickets } = InitializeVars();
 
@@ -64,13 +68,7 @@ const tech = ref({});
 SetTitle("Técnicos");
 
 onBeforeMount(async () => {
-  const res = await fetch(baseUrl + "/tech/list", {
-    headers: {
-      authorization: `Bearer ${token}`,
-    },
-  });
-
-  const data = await res.json();
+  const data = await FetchAPI("/tech/list", token);
   techs.value = data;
 });
 
@@ -98,6 +96,10 @@ function _reopenTicket({ id, status }) {
 
 function _editTicket({ id, status, data }) {
   editTicket(tickets, id, popup, msg, type, data, status);
+}
+
+function _notedTicket({ id, status, data }) {
+  notedTicket(tickets, id, popup, msg, type, data, status);
 }
 </script>
 
