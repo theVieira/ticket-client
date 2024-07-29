@@ -151,7 +151,7 @@
           @mouseover="showActionsLabel(4)"
           @mouseout="showActionsLabel(4)"
         >
-          <p v-show="actionsLabel[4]">Marcar em progresso</p>
+          <p v-show="actionsLabel[4]">Progresso</p>
           <img
             src="../assets/icons/progress.png"
             alt="progress icon"
@@ -164,7 +164,7 @@
           @mouseover="showActionsLabel(5)"
           @mouseout="showActionsLabel(5)"
         >
-          <p v-show="actionsLabel[5]">Inserir nota</p>
+          <p v-show="actionsLabel[5]">Anotar</p>
           <img src="../assets/icons/note.png" alt="note icon" />
         </div>
         <div
@@ -174,7 +174,7 @@
           @mouseover="showActionsLabel(6)"
           @mouseout="showActionsLabel(6)"
         >
-          <p v-show="actionsLabel[6]">Enviar mensagem</p>
+          <p v-show="actionsLabel[6]">Mensagem</p>
           <img src="../assets/icons/whatsapp.png" alt="whats icon" />
         </div>
       </div>
@@ -511,7 +511,7 @@ async function addNote(id) {
 
 .ticket-actions .action {
   cursor: pointer;
-  height: 10rem;
+  height: 3.2rem;
   display: flex;
   flex-direction: column-reverse;
   align-items: center;
@@ -526,6 +526,11 @@ async function addNote(id) {
 
 .ticket-actions .action:hover {
   opacity: 1;
+}
+
+.action p {
+  top: -100%;
+  position: absolute;
 }
 
 .editActions {
