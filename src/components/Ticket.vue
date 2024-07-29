@@ -93,12 +93,14 @@
         <div
           class="action"
           v-if="admin == 'true' && !editShow"
-          @click="editShow = true"
+          @click="showEdit"
+          @mouseover="showActionsLabel(0)"
+          @mouseout="showActionsLabel(0)"
         >
-          <p>Editar</p>
+          <p v-show="actionsLabel[0]">Editar</p>
           <img src="../assets/icons/pencil.png" alt="pencil icon" />
         </div>
-        <div class="editActions" v-if="editShow && admin == 'true'">
+        <div class="editActions" v-if="admin == 'true'" v-show="editShow">
           <div class="action" @click="saveEdited(ticket.id)">
             <p>Salvar</p>
             <img src="../assets/icons/save.png" alt="save icon" />
@@ -116,44 +118,63 @@
           class="action"
           v-if="admin == 'true' || delete_ticket == 'true'"
           @click.prevent="deleteTicket(ticket)"
+          @mouseover="showActionsLabel(1)"
+          @mouseout="showActionsLabel(1)"
         >
-          <p>Deletar</p>
+          <p v-show="actionsLabel[1]">Deletar</p>
           <img src="../assets/icons/trash.png" alt="trash icon" />
         </div>
         <div
           class="action"
           v-if="ticket.status == 'progress'"
           @click="setFinishedTicket(ticket.id)"
+          @mouseover="showActionsLabel(2)"
+          @mouseout="showActionsLabel(2)"
         >
-          <p>Finalizar</p>
+          <p v-show="actionsLabel[2]">Finalizar</p>
           <img src="../assets/icons/check.png" alt="check icon" />
         </div>
         <div
           class="action"
           v-if="ticket.status == 'finished'"
           @click="reopen(ticket.id)"
+          @mouseover="showActionsLabel(3)"
+          @mouseout="showActionsLabel(3)"
         >
-          <p>Reabrir</p>
+          <p v-show="actionsLabel[3]">Reabrir</p>
           <img src="../assets/icons/reload.png" alt="reload icon" />
         </div>
         <div
           class="action"
           v-if="ticket.status == 'open'"
           @click.prevent="setProgressTicket(ticket.id)"
+          @mouseover="showActionsLabel(4)"
+          @mouseout="showActionsLabel(4)"
         >
-          <p>Marcar em progresso</p>
+          <p v-show="actionsLabel[4]">Marcar em progresso</p>
           <img
             src="../assets/icons/progress.png"
             alt="progress icon"
             style="width: 4rem"
           />
         </div>
-        <div class="action" @click.prevent="addNote(ticket.id)">
-          <p>Inserir nota</p>
+        <div
+          class="action"
+          @click.prevent="addNote(ticket.id)"
+          @mouseover="showActionsLabel(5)"
+          @mouseout="showActionsLabel(5)"
+        >
+          <p v-show="actionsLabel[5]">Inserir nota</p>
           <img src="../assets/icons/note.png" alt="note icon" />
         </div>
-        <div class="action" v-if="admin" @click="msgShow = true">
-          <p>Enviar mensagem</p>
+        <div
+          class="action"
+          v-if="admin"
+          @click="msgShow = true"
+          @mouseover="showActionsLabel(6)"
+          @mouseout="showActionsLabel(6)"
+        >
+          <p v-show="actionsLabel[6]">Enviar mensagem</p>
           <img src="../assets/icons/whatsapp.png" alt="whats icon" />
         </div>
       </div>
@@ -185,6 +206,17 @@ import { FormatDate } from "@/assets/utils/FormatDate";
 import { InitializeVars } from "@/assets/utils/InitializeVars";
 
 const { token, admin, delete_ticket, techName, msg } = InitializeVars();
+
+const actionsLabel = ref([false, false, false, false, false, false, false]);
+
+function showEdit() {
+  editShow.value = true;
+  actionsLabel.value[0] = false;
+}
+
+function showActionsLabel(index) {
+  actionsLabel.value[index] = !actionsLabel.value[index];
+}
 
 const props = defineProps({
   ticket: {},
@@ -381,9 +413,9 @@ async function saveEdited(id) {
     }
 
     editShow.value = false;
-
     emit("edited", { id, status: res.status, data });
   }
+  actionsLabel.value[0] = false;
 }
 
 async function addNote(id) {
@@ -462,8 +494,10 @@ async function addNote(id) {
   gap: 2.4rem;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: center;
+  justify-content: end;
+  margin: 0 3rem;
   text-align: center;
+  width: 40rem;
 }
 
 .ticket-actions .more-infos {
@@ -477,12 +511,21 @@ async function addNote(id) {
 
 .ticket-actions .action {
   cursor: pointer;
+  height: 10rem;
   display: flex;
+  flex-direction: column-reverse;
   align-items: center;
   gap: 1rem;
   font-weight: 600;
   flex-wrap: wrap;
   justify-content: center;
+  position: relative;
+  opacity: 0.7;
+  transition: all 0.3s;
+}
+
+.ticket-actions .action:hover {
+  opacity: 1;
 }
 
 .editActions {
