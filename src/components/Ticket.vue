@@ -64,6 +64,15 @@
           <h4>Criado</h4>
           <p>{{ FormatDate(ticket.createdAt) }}</p>
         </section>
+
+        <section class="more-info" v-if="ticket.status != 'open'">
+          <h4>Progresso</h4>
+          <p>{{ FormatDate(ticket.progress) }}</p>
+        </section>
+        <section class="more-info" v-if="ticket.status == 'finished'">
+          <h4>Finalizado</h4>
+          <p>{{ FormatDate(ticket.finished) }}</p>
+        </section>
         <section class="more-info" v-if="ticket.techName">
           <h4>Técnico</h4>
           <section :style="{ color: ticket.techColor }">
@@ -76,14 +85,7 @@
           <h4>Anotação</h4>
           <p>{{ ticket.note }}</p>
         </section>
-        <section class="more-info" v-if="ticket.status != 'open'">
-          <h4>Progresso</h4>
-          <p>{{ FormatDate(ticket.progress) }}</p>
-        </section>
-        <section class="more-info" v-if="ticket.status == 'finished'">
-          <h4>Finalizado</h4>
-          <p>{{ FormatDate(ticket.finished) }}</p>
-        </section>
+
         <section class="more-info" v-if="ticket.status == 'finished'">
           <h4>Feedback do técnico</h4>
           <p>{{ ticket.report }}</p>
@@ -101,12 +103,23 @@
           <img src="../assets/icons/pencil.png" alt="pencil icon" />
         </div>
         <div class="editActions" v-if="admin == 'true'" v-show="editShow">
-          <div class="action" @click="saveEdited(ticket.id)">
-            <p>Salvar</p>
+          <div
+            class="action"
+            @click="saveEdited(ticket.id)"
+            @mouseover="showActionsLabel(1)"
+            @mouseout="showActionsLabel(1)"
+          >
+            <p v-show="actionsLabel[1]">Salvar</p>
             <img src="../assets/icons/save.png" alt="save icon" />
           </div>
-          <div class="action" v-show="editShow" @click="editShow = false">
-            <p>Cancelar</p>
+          <div
+            class="action"
+            v-show="editShow"
+            @click="editShow = false"
+            @mouseover="showActionsLabel(2)"
+            @mouseout="showActionsLabel(2)"
+          >
+            <p v-show="actionsLabel[2]">Cancelar</p>
             <img
               src="../assets/icons/block.svg"
               alt="cancel icon"
@@ -118,40 +131,40 @@
           class="action"
           v-if="admin == 'true' || delete_ticket == 'true'"
           @click.prevent="deleteTicket(ticket)"
-          @mouseover="showActionsLabel(1)"
-          @mouseout="showActionsLabel(1)"
+          @mouseover="showActionsLabel(3)"
+          @mouseout="showActionsLabel(3)"
         >
-          <p v-show="actionsLabel[1]">Deletar</p>
+          <p v-show="actionsLabel[3]">Deletar</p>
           <img src="../assets/icons/trash.png" alt="trash icon" />
         </div>
         <div
           class="action"
           v-if="ticket.status == 'progress'"
           @click="setFinishedTicket(ticket.id)"
-          @mouseover="showActionsLabel(2)"
-          @mouseout="showActionsLabel(2)"
+          @mouseover="showActionsLabel(4)"
+          @mouseout="showActionsLabel(4)"
         >
-          <p v-show="actionsLabel[2]">Finalizar</p>
+          <p v-show="actionsLabel[4]">Finalizar</p>
           <img src="../assets/icons/check.png" alt="check icon" />
         </div>
         <div
           class="action"
           v-if="ticket.status == 'finished'"
           @click="reopen(ticket.id)"
-          @mouseover="showActionsLabel(3)"
-          @mouseout="showActionsLabel(3)"
+          @mouseover="showActionsLabel(5)"
+          @mouseout="showActionsLabel(5)"
         >
-          <p v-show="actionsLabel[3]">Reabrir</p>
+          <p v-show="actionsLabel[5]">Reabrir</p>
           <img src="../assets/icons/reload.png" alt="reload icon" />
         </div>
         <div
           class="action"
           v-if="ticket.status == 'open'"
           @click.prevent="setProgressTicket(ticket.id)"
-          @mouseover="showActionsLabel(4)"
-          @mouseout="showActionsLabel(4)"
+          @mouseover="showActionsLabel(5)"
+          @mouseout="showActionsLabel(5)"
         >
-          <p v-show="actionsLabel[4]">Progresso</p>
+          <p v-show="actionsLabel[5]">Progresso</p>
           <img
             src="../assets/icons/progress.png"
             alt="progress icon"
@@ -161,20 +174,20 @@
         <div
           class="action"
           @click.prevent="addNote(ticket.id)"
-          @mouseover="showActionsLabel(5)"
-          @mouseout="showActionsLabel(5)"
+          @mouseover="showActionsLabel(6)"
+          @mouseout="showActionsLabel(6)"
         >
-          <p v-show="actionsLabel[5]">Anotar</p>
+          <p v-show="actionsLabel[6]">Anotar</p>
           <img src="../assets/icons/note.png" alt="note icon" />
         </div>
         <div
           class="action"
           v-if="admin"
           @click="msgShow = true"
-          @mouseover="showActionsLabel(6)"
-          @mouseout="showActionsLabel(6)"
+          @mouseover="showActionsLabel(7)"
+          @mouseout="showActionsLabel(7)"
         >
-          <p v-show="actionsLabel[6]">Mensagem</p>
+          <p v-show="actionsLabel[7]">Mensagem</p>
           <img src="../assets/icons/whatsapp.png" alt="whats icon" />
         </div>
       </div>
@@ -186,13 +199,7 @@
             {{ tech.name }} | {{ tech.phone }}
           </option>
         </select>
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          class="msgLink"
-          @click="sendMsg"
-          >Enviar</a
-        >
+        <a rel="noopener noreferrer" class="msgLink" @click="sendMsg">Enviar</a>
       </div>
     </div>
   </div>
@@ -207,7 +214,16 @@ import { InitializeVars } from "@/assets/utils/InitializeVars";
 
 const { token, admin, delete_ticket, techName, msg } = InitializeVars();
 
-const actionsLabel = ref([false, false, false, false, false, false, false]);
+const actionsLabel = ref([
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+]);
 
 function showEdit() {
   editShow.value = true;
@@ -238,7 +254,7 @@ msg.value = `Chamado%0ACliente%3A%20${
 )}%2C%0AStatus%3A%20${Translate(props.ticket.status)}`;
 
 function sendMsg() {
-  open(`https://wa.me/+55${phone.value}?text=${msg.value}`, "_blank");
+  open(`https://wa.me/55${phone.value}?text=${msg.value}`, "_blank");
 }
 
 const ticketFocus = ref(false);
@@ -471,42 +487,46 @@ async function addNote(id) {
   flex-direction: column;
   align-items: center;
   gap: 0.5rem;
-  text-align: center;
   flex-basis: 10rem;
   flex-shrink: 0;
   flex-grow: 1;
+}
+
+.info-section p {
+  text-align: center;
+  word-break: break-all;
 }
 
 .ticket-actions {
   margin-top: -1rem;
   width: 100%;
   background: var(--light-background);
-  padding: 2rem;
+  padding: 3rem;
   border-radius: 1.2rem;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
-  gap: 7rem;
+  justify-content: space-around;
+  gap: 1.5rem;
 }
 
 .ticket-actions .actions {
+  width: fit-content;
   display: flex;
   gap: 2.4rem;
   flex-wrap: wrap;
   align-items: center;
   justify-content: end;
-  margin: 0 3rem;
   text-align: center;
-  width: 40rem;
 }
 
 .ticket-actions .more-infos {
-  white-space: nowrap;
-  padding: 2rem;
   display: flex;
   flex-wrap: wrap;
   flex-direction: column;
   gap: 1.5rem;
+  text-align: center;
+  width: 30%;
 }
 
 .ticket-actions .action {
@@ -526,6 +546,7 @@ async function addNote(id) {
 
 .ticket-actions .action:hover {
   opacity: 1;
+  filter: brightness(110%);
 }
 
 .action p {
@@ -535,7 +556,6 @@ async function addNote(id) {
 
 .editActions {
   display: flex;
-  flex-direction: column;
   gap: 2.2rem;
   justify-content: center;
   align-items: center;
@@ -546,6 +566,15 @@ async function addNote(id) {
   gap: 1rem;
   flex-wrap: wrap;
   align-items: center;
+}
+
+.more-info h4 {
+  white-space: nowrap;
+}
+
+.more-info p {
+  word-break: break-all;
+  text-align: start;
 }
 
 .status {
@@ -578,17 +607,15 @@ async function addNote(id) {
 }
 
 .message {
-  width: 70%;
-  height: 60%;
+  height: 12rem;
   padding: 2rem;
   background: var(--dark-background);
   border-radius: 1.2rem;
   position: absolute;
-  margin: 0 50%;
-  transform: translateX(-50%);
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-wrap: wrap;
   gap: 1.6rem;
 }
 
@@ -596,8 +623,8 @@ async function addNote(id) {
   font-weight: 800;
   font-size: 2rem;
   position: absolute;
-  top: 2rem;
-  right: 2rem;
+  top: 1rem;
+  right: 1rem;
   color: #c25005;
   cursor: pointer;
 }
@@ -607,6 +634,7 @@ async function addNote(id) {
   background: rgba(53, 167, 53, 0.589);
   padding: 1rem 2rem;
   border-radius: 1.2rem;
+  cursor: pointer;
 }
 
 .selectTech {
@@ -621,26 +649,18 @@ async function addNote(id) {
     padding: 3rem;
     border: 1px solid #c25005;
   }
-  .ticket-actions {
-    gap: 3rem;
-    flex-wrap: wrap;
-    justify-content: center;
+
+  .more-infos {
+    width: 100% !important;
   }
 
-  .action {
-    gap: 0;
-  }
-
-  .more-info {
-    justify-content: center;
+  .actions {
+    justify-content: center !important;
+    margin-top: 1rem;
   }
 
   .message {
-    flex-direction: column;
-    gap: 3rem;
-    width: 90%;
-    margin: 0;
-    transform: translateX(0);
+    height: 15rem;
   }
 }
 </style>
