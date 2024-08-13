@@ -39,7 +39,7 @@
             >
           </li>
           <li class="hover" v-if="admin == 'true'">
-            <RouterLink to="/dash/tech" class="link">Ver Relatório</RouterLink>
+            <RouterLink to="/dash/tech" class="link">Relatório</RouterLink>
           </li>
           <li class="hover" v-if="admin == 'true'">
             <RouterLink to="/manage/tech" class="link">Gerenciar</RouterLink>
@@ -55,6 +55,9 @@
         <ul v-if="listIndex[2]">
           <li class="hover">
             <RouterLink to="/list/clients" class="link">Todos</RouterLink>
+          </li>
+          <li class="hover">
+            <RouterLink to="/dash/client" class="link">Relatório</RouterLink>
           </li>
           <li class="hover">
             <RouterLink to="/create/client" class="link">Criar</RouterLink>
