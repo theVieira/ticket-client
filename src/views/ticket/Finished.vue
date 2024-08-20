@@ -5,7 +5,7 @@
 				<strong>Total: {{ total }}</strong>
 			</p>
 			<div class="filter">
-				<Filter @search="search" />
+				<Filter @search="search" :url="'Finished'" />
 			</div>
 		</div>
 		<div class="tickets-list">

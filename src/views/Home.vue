@@ -2,7 +2,7 @@
 	<main class="tickets-container">
 		<div class="tickets-header">
 			<strong>Total: {{ total }}</strong>
-			<Filter @search="search" />
+			<Filter @search="search" :url="'Open'" />
 		</div>
 		<div class="tickets-list">
 			<Ticket
