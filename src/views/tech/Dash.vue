@@ -1,196 +1,223 @@
 <template>
-  <main class="dashboard-container">
-    <select name="dashOption" id="dashOption" v-model="dashOption">
-      <option value="current" selected>Últimos 30 dias</option>
-      <option value="anual">Anual</option>
-      <option value="tech">Técnico</option>
-    </select>
-    <canvas id="chart"></canvas>
-  </main>
+	<main class="dashboard-container">
+		<select name="dashOption" id="dashOption" v-model="dashOption">
+			<option value="now">Hoje</option>
+			<option value="current" selected>Últimos 30 dias</option>
+			<option value="anual">Anual</option>
+			<option value="tech">Técnico</option>
+		</select>
+		<canvas id="chart"></canvas>
+	</main>
 </template>
 
 <script setup>
-import { FetchAPI } from "@/assets/utils/FetchAPI";
-import { InitializeVars } from "@/assets/utils/InitializeVars";
-import Chart from "chart.js/auto";
-import { onMounted, ref, watch } from "vue";
+import { FetchAPI } from '@/assets/utils/FetchAPI'
+import { InitializeVars } from '@/assets/utils/InitializeVars'
+import Chart from 'chart.js/auto'
+import { onMounted, ref, watch } from 'vue'
 
-const dashOption = ref("current");
+const dashOption = ref('current')
 
 function mapMonth(month) {
-  switch (month) {
-    case 0:
-      return "Janeiro";
-    case 1:
-      return "Fevereiro";
-    case 2:
-      return "Março";
-    case 3:
-      return "Abril";
-    case 4:
-      return "Maio";
-    case 5:
-      return "Junho";
-    case 6:
-      return "Julho";
-    case 7:
-      return "Agosto";
-    case 8:
-      return "Setembro";
-    case 9:
-      return "Outubro";
-    case 10:
-      return "Novembro";
-    case 11:
-      return "Dezembro";
-  }
+	switch (month) {
+		case 0:
+			return 'Janeiro'
+		case 1:
+			return 'Fevereiro'
+		case 2:
+			return 'Março'
+		case 3:
+			return 'Abril'
+		case 4:
+			return 'Maio'
+		case 5:
+			return 'Junho'
+		case 6:
+			return 'Julho'
+		case 7:
+			return 'Agosto'
+		case 8:
+			return 'Setembro'
+		case 9:
+			return 'Outubro'
+		case 10:
+			return 'Novembro'
+		case 11:
+			return 'Dezembro'
+	}
 }
 
-const { token } = InitializeVars();
+const { token } = InitializeVars()
 
 onMounted(async () => {
-  const res = await FetchAPI("/tech/list", token);
-  const ctx = document.querySelector("#chart");
+	const res = await FetchAPI('/tech/list', token)
+	const ctx = document.querySelector('#chart')
 
-  const current = res.map((tech) => {
-    const now = new Date();
-    const tickets = tech.tickets.map((ticket) => {
-      const ticketDate = new Date(ticket.createdAt);
+	const current = res.map((tech) => {
+		const now = new Date()
+		const tickets = tech.tickets.map((ticket) => {
+			const ticketDate = new Date(ticket.createdAt)
 
-      if (ticketDate.getUTCDate() > now.getUTCDate() - 30) {
-        return ticket;
-      } else {
-        return;
-      }
-    });
+			if (ticketDate.getUTCDate() > now.getUTCDate() - 30) {
+				return ticket
+			} else {
+				return
+			}
+		})
 
-    tech.tickets = tickets;
-    return tech;
-  });
+		tech.tickets = tickets
+		return tech
+	})
 
-  const datasetData = current.map((el) => {
-    const data = new Array();
-    data.push(el.tickets.length);
+	const datasetData = current.map((el) => {
+		const data = new Array()
+		data.push(el.tickets.length)
 
-    const obj = new Object({
-      label: el.name,
-      data,
-      borderWidth: 1,
-      backgroundColor: el.color,
-    });
+		const obj = new Object({
+			label: el.name,
+			data,
+			borderWidth: 1,
+			backgroundColor: el.color,
+		})
 
-    return obj;
-  });
+		return obj
+	})
 
-  const chart = new Chart(ctx, {
-    type: "bar",
-    data: {
-      labels: [mapMonth(new Date().getMonth())],
-      datasets: datasetData,
-    },
-    options: {
-      animation: true,
-      scales: {
-        y: {
-          beginAtZero: true,
-        },
-      },
-    },
-  });
+	const chart = new Chart(ctx, {
+		type: 'bar',
+		data: {
+			labels: [mapMonth(new Date().getMonth())],
+			datasets: datasetData,
+		},
+		options: {
+			animation: true,
+			scales: {
+				y: {
+					beginAtZero: true,
+				},
+			},
+		},
+	})
 
-  watch(dashOption, () => {
-    if (dashOption.value == "current") {
-      const datasetData = current.map((el) => {
-        const data = new Array();
-        data.push(el.tickets.length);
+	watch(dashOption, () => {
+		if (dashOption.value == 'now') {
+			const datasetData = current.map((tech) => {
+				const filterNowTickets = tech.tickets.filter((ticket) => {
+					const ticketDate = new Date(ticket.createdAt).getTime()
+					const now = new Date().getTime()
+					const diffInHours = Math.floor((now - ticketDate) / (1000 * 60 * 60))
 
-        const obj = new Object({
-          label: el.name,
-          data,
-          borderWidth: 1,
-          backgroundColor: el.color,
-        });
+					if (diffInHours <= 24) {
+						return ticket
+					}
+				})
 
-        return obj;
-      });
+				return new Object({
+					label: tech.name,
+					borderWidth: 1,
+					backgroundColor: tech.color,
+					data: [filterNowTickets.length],
+				})
+			})
 
-      chart.data.labels = [mapMonth(new Date().getMonth())];
-      chart.data.datasets = datasetData;
-      chart.update();
-    }
+			chart.data.datasets = datasetData
+			chart.data.labels = [
+				`Dia ${new Date().getDate()} de ${mapMonth(new Date().getUTCMonth())}`,
+			]
+			chart.update()
+		}
+		if (dashOption.value == 'current') {
+			const datasetData = current.map((el) => {
+				const data = new Array()
+				data.push(el.tickets.length)
 
-    if (dashOption.value == "anual") {
-      const datasetData = res.map((tech) => {
-        const months = [[], [], [], [], [], [], [], [], [], [], [], []];
+				const obj = new Object({
+					label: el.name,
+					data,
+					borderWidth: 1,
+					backgroundColor: el.color,
+				})
 
-        const newTech = new Object({
-          label: tech.name,
-          data: months,
-          borderWidth: 1,
-          backgroundColor: tech.color,
-        });
+				return obj
+			})
 
-        tech.tickets.forEach((ticket) => {
-          const ticketDate = new Date(ticket.createdAt).getUTCMonth();
-          newTech.data[ticketDate]++;
-        });
+			chart.data.labels = [mapMonth(new Date().getMonth())]
+			chart.data.datasets = datasetData
+			chart.update()
+		}
 
-        return newTech;
-      });
+		if (dashOption.value == 'anual') {
+			const datasetData = res.map((tech) => {
+				const months = [[], [], [], [], [], [], [], [], [], [], [], []]
 
-      chart.data.labels = [
-        "Janeiro",
-        "Fevereiro",
-        "Março",
-        "Abril",
-        "Maio",
-        "Junho",
-        "Julho",
-        "Agosto",
-        "Setembro",
-        "Outubro",
-        "Novembro",
-        "Dezembro",
-      ];
+				const newTech = new Object({
+					label: tech.name,
+					data: months,
+					borderWidth: 1,
+					backgroundColor: tech.color,
+				})
 
-      chart.data.datasets = datasetData;
-      chart.update();
-    }
+				tech.tickets.forEach((ticket) => {
+					const ticketDate = new Date(ticket.createdAt).getUTCMonth()
+					newTech.data[ticketDate]++
+				})
 
-    if (dashOption.value == "tech") {
-      const datasetData = res.map((tech) => {
-        return new Object({
-          label: tech.name,
-          data: [tech.tickets.length],
-          borderWidth: 1,
-          backgroundColor: tech.color,
-        });
-      });
+				return newTech
+			})
 
-      chart.data.labels = ["Técnicos"];
-      chart.data.datasets = datasetData;
+			chart.data.labels = [
+				'Janeiro',
+				'Fevereiro',
+				'Março',
+				'Abril',
+				'Maio',
+				'Junho',
+				'Julho',
+				'Agosto',
+				'Setembro',
+				'Outubro',
+				'Novembro',
+				'Dezembro',
+			]
 
-      chart.update();
-    }
-  });
-});
+			chart.data.datasets = datasetData
+			chart.update()
+		}
+
+		if (dashOption.value == 'tech') {
+			const datasetData = res.map((tech) => {
+				return new Object({
+					label: tech.name,
+					data: [tech.tickets.length],
+					borderWidth: 1,
+					backgroundColor: tech.color,
+				})
+			})
+
+			chart.data.labels = ['Técnicos']
+			chart.data.datasets = datasetData
+
+			chart.update()
+		}
+	})
+})
 </script>
 
 <style scoped>
 .dashboard-container {
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  padding: 5rem;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	padding: 5rem;
 }
 
 #dashOption {
-  background: var(--medium-background);
-  color: var(--light-color);
-  padding: 1rem 2rem;
-  border-radius: 1.2rem;
-  margin: -2rem 0 3rem 0;
+	background: var(--medium-background);
+	color: var(--light-color);
+	padding: 1rem 2rem;
+	border-radius: 1.2rem;
+	margin: -2rem 0 3rem 0;
 }
 </style>
