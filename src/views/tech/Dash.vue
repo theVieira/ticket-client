@@ -1,7 +1,7 @@
 <template>
 	<main class="dashboard-container">
 		<select name="dashOption" id="dashOption" v-model="dashOption">
-			<option value="now">Hoje</option>
+			<option value="now">Finalizados Hoje</option>
 			<option value="current" selected>Últimos 30 dias</option>
 			<option value="anual">Anual</option>
 			<option value="tech">Técnico</option>
@@ -103,7 +103,7 @@ onMounted(async () => {
 		if (dashOption.value == 'now') {
 			const datasetData = current.map((tech) => {
 				const filterNowTickets = tech.tickets.filter((ticket) => {
-					const ticketDate = new Date(ticket.createdAt).getTime()
+					const ticketDate = new Date(ticket.finished).getTime()
 					const now = new Date().getTime()
 					const diffInHours = Math.floor((now - ticketDate) / (1000 * 60 * 60))
 
