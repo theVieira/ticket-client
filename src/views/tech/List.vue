@@ -71,6 +71,12 @@ const techDialog = ref(false)
 const tech = ref({})
 const filterOption = ref('all')
 
+addEventListener('keydown', (ev) => {
+	if (techDialog.value == true && ev.key == 'Escape') {
+		techDialog.value = false
+	}
+})
+
 SetTitle('Técnicos')
 
 onBeforeMount(async () => {
