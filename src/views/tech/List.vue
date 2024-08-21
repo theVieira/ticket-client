@@ -32,7 +32,7 @@
 		</div>
 		<div class="tickets">
 			<Ticket
-				v-for="ticket in filterTickets"
+				v-for="ticket in tickets"
 				:key="ticket.id"
 				:ticket="ticket"
 				:techs="techs"
@@ -69,7 +69,6 @@ const { token, popup, type, msg, techs, tickets } = InitializeVars()
 
 const techDialog = ref(false)
 const tech = ref({})
-const filterTickets = ref([])
 const filterOption = ref('all')
 
 SetTitle('Técnicos')
@@ -83,34 +82,40 @@ watch(filterOption, (newValue) => {
 	switch (newValue) {
 		case 'all': {
 			tickets.value = tech.value.tickets
-			filterTickets.value = tech.value.tickets
-			return
+			break
 		}
+
 		case 'now': {
-			filterTickets.value = tech.value.tickets.map((ticket) => {
-				const ticketDate = new Date(ticket.finished).getTime()
-				const now = new Date().getTime()
-				const diffInHours = Math.floor(now - ticketDate) / (1000 * 60 * 60)
+			const filterFinished = tech.value.tickets.filter((ticket) => ticket.finished)
+			const filterNow = filterFinished.filter((ticket) => {
+				const ticketDate = `${new Date(ticket.finished).getDate()}/${new Date(
+					ticket.finished
+				).getMonth()}/${new Date(ticket.finished).getFullYear()}`
+				const nowDate = `${new Date().getDate()}/${new Date().getMonth()}/${new Date().getFullYear()}`
 
-				if (diffInHours <= 24) {
+				if (nowDate == ticketDate) {
 					return ticket
 				}
 			})
 
-			return
+			tickets.value = filterNow
+			break
 		}
-		case 'week': {
-			filterTickets.value = tech.value.tickets.map((ticket) => {
-				const ticketDate = new Date(ticket.finished).getTime()
-				const now = new Date().getTime()
-				const diffInDays = Math.floor(now - ticketDate) / (1000 * 60 * 60 * 24)
 
-				if (diffInDays <= 7) {
+		case 'week': {
+			const filterFinished = tech.value.tickets.filter((ticket) => ticket.finished)
+			const filterWeek = filterFinished.filter((ticket) => {
+				const ticketDate = new Date(ticket.finished).getTime()
+				const nowDate = new Date().getTime()
+				const diffInDays = (nowDate - ticketDate) / (1000 * 60 * 60 * 24)
+
+				if (diffInDays < 7) {
 					return ticket
 				}
 			})
 
-			return
+			tickets.value = filterWeek
+			break
 		}
 		default: {
 			console.error('unknown filter option!')
@@ -122,7 +127,6 @@ function showTech(info) {
 	tech.value = info
 	tickets.value = info.tickets
 	techDialog.value = true
-	filterTickets.value = tech.value.tickets
 }
 
 function _deleteTicket({ id, status }) {
