@@ -253,6 +253,12 @@ const editShow = ref(false)
 const category = ref(props.ticket.category)
 const description = ref(props.ticket.description)
 
+addEventListener('keydown', (ev) => {
+	if (ev.key == 'Escape') {
+		ticketFocus.value = false
+	}
+})
+
 const emit = defineEmits([
 	'deleted',
 	'progress',
