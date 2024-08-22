@@ -36,6 +36,7 @@
 				@reopen="_reopenTicket"
 				@edited="_editTicket"
 				@noted="_notedTicket"
+				@focus="_ticketInfo"
 			/>
 		</div>
 
@@ -64,9 +65,18 @@ const { token, clients, tickets, popup, msg, type, techs } = InitializeVars()
 const client = ref({})
 
 const showClientDialog = ref(false)
+const ticketFocus = ref(false)
+
+function _ticketInfo({ data }) {
+	ticketFocus.value = data
+}
 
 addEventListener('keydown', (ev) => {
-	if (ev.key == 'Escape') {
+	if (
+		ticketFocus.value == false &&
+		showClientDialog.value == true &&
+		ev.key == 'Escape'
+	) {
 		showClientDialog.value = false
 	}
 })

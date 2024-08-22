@@ -42,6 +42,7 @@
 				@reopen="_reopenTicket"
 				@edited="_editTicket"
 				@noted="_notedTicket"
+				@focus="_ticketInfo"
 			/>
 		</div>
 		<Popup class="popup" v-if="popup" :msg="msg" :type="type" />
@@ -70,9 +71,14 @@ const { token, popup, type, msg, techs, tickets } = InitializeVars()
 const techDialog = ref(false)
 const tech = ref({})
 const filterOption = ref('all')
+const ticketFocus = ref(false)
+
+function _ticketInfo({ data }) {
+	ticketFocus.value = data
+}
 
 addEventListener('keydown', (ev) => {
-	if (techDialog.value == true && ev.key == 'Escape') {
+	if (ticketFocus.value == false && techDialog.value == true && ev.key == 'Escape') {
 		techDialog.value = false
 	}
 })

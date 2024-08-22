@@ -254,8 +254,9 @@ const category = ref(props.ticket.category)
 const description = ref(props.ticket.description)
 
 addEventListener('keydown', (ev) => {
-	if (ev.key == 'Escape') {
+	if (ticketFocus.value == true && ev.key == 'Escape') {
 		ticketFocus.value = false
+		emit('focus', { data: ticketFocus.value })
 	}
 })
 
@@ -266,6 +267,7 @@ const emit = defineEmits([
 	'reopen',
 	'edited',
 	'noted',
+	'focus',
 ])
 
 const priority = computed(() => {
@@ -297,6 +299,7 @@ function showTicketInfos() {
 		ticketFocus.value = true
 	} else {
 		ticketFocus.value = !ticketFocus.value
+		emit('focus', { data: ticketFocus.value })
 	}
 }
 
