@@ -103,11 +103,12 @@ onMounted(async () => {
 		if (dashOption.value == 'now') {
 			const datasetData = current.map((tech) => {
 				const filterNowTickets = tech.tickets.filter((ticket) => {
-					const ticketDate = new Date(ticket.finished).getTime()
-					const now = new Date().getTime()
-					const diffInHours = Math.floor((now - ticketDate) / (1000 * 60 * 60))
+					const ticketDate = `${new Date(
+						ticket.finished
+					).getDate()}/${new Date().getMonth()}/${new Date().getFullYear()}`
+					const now = `${new Date().getDate()}/${new Date().getMonth()}/${new Date().getFullYear()}`
 
-					if (diffInHours <= 24) {
+					if (now == ticketDate) {
 						return ticket
 					}
 				})
