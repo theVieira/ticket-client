@@ -86,7 +86,7 @@
 					<p style="white-space: pre-wrap">{{ ticket.note }}</p>
 				</section>
 
-				<section class="more-info" v-if="ticket.status == 'finished'">
+				<section class="more-info" v-if="ticket.report">
 					<h4>Feedback do técnico</h4>
 					<p>{{ ticket.report }}</p>
 				</section>
