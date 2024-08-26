@@ -88,7 +88,7 @@
 
 				<section class="more-info" v-if="ticket.report">
 					<h4>Feedback do técnico</h4>
-					<p>{{ ticket.report }}</p>
+					<p style="white-space: pre-wrap">{{ ticket.report }}</p>
 				</section>
 			</div>
 			<div class="actions">
