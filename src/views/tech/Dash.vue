@@ -1,11 +1,31 @@
 <template>
 	<main class="dashboard-container">
-		<select name="dashOption" id="dashOption" v-model="dashOption">
-			<option value="now">Finalizados Hoje</option>
-			<option value="current" selected>Últimos 30 dias</option>
-			<option value="anual">Anual</option>
-			<option value="tech">Técnico</option>
-		</select>
+		<div class="dataContainer">
+			<select name="dashOption" id="dashOption" v-model="dashOption">
+				<option value="date">{{ dateInput }}</option>
+				<option value="now">Finalizados Hoje</option>
+				<option value="current" selected>Últimos 30 dias</option>
+				<option value="anual">Anual</option>
+				<option value="tech">Técnico</option>
+			</select>
+
+			<input
+				type="date"
+				name="dataInput"
+				class="dataInput"
+				v-if="dashOption == 'date'"
+				v-model="date"
+			/>
+
+			<input
+				type="button"
+				value="Buscar"
+				class="dataInput"
+				id="findByDateBtn"
+				v-if="dashOption == 'date'"
+			/>
+		</div>
+
 		<canvas id="chart"></canvas>
 	</main>
 </template>
@@ -17,6 +37,8 @@ import Chart from 'chart.js/auto'
 import { onMounted, ref, watch } from 'vue'
 
 const dashOption = ref('current')
+const dateInput = ref('Selecione a data')
+const date = ref('')
 
 function mapMonth(month) {
 	switch (month) {
@@ -100,6 +122,42 @@ onMounted(async () => {
 	})
 
 	watch(dashOption, () => {
+		if (dashOption.value == 'date') {
+			document.querySelector('#findByDateBtn').addEventListener('click', (ev) => {
+				const selectedDate = new Date(date.value)
+				const selectedCompare = `${selectedDate.getDate() + 1}-${(
+					selectedDate.getMonth() + 1
+				)
+					.toString()
+					.padStart(2, '0')}-${selectedDate.getFullYear()}`
+
+				const datasetData = res.map((tech) => {
+					const filterTickets = tech.tickets.filter((ticket) => {
+						const ticketDate = new Date(ticket.finished)
+						const ticketCompare = `${ticketDate.getDate()}-${(
+							ticketDate.getMonth() + 1
+						)
+							.toString()
+							.padStart(2, '0')}-${ticketDate.getFullYear()}`
+
+						if (ticketCompare == selectedCompare) {
+							return ticket
+						}
+					})
+
+					return new Object({
+						label: tech.name,
+						borderWidth: 1,
+						backgroundColor: tech.color,
+						data: [filterTickets.length],
+					})
+				})
+
+				chart.data.datasets = datasetData
+				chart.data.labels = [selectedCompare]
+				chart.update()
+			})
+		}
 		if (dashOption.value == 'now') {
 			const datasetData = current.map((tech) => {
 				const filterNowTickets = tech.tickets.filter((ticket) => {
@@ -219,6 +277,22 @@ onMounted(async () => {
 	color: var(--light-color);
 	padding: 1rem 2rem;
 	border-radius: 1.2rem;
-	margin: -2rem 0 3rem 0;
+}
+
+.dataContainer {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 2rem;
+	margin-bottom: 2rem;
+}
+
+.dataInput {
+	border-radius: 1.2rem;
+	padding: 1rem 2rem;
+	background: var(--medium-background);
+	color: var(--light-color);
+	border: none;
+	cursor: pointer;
 }
 </style>
