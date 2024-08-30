@@ -355,7 +355,7 @@ async function setProgressTicket(id) {
 
 async function setFinishedTicket(id) {
 	const report = prompt('Insira o feedback do chamado')
-	if (report) {
+	if (report && report.length < 559) {
 		const res = await fetch(baseUrl + '/ticket/finished', {
 			method: 'PUT',
 			headers: {
@@ -376,6 +376,9 @@ async function setFinishedTicket(id) {
 		}
 
 		emit('finished', { id, status: res.status })
+	} else {
+		alert('Limite de caracteres excedido!')
+		throw new Error('feedback char over limit')
 	}
 }
 
