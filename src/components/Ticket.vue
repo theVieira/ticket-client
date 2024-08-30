@@ -410,54 +410,64 @@ async function saveEdited(id) {
 		}\nCategoria: ${Translate(category.value)}`
 	)
 	if (confirmation) {
-		const res = await fetch(baseUrl + '/ticket/edit', {
-			method: 'PUT',
-			headers: {
-				authorization: `Bearer ${token}`,
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({
-				id,
-				description: description.value,
-				category: category.value,
-			}),
-		})
+		if (description.value.length > 599) {
+			alert('Limite de caracteres excedido!')
+			throw new Error('description char over limit')
+		} else {
+			const res = await fetch(baseUrl + '/ticket/edit', {
+				method: 'PUT',
+				headers: {
+					authorization: `Bearer ${token}`,
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					id,
+					description: description.value,
+					category: category.value,
+				}),
+			})
 
-		const data = await res.json()
+			const data = await res.json()
 
-		if (res.status != 200) {
-			console.error(data)
+			if (res.status != 200) {
+				console.error(data)
+			}
+
+			editShow.value = false
+			emit('edited', { id, status: res.status, data })
 		}
-
-		editShow.value = false
-		emit('edited', { id, status: res.status, data })
+		actionsLabel.value[0] = false
 	}
-	actionsLabel.value[0] = false
 }
 
 async function addNote(id) {
 	const note = prompt('Insira a anotação')
 	if (note) {
-		const res = await fetch(baseUrl + '/ticket/addNote', {
-			method: 'PUT',
-			headers: {
-				'Content-Type': 'application/json',
-				authorization: `Bearer ${token}`,
-			},
-			body: JSON.stringify({
-				id,
-				note,
-				techName,
-			}),
-		})
+		if (note.length > 599) {
+			alert('Limite de caracteres excedido!')
+			throw new Error('note char over limit')
+		} else {
+			const res = await fetch(baseUrl + '/ticket/addNote', {
+				method: 'PUT',
+				headers: {
+					'Content-Type': 'application/json',
+					authorization: `Bearer ${token}`,
+				},
+				body: JSON.stringify({
+					id,
+					note,
+					techName,
+				}),
+			})
 
-		const data = await res.json()
+			const data = await res.json()
 
-		if (res.status != 200) {
-			console.error(data)
+			if (res.status != 200) {
+				console.error(data)
+			}
+
+			emit('noted', { id, status: res.status, data })
 		}
-
-		emit('noted', { id, status: res.status, data })
 	}
 }
 </script>
