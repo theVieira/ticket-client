@@ -11,13 +11,4 @@ export default defineConfig({
 			'@': fileURLToPath(new URL('./src', import.meta.url)),
 		},
 	},
-	server: {
-		cors: {
-			methods: '*',
-			origin: '*',
-		},
-		host: '0.0.0.0',
-		port: '5050',
-		origin: '127.0.0.1:5050',
-	},
 })
