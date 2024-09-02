@@ -5,7 +5,7 @@
 				<select name="option" id="option" v-model="option">
 					<option value="select-date">Selecione a data</option>
 					<option value="today">Finalizados hoje</option>
-					<option value="month">Últimos 30 dias</option>
+					<option value="month">Este mês</option>
 					<option value="annual">Anual</option>
 					<option value="tech">Técnicos</option>
 				</select>
