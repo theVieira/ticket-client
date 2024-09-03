@@ -4,21 +4,32 @@
 			<div class="controls">
 				<select name="option" id="option" v-model="option">
 					<option value="select-date">Selecione a data</option>
-					<option value="today">Finalizados hoje</option>
-					<option value="month">Este mês</option>
 					<option value="annual">Anual</option>
 					<option value="tech">Técnicos</option>
 				</select>
 
-				<input
-					type="date"
-					name="date"
-					id="dateInput"
-					v-if="option == 'select-date'"
-					class="date"
-					v-model="date"
-					@change="find"
-				/>
+				<div class="dateInput" v-if="option == 'select-date'">
+					<span>De</span>
+					<input
+						type="date"
+						name="date"
+						id="dateInput"
+						class="date"
+						v-model="startDate"
+						@change="find"
+					/>
+				</div>
+
+				<div class="dateInput" v-if="option == 'select-date'">
+					<span>Até</span>
+					<input
+						type="date"
+						name="date"
+						class="date"
+						v-model="endDate"
+						@change="find"
+					/>
+				</div>
 			</div>
 			<canvas id="chart"></canvas>
 		</section>
@@ -57,10 +68,11 @@ import {
 	progressTicket,
 } from '@/assets/utils/TicketActions'
 
-const option = ref('month')
-const date = ref('Selecione a data')
+const option = ref('tech')
 const ticketSection = ref(false)
 const ticketFocus = ref(false)
+const startDate = ref()
+const endDate = ref()
 
 const { token, popup, tickets, msg, type, techs } = InitializeVars()
 
@@ -107,7 +119,7 @@ addEventListener('keydown', (ev) => {
 
 async function find() {
 	const findTechs = await FetchAPI('/tech/list', token)
-	const datasetData = FilterDate(findTechs, date.value)
+	const datasetData = FilterDate(findTechs, [startDate.value, endDate.value])
 	return datasetData
 }
 
@@ -116,7 +128,7 @@ onMounted(async () => {
 	techs.value = res
 
 	const ctx = document.querySelector('#chart')
-	const datasetData = FilterMonth(techs.value)
+	const datasetData = FilterTech(techs.value)
 	const chart = new Chart(ctx, {
 		type: 'bar',
 		data: {
@@ -154,10 +166,10 @@ onMounted(async () => {
 	watch(option, async (val) => {
 		switch (val) {
 			case 'select-date': {
-				watch(date, async () => {
+				watch([endDate, startDate], async () => {
 					const datasetData = await find()
 					chart.data.datasets = datasetData
-					chart.data.labels = [MapMonth(new Date(date.value).getMonth() + 1)]
+					chart.data.labels = [MapMonth(new Date().getMonth() + 1)]
 					chart.options.onClick = (ev) => {
 						const name = FindIam(ev, datasetData)
 						tickets.value = datasetData.filter((el) => el.label == name)[0].tickets
@@ -165,37 +177,6 @@ onMounted(async () => {
 					}
 					chart.update()
 				})
-				break
-			}
-
-			case 'today': {
-				const date = new Date()
-				const dateString = `${date.getDate()}/${(date.getMonth() + 1)
-					.toString()
-					.padStart(2, '0')}/${date.getFullYear()}`
-
-				const datasetData = FilterToday(techs.value)
-				chart.data.datasets = datasetData
-				chart.data.labels = [dateString]
-				chart.options.onClick = (ev) => {
-					const name = FindIam(ev, datasetData)
-					tickets.value = datasetData.filter((el) => el.label == name)[0].tickets
-					ticketSection.value = true
-				}
-				chart.update()
-				break
-			}
-
-			case 'month': {
-				const datasetData = FilterMonth(techs.value)
-				chart.data.datasets = datasetData
-				chart.data.labels = [MapMonth(new Date().getMonth() + 1)]
-				chart.options.onClick = (ev) => {
-					const name = FindIam(ev, datasetData)
-					tickets.value = datasetData.filter((el) => el.label == name)[0].tickets
-					ticketSection.value = true
-				}
-				chart.update()
 				break
 			}
 
@@ -248,32 +229,16 @@ onMounted(async () => {
 })
 
 //	<Filters
-function FilterMonth(techs) {
-	return techs.map((tech) => {
-		const nowDate = new Date()
-		const compareNow = `${nowDate.getMonth()}/${nowDate.getFullYear()}`
-		const filterFinished = tech.tickets.filter((ticket) => ticket.finished)
+function FilterDate(techs, range) {
+	// range = [startDate, endDate]
+	if (range[0] == undefined) {
+		range[0] = range[1]
+	}
 
-		const filterMonth = filterFinished.filter((ticket) => {
-			const ticketDate = new Date(ticket.finished)
-			const compareTicket = `${ticketDate.getMonth()}/${ticketDate.getFullYear()}`
+	if (range[1] == undefined) {
+		range[1] = range[0]
+	}
 
-			if (compareNow.toString() === compareTicket.toString()) {
-				return ticket
-			}
-		})
-
-		return new Object({
-			label: tech.name,
-			borderWidth: 1,
-			backgroundColor: tech.color,
-			data: [filterMonth.length],
-			tickets: filterMonth,
-		})
-	})
-}
-
-function FilterDate(techs, date) {
 	return techs.map((tech) => {
 		const filterFinished = tech.tickets.filter((ticket) => ticket.finished)
 		const filterTickets = filterFinished.filter((ticket) => {
@@ -282,9 +247,9 @@ function FilterDate(techs, date) {
 				ticketDate.getMonth() + 1
 			)
 				.toString()
-				.padStart(2, '0')}-${ticketDate.getDate()}`
+				.padStart(2, '0')}-${ticketDate.getDate().toString().padStart(2, '0')}`
 
-			if (ticketDateFormat == date) {
+			if (ticketDateFormat >= range[0] && ticketDateFormat <= range[1]) {
 				return ticket
 			}
 		})
@@ -295,31 +260,6 @@ function FilterDate(techs, date) {
 			backgroundColor: tech.color,
 			data: [filterTickets.length],
 			tickets: filterTickets,
-		})
-	})
-}
-
-function FilterToday(techs) {
-	const nowDate = new Date()
-	const nowCompare = `${nowDate.getDate()}-${nowDate.getMonth()}-${nowDate.getFullYear()}`
-
-	return techs.map((tech) => {
-		const filterFinished = tech.tickets.filter((ticket) => ticket.finished)
-		const filterToday = filterFinished.filter((ticket) => {
-			const ticketDate = new Date(ticket.finished)
-			const ticketCompare = `${ticketDate.getDate()}-${ticketDate.getMonth()}-${ticketDate.getFullYear()}`
-
-			if (nowCompare === ticketCompare) {
-				return ticket
-			}
-		})
-
-		return new Object({
-			label: tech.name,
-			borderWidth: 1,
-			backgroundColor: tech.color,
-			data: [filterToday.length],
-			tickets: filterToday,
 		})
 	})
 }
@@ -428,6 +368,9 @@ function MapMonth(month) {
 .controls {
 	display: flex;
 	gap: 2rem;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: center;
 }
 
 .controls input,
@@ -439,6 +382,23 @@ select {
 	color: var(--light-color);
 	font-weight: 600;
 	cursor: pointer;
+}
+
+.dateInput {
+	color: var(--light-color);
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+	background: var(--medium-background);
+	padding: 0 0 0 1rem;
+	border-radius: 1.2rem;
+	border: 1px solid var(--light-color);
+}
+
+.dateInput input {
+	border: none;
+	color: var(--light-color);
+	filter: brightness(130%);
 }
 
 #chart {
