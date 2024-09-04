@@ -1,22 +1,23 @@
 {
-  "name": "tickets-client",
-  "version": "0.0.0",
-  "private": true,
-  "type": "module",
-  "scripts": {
-    "serve": "vite --host --port 5173",
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
-  },
-  "dependencies": {
-    "chart.js": "^4.4.3",
-    "dayjs": "^1.11.11",
-    "vue": "^3.4.29",
-    "vue-router": "^4.3.3"
-  },
-  "devDependencies": {
-    "@vitejs/plugin-vue": "^5.0.5",
-    "vite": "^5.3.1"
-  }
+	"name": "tickets-client",
+	"version": "0.0.0",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"serve": "vite --host --port 5173",
+		"dev": "vite",
+		"build": "vite build",
+		"preview": "vite preview",
+		"format": "prettier . --write --semi false --single-quote true --tab-width 2 --print-width 85"
+	},
+	"dependencies": {
+		"chart.js": "^4.4.3",
+		"dayjs": "^1.11.11",
+		"vue": "^3.4.29",
+		"vue-router": "^4.3.3"
+	},
+	"devDependencies": {
+		"@vitejs/plugin-vue": "^5.0.5",
+		"vite": "^5.3.1"
+	}
 }

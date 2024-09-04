@@ -5,12 +5,7 @@
         <h3>Trocar senha</h3>
         <div class="input-form">
           <label for="password">Senha atual</label>
-          <input
-            type="password"
-            name="password"
-            id="password"
-            v-model="password"
-          />
+          <input type="password" name="password" id="password" v-model="password" />
         </div>
         <div class="input-form">
           <label for="newPassword">Nova senha</label>
@@ -31,44 +26,44 @@
 </template>
 
 <script setup>
-import { InitializeVars } from "@/assets/utils/InitializeVars";
-import { SetTitle } from "@/assets/utils/SetTitle";
-import { baseUrl } from "../../../conf";
-import { ref } from "vue";
-import Popup from "@/components/Popup.vue";
-import { ShowPopup } from "@/assets/utils/ShowPopup";
+import { InitializeVars } from '@/assets/utils/InitializeVars'
+import { SetTitle } from '@/assets/utils/SetTitle'
+import { baseUrl } from '../../../conf'
+import { ref } from 'vue'
+import Popup from '@/components/Popup.vue'
+import { ShowPopup } from '@/assets/utils/ShowPopup'
 
-SetTitle("Sua Conta");
-const { msg, type, popup, token, techName } = InitializeVars();
+SetTitle('Sua Conta')
+const { msg, type, popup, token, techName } = InitializeVars()
 
-const password = ref("");
-const newPassword = ref("");
+const password = ref('')
+const newPassword = ref('')
 
 async function replacePassword() {
-  const res = await fetch(baseUrl + "/tech/replacePassword", {
-    method: "PUT",
+  const res = await fetch(baseUrl + '/tech/replacePassword', {
+    method: 'PUT',
     headers: {
       authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify({
       name: techName,
       password: password.value,
       newPassword: newPassword.value,
     }),
-  });
+  })
 
-  const data = await res.json();
+  const data = await res.json()
 
   if (res.status != 200) {
-    ShowPopup(popup, msg, type, "Ops! Ocorreu algum erro!", "error");
-    console.error(data);
+    ShowPopup(popup, msg, type, 'Ops! Ocorreu algum erro!', 'error')
+    console.error(data)
   } else {
-    ShowPopup(popup, msg, type, "Senha alterada com sucesso!", "success");
+    ShowPopup(popup, msg, type, 'Senha alterada com sucesso!', 'success')
   }
 
-  password.value = "";
-  newPassword.value = "";
+  password.value = ''
+  newPassword.value = ''
 }
 </script>
 
@@ -112,14 +107,14 @@ async function replacePassword() {
   color: var(--light-color);
 }
 
-.input-form input[type="submit"] {
+.input-form input[type='submit'] {
   padding: 1rem 2rem;
   cursor: pointer;
   font-weight: 600;
   transition: 0.3s;
 }
 
-.input-form input[type="submit"]:hover {
+.input-form input[type='submit']:hover {
   filter: brightness(120%);
 }
 </style>

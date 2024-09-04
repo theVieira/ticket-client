@@ -13,57 +13,57 @@ import DashTech from '@/views/tech/Dash.vue'
 import DashClient from '@/views/client/Dash.vue'
 
 const router = createRouter({
-	history: createWebHistory(import.meta.env.BASE_URL),
-	routes: [
-		{
-			path: '/',
-			component: Login,
-		},
-		{
-			path: '/home',
-			component: Home,
-		},
-		{
-			path: '/create/ticket',
-			component: CreateTicket,
-		},
-		{
-			path: '/create/client',
-			component: CreateClient,
-		},
-		{
-			path: '/finisheds',
-			component: Finished,
-		},
-		{
-			path: '/list/clients',
-			component: Clients,
-		},
-		{
-			path: '/account',
-			component: Account,
-		},
-		{
-			path: '/progress',
-			component: Progress,
-		},
-		{
-			path: '/manage/tech',
-			component: Techs,
-		},
-		{
-			path: '/create/tech',
-			component: CreateTech,
-		},
-		{
-			path: '/dash/tech',
-			component: DashTech,
-		},
-		{
-			path: '/dash/client',
-			component: DashClient,
-		},
-	],
+  history: createWebHistory(import.meta.env.BASE_URL),
+  routes: [
+    {
+      path: '/',
+      component: Login,
+    },
+    {
+      path: '/home',
+      component: Home,
+    },
+    {
+      path: '/create/ticket',
+      component: CreateTicket,
+    },
+    {
+      path: '/create/client',
+      component: CreateClient,
+    },
+    {
+      path: '/finisheds',
+      component: Finished,
+    },
+    {
+      path: '/list/clients',
+      component: Clients,
+    },
+    {
+      path: '/account',
+      component: Account,
+    },
+    {
+      path: '/progress',
+      component: Progress,
+    },
+    {
+      path: '/manage/tech',
+      component: Techs,
+    },
+    {
+      path: '/create/tech',
+      component: CreateTech,
+    },
+    {
+      path: '/dash/tech',
+      component: DashTech,
+    },
+    {
+      path: '/dash/client',
+      component: DashClient,
+    },
+  ],
 })
 
 export default router

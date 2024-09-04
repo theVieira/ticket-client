@@ -1,13 +1,13 @@
 <template>
-	<main class="client-dashboard-container">
-		<h1>Página em construção</h1>
-		<!-- <select name="clientOption" id="clientOption" v-model="clientOption">
+  <main class="client-dashboard-container">
+    <h1>Página em construção</h1>
+    <!-- <select name="clientOption" id="clientOption" v-model="clientOption">
       <option value="" selected disabled>Selecione</option>
       <option value="all">Todos</option>
       <option value="month">Mensal</option>
     </select>
     <canvas id="chart"></canvas> -->
-	</main>
+  </main>
 </template>
 
 <!-- <script setup>
@@ -84,18 +84,18 @@ onMounted(async () => {
 
 <style scoped>
 .client-dashboard-container {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	gap: 3rem;
-	padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3rem;
+  padding: 3rem;
 }
 
 #clientOption {
-	background: var(--medium-background);
-	padding: 1rem 2rem;
-	border-radius: 1.2rem;
-	color: var(--light-color);
-	cursor: pointer;
+  background: var(--medium-background);
+  padding: 1rem 2rem;
+  border-radius: 1.2rem;
+  color: var(--light-color);
+  cursor: pointer;
 }
 </style>
