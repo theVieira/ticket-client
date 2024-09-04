@@ -67,6 +67,7 @@ import {
 	notedTicket,
 	progressTicket,
 } from '@/assets/utils/TicketActions'
+import { SetTitle } from '@/assets/utils/SetTitle'
 
 const option = ref('tech')
 const ticketSection = ref(false)
@@ -124,6 +125,7 @@ async function find() {
 }
 
 onMounted(async () => {
+	SetTitle('Dashboard - Técnicos')
 	const res = await FetchAPI('/tech/list', token)
 	techs.value = res
 
