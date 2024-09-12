@@ -151,7 +151,7 @@ onMounted(async () => {
 }
 
 .dashboard {
-	max-width: 90%;
+	width: 90%;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
