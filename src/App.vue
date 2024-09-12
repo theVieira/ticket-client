@@ -1,12 +1,12 @@
 <template>
-	<main class="app-container">
-		<section class="navbar-section" v-if="$route.path != '/'">
-			<Navbar />
-		</section>
-		<section class="app-section">
-			<RouterView />
-		</section>
-	</main>
+  <main class="app-container">
+    <section class="navbar-section" v-if="$route.path != '/'">
+      <Navbar />
+    </section>
+    <section class="app-section">
+      <RouterView />
+    </section>
+  </main>
 </template>
 
 <script setup>
@@ -24,17 +24,17 @@ if (!expires || expires < Date.now() - 1000 * 60 * 60 * 12) {
 
 <style scoped>
 .app-container {
-	min-height: 100vh;
-	display: flex;
+  min-height: 100vh;
+  display: flex;
 }
 
 .app-section {
-	width: 100%;
-	min-height: 100%;
-	background: var(--light-background);
+  width: 100%;
+  min-height: 100%;
+  background: var(--light-background);
 }
 
 .navbar-section {
-	z-index: 10;
+  z-index: 10;
 }
 </style>

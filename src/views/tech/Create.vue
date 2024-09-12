@@ -7,12 +7,7 @@
       </div>
       <div class="input-data">
         <label for="password">Senha</label>
-        <input
-          type="password"
-          name="password"
-          id="password"
-          v-model="password"
-        />
+        <input type="password" name="password" id="password" v-model="password" />
       </div>
       <div class="input-data">
         <label for="phone">Telefone</label>
@@ -68,56 +63,56 @@
 </template>
 
 <script setup>
-import { InitializeVars } from "@/assets/utils/InitializeVars";
-import { ref } from "vue";
-import { baseUrl } from "../../../conf";
-import { ShowPopup } from "@/assets/utils/ShowPopup";
-import Popup from "@/components/Popup.vue";
+import { InitializeVars } from '@/assets/utils/InitializeVars'
+import { ref } from 'vue'
+import { baseUrl } from '../../../conf'
+import { ShowPopup } from '@/assets/utils/ShowPopup'
+import Popup from '@/components/Popup.vue'
 
-const { token, popup, msg, type } = InitializeVars();
+const { token, popup, msg, type } = InitializeVars()
 
-const name = ref("");
-const password = ref("");
-const phone = ref("");
-const admin = ref(false);
-const create_ticket = ref(false);
-const delete_ticket = ref(false);
-const color = ref("");
+const name = ref('')
+const password = ref('')
+const phone = ref('')
+const admin = ref(false)
+const create_ticket = ref(false)
+const delete_ticket = ref(false)
+const color = ref('')
 
 async function createTech() {
-  const res = await fetch(baseUrl + "/tech/create", {
-    method: "POST",
+  const res = await fetch(baseUrl + '/tech/create', {
+    method: 'POST',
     headers: {
       authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify({
       name: name.value,
       password: password.value,
-      phone: phone.value.replace(/\D/g, ""),
+      phone: phone.value.replace(/\D/g, ''),
       admin: admin.value,
       create_ticket: create_ticket.value,
       delete_ticket: delete_ticket.value,
       color: color.value,
     }),
-  });
+  })
 
-  const data = await res.json();
+  const data = await res.json()
 
   if (res.status != 201) {
-    console.error(data);
-    ShowPopup(popup, msg, type, "Ops! Ocorreu um erro!", "error");
+    console.error(data)
+    ShowPopup(popup, msg, type, 'Ops! Ocorreu um erro!', 'error')
   } else {
-    ShowPopup(popup, msg, type, "Técnico criado com sucesso!", "success");
+    ShowPopup(popup, msg, type, 'Técnico criado com sucesso!', 'success')
   }
 
-  name.value = "";
-  password.value = "";
-  phone.value = "";
-  admin.value = false;
-  create_ticket.value = false;
-  delete_ticket.value = false;
-  color.value = "";
+  name.value = ''
+  password.value = ''
+  phone.value = ''
+  admin.value = false
+  create_ticket.value = false
+  delete_ticket.value = false
+  color.value = ''
 }
 </script>
 

@@ -6,11 +6,7 @@
           <label for="clientName">Cliente</label>
           <select name="clientName" id="clientName" v-model="clientName">
             <option value="" selected disabled>Selecione</option>
-            <option
-              v-for="client in clients"
-              :key="client.id"
-              :value="client.name"
-            >
+            <option v-for="client in clients" :key="client.id" :value="client.name">
               {{ client.name.toUpperCase() }}
             </option>
           </select>
@@ -55,39 +51,39 @@
 </template>
 
 <script setup>
-import Popup from "@/components/Popup.vue";
-import { onBeforeMount, ref } from "vue";
-import { baseUrl } from "@/../conf.js";
-import { InitializeVars } from "@/assets/utils/InitializeVars";
-import { SetTitle } from "@/assets/utils/SetTitle";
-import { ShowPopup } from "@/assets/utils/ShowPopup";
+import Popup from '@/components/Popup.vue'
+import { onBeforeMount, ref } from 'vue'
+import { baseUrl } from '@/../conf.js'
+import { InitializeVars } from '@/assets/utils/InitializeVars'
+import { SetTitle } from '@/assets/utils/SetTitle'
+import { ShowPopup } from '@/assets/utils/ShowPopup'
 
-const { popup, clientName, msg, type, token, clients } = InitializeVars();
+const { popup, clientName, msg, type, token, clients } = InitializeVars()
 
-const priority = ref("");
-const category = ref("");
-const description = ref("");
+const priority = ref('')
+const category = ref('')
+const description = ref('')
 
-SetTitle("Criar Ticket");
+SetTitle('Criar Ticket')
 
 onBeforeMount(async () => {
-  const res = await fetch(baseUrl + "/client/list", {
-    method: "GET",
+  const res = await fetch(baseUrl + '/client/list', {
+    method: 'GET',
     headers: {
       authorization: `Bearer ${token}`,
     },
-  });
+  })
 
-  const data = await res.json();
-  clients.value = data;
-});
+  const data = await res.json()
+  clients.value = data
+})
 
 async function createTicket() {
-  const res = await fetch(baseUrl + "/ticket/create", {
-    method: "POST",
+  const res = await fetch(baseUrl + '/ticket/create', {
+    method: 'POST',
     headers: {
       authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify({
       clientName: clientName.value,
@@ -95,20 +91,20 @@ async function createTicket() {
       priority: priority.value,
       category: category.value,
     }),
-  });
+  })
 
-  clientName.value = "";
-  priority.value = "";
-  description.value = "";
-  category.value = "";
+  clientName.value = ''
+  priority.value = ''
+  description.value = ''
+  category.value = ''
 
-  const data = await res.json();
+  const data = await res.json()
 
   if (res.status == 201) {
-    ShowPopup(popup, msg, type, "Ticket criado com sucesso", "success");
+    ShowPopup(popup, msg, type, 'Ticket criado com sucesso', 'success')
   } else {
-    ShowPopup(popup, msg, type, "Ops! Ocorreu algum erro!", "error");
-    console.error(data);
+    ShowPopup(popup, msg, type, 'Ops! Ocorreu algum erro!', 'error')
+    console.error(data)
   }
 }
 </script>
@@ -159,7 +155,7 @@ async function createTicket() {
   color: var(--light-color);
 }
 
-.form-section input[type="submit"] {
+.form-section input[type='submit'] {
   border-radius: 1.2rem;
   border: none;
   padding: 1.2rem 2rem;
@@ -170,7 +166,7 @@ async function createTicket() {
   transition: 0.3s;
 }
 
-.form-section input[type="submit"]:hover {
+.form-section input[type='submit']:hover {
   filter: brightness(140%);
 }
 

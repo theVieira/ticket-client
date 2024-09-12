@@ -22,40 +22,40 @@
 </template>
 
 <script setup>
-import { InitializeVars } from "@/assets/utils/InitializeVars";
-import { SetTitle } from "@/assets/utils/SetTitle";
-import { baseUrl } from "../../../conf";
-import Popup from "@/components/Popup.vue";
-import { ref } from "vue";
-import { ShowPopup } from "@/assets/utils/ShowPopup";
+import { InitializeVars } from '@/assets/utils/InitializeVars'
+import { SetTitle } from '@/assets/utils/SetTitle'
+import { baseUrl } from '../../../conf'
+import Popup from '@/components/Popup.vue'
+import { ref } from 'vue'
+import { ShowPopup } from '@/assets/utils/ShowPopup'
 
-const { popup, msg, type, token } = InitializeVars();
+const { popup, msg, type, token } = InitializeVars()
 
-const name = ref("");
+const name = ref('')
 
-SetTitle("Criar Cliente");
+SetTitle('Criar Cliente')
 
 async function createClient() {
-  const res = await fetch(baseUrl + "/client/create", {
-    method: "POST",
+  const res = await fetch(baseUrl + '/client/create', {
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
       authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({
       name: name.value,
     }),
-  });
+  })
 
-  const data = await res.json();
+  const data = await res.json()
 
-  name.value = "";
+  name.value = ''
 
   if (res.status == 201) {
-    ShowPopup(popup, msg, type, "Cliente criado com sucesso!", "success");
+    ShowPopup(popup, msg, type, 'Cliente criado com sucesso!', 'success')
   } else {
-    ShowPopup(popup, msg, type, "Ops! Ocorreu algum erro!");
-    console.error(data);
+    ShowPopup(popup, msg, type, 'Ops! Ocorreu algum erro!')
+    console.error(data)
   }
 }
 </script>
@@ -102,14 +102,14 @@ async function createClient() {
   color: var(--light-color);
 }
 
-.create-client-form .form-data input[type="submit"] {
+.create-client-form .form-data input[type='submit'] {
   font-weight: 600;
   width: 100%;
   cursor: pointer;
   transition: 0.3s;
 }
 
-.create-client-form .form-data input[type="submit"]:hover {
+.create-client-form .form-data input[type='submit']:hover {
   filter: brightness(130%);
 }
 </style>

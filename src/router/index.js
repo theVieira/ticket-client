@@ -9,8 +9,8 @@ import Account from '@/views/tech/Account.vue'
 import Progress from '@/views/ticket/Progress.vue'
 import Techs from '@/views/tech/List.vue'
 import CreateTech from '@/views/tech/Create.vue'
-import DashTech from '@/views/tech/Dash.vue'
-import DashClient from '@/views/client/Dash.vue'
+import TechDasboard from '@/views/dashboards/TechDasboard.vue'
+import ClientDashboard from '@/views/dashboards/ClientDashboard.vue'
 
 const router = createRouter({
 	history: createWebHistory(import.meta.env.BASE_URL),
@@ -57,11 +57,11 @@ const router = createRouter({
 		},
 		{
 			path: '/dash/tech',
-			component: DashTech,
+			component: TechDasboard,
 		},
 		{
 			path: '/dash/client',
-			component: DashClient,
+			component: ClientDashboard,
 		},
 	],
 })
