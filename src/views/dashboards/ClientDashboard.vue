@@ -211,7 +211,7 @@ onMounted(async () => {
 
 <style scoped>
 .client-dashboard-container {
-	height: 100vh;
+	min-height: 100vh;
 	display: flex;
 	align-items: center;
 	justify-content: center;
