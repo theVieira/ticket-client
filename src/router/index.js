@@ -9,7 +9,7 @@ import Account from '@/views/tech/Account.vue'
 import Progress from '@/views/ticket/Progress.vue'
 import Techs from '@/views/tech/List.vue'
 import CreateTech from '@/views/tech/Create.vue'
-import TechDasboard from '@/views/dashboards/TechDasboard.vue'
+import TechDashboard from '@/views/dashboards/TechDashboard.vue'
 import ClientDashboard from '@/views/dashboards/ClientDashboard.vue'
 
 const router = createRouter({
@@ -57,7 +57,7 @@ const router = createRouter({
 		},
 		{
 			path: '/dash/tech',
-			component: TechDasboard,
+			component: TechDashboard,
 		},
 		{
 			path: '/dash/client',
