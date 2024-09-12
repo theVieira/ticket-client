@@ -11,6 +11,15 @@
 
 <script setup>
 import Navbar from '@/components/Navbar.vue'
+import { InitializeVars } from './assets/utils/InitializeVars'
+import router from './router'
+
+const { expires } = InitializeVars()
+
+if (!expires || expires < Date.now() - 1000 * 60 * 60 * 12) {
+	localStorage.clear()
+	router.push('/')
+}
 </script>
 
 <style scoped>
