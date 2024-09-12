@@ -62,7 +62,6 @@ import {
 } from '@/assets/utils/TicketActions'
 import FilterElement from './filter/filter-element'
 import FilterAnnual from './filter/filter-annual'
-import FilterDate from './filter/filter-date'
 import MapMonth from './mapper/map-month'
 import FindIam from './filter/i-am'
 import FilterRange from './filter/filter-range'
@@ -75,7 +74,7 @@ const endDate = ref()
 
 const { token, popup, tickets, msg, type, techs } = InitializeVars()
 
-// <Ticket Functions
+// <Ticket Functions>
 function _deleteTicket({ id, status }) {
 	deleteTicket(tickets, id, popup, msg, type, status)
 }

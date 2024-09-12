@@ -26,34 +26,91 @@
 			</div>
 			<canvas id="chart"></canvas>
 		</div>
+		<div class="tickets-container" v-if="showTickets">
+			<span id="close" @click="closeTicketSection">X</span>
+			<Ticket
+				v-for="ticket in tickets"
+				:key="ticket.id"
+				:ticket="ticket"
+				:techs="techs"
+				@deleted="_deleteTicket"
+				@progress="_progressTicket"
+				@finished="_finishTicket"
+				@edited="_editTicket"
+				@noted="_notedTicket"
+				@focus="ticketFocusFn"
+				class="ticket"
+			/>
+		</div>
 	</main>
 </template>
 
 <script setup>
 import { FetchAPI } from '@/assets/utils/FetchAPI'
 import { InitializeVars } from '@/assets/utils/InitializeVars'
-import { animator, Chart } from 'chart.js/auto'
+import { Chart } from 'chart.js/auto'
 import { onMounted, ref, watch } from 'vue'
 import FilterElement from './filter/filter-element'
-import MapMonth from './mapper/map-month'
 import FindIam from './filter/i-am'
 import FilterAnnual from './filter/filter-annual'
-import FilterDate from './filter/filter-date'
 import FilterRange from './filter/filter-range'
+import Ticket from '@/components/Ticket.vue'
+import {
+	deleteTicket,
+	editTicket,
+	finishedTicket,
+	notedTicket,
+	progressTicket,
+} from '@/assets/utils/TicketActions'
 
 const option = ref('client')
 const showTickets = ref(false)
 const startDate = ref()
 const endDate = ref()
+const ticketFocus = ref(false)
 
 const { token, clients, popup, tickets, msg, type } = InitializeVars()
 
-async function find() {
-	const findTechs = await FetchAPI('/tech/list', token)
-	const datasetData = FilterDate(findTechs, [startDate.value, endDate.value])
-	return datasetData
+// <Ticket Functions >
+function _deleteTicket({ id, status }) {
+	deleteTicket(tickets, id, popup, msg, type, status)
 }
 
+function _progressTicket({ id, status }) {
+	progressTicket(tickets, id, popup, msg, type, status)
+}
+
+function _finishTicket({ id, status }) {
+	finishedTicket(tickets, id, popup, msg, type, status, true)
+}
+
+function _editTicket({ id, status, data }) {
+	editTicket(tickets, id, popup, msg, type, data, status)
+}
+
+function _notedTicket({ id, status, data }) {
+	notedTicket(tickets, id, popup, msg, type, data, status)
+}
+
+function closeTicketSection(ev) {
+	if (!ticketFocus.value || ev.type == 'click') {
+		showTickets.value = false
+		return
+	}
+
+	showTickets.value = true
+}
+
+function ticketFocusFn({ data }) {
+	ticketFocus.value = data
+}
+
+addEventListener('keydown', (ev) => {
+	if (ev.key == 'Escape') {
+		closeTicketSection()
+	}
+})
+// Ticket Functions />
 onMounted(async () => {
 	const ctx = document.querySelector('#chart')
 
@@ -84,6 +141,7 @@ onMounted(async () => {
 				const name = FindIam(ev, datasetData, chart)
 				tickets.value = datasetData.filter((el) => el.label == name)[0].tickets
 				showTickets.value = true
+				showTickets.value = true
 			},
 		},
 	})
@@ -107,6 +165,11 @@ onMounted(async () => {
 					'Novembro',
 					'Dezembro',
 				]
+				chart.options.onClick = (ev) => {
+					const name = FindIam(ev, datasetData, chart)
+					tickets.value = datasetData.filter((el) => el.label == name)[0].tickets
+					showTickets.value = true
+				}
 				chart.update()
 				break
 			}
@@ -122,7 +185,7 @@ onMounted(async () => {
 					chart.options.onClick = (ev) => {
 						const name = FindIam(ev, datasetData, chart)
 						tickets.value = datasetData.filter((el) => el.label == name)[0].tickets
-						console.log(tickets.value)
+						showTickets.value = true
 					}
 					chart.update()
 				})
@@ -133,6 +196,11 @@ onMounted(async () => {
 				const datasetData = FilterElement(clients.value)
 				chart.data.datasets = datasetData
 				chart.data.labels = ['Clientes']
+				chart.options.onClick = (ev) => {
+					const name = FindIam(ev, datasetData, chart)
+					tickets.value = datasetData.filter((el) => el.label == name)[0].tickets
+					showTickets.value = true
+				}
 				chart.update()
 				break
 			}
@@ -172,5 +240,31 @@ input[type='date'] {
 	color: var(--light-color);
 	border-radius: 1.2rem;
 	border: 1px solid var(--light-color);
+}
+
+.tickets-container {
+	width: 100%;
+}
+
+.ticket {
+	width: 100%;
+}
+
+#close {
+	position: absolute;
+	top: 2rem;
+	left: 20rem;
+	background: none;
+	border: none;
+	color: red;
+	font-size: 3rem;
+	font-weight: 600;
+	cursor: pointer;
+}
+
+@media (max-width: 800px) {
+	#close {
+		left: 3rem;
+	}
 }
 </style>
