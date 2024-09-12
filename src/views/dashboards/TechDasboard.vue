@@ -16,19 +16,12 @@
 						id="dateInput"
 						class="date"
 						v-model="startDate"
-						@change="find"
 					/>
 				</div>
 
 				<div class="dateInput" v-if="option == 'select-date'">
 					<span>Até</span>
-					<input
-						type="date"
-						name="date"
-						class="date"
-						v-model="endDate"
-						@change="find"
-					/>
+					<input type="date" name="date" class="date" v-model="endDate" />
 				</div>
 			</div>
 			<canvas id="chart"></canvas>
@@ -67,6 +60,12 @@ import {
 	notedTicket,
 	progressTicket,
 } from '@/assets/utils/TicketActions'
+import FilterElement from './filter/filter-element'
+import FilterAnnual from './filter/filter-annual'
+import FilterDate from './filter/filter-date'
+import MapMonth from './mapper/map-month'
+import FindIam from './filter/i-am'
+import FilterRange from './filter/filter-range'
 
 const option = ref('tech')
 const ticketSection = ref(false)
@@ -117,18 +116,12 @@ addEventListener('keydown', (ev) => {
 })
 // Ticket Functions />
 
-async function find() {
-	const findTechs = await FetchAPI('/tech/list', token)
-	const datasetData = FilterDate(findTechs, [startDate.value, endDate.value])
-	return datasetData
-}
-
 onMounted(async () => {
 	const res = await FetchAPI('/tech/list', token)
 	techs.value = res
 
 	const ctx = document.querySelector('#chart')
-	const datasetData = FilterTech(techs.value)
+	const datasetData = FilterElement(techs.value)
 	const chart = new Chart(ctx, {
 		type: 'bar',
 		data: {
@@ -149,30 +142,25 @@ onMounted(async () => {
 			responsive: true,
 			aspectRatio: 2 / 1.5,
 			onClick: (ev) => {
-				const name = FindIam(ev, datasetData)
+				const name = FindIam(ev, datasetData, chart)
 				tickets.value = datasetData.filter((el) => el.label == name)[0].tickets
 				ticketSection.value = true
 			},
 		},
 	})
 
-	function FindIam(ev, dataset) {
-		const i = chart.getElementsAtEventForMode(ev, 'nearest', {
-			intersect: true,
-		})[0].datasetIndex
-
-		return dataset[i].label
-	}
-
 	watch(option, async (val) => {
 		switch (val) {
 			case 'select-date': {
 				watch([endDate, startDate], async () => {
-					const datasetData = await find()
+					const datasetData = await FilterRange('/tech/list', token, [
+						startDate.value,
+						endDate.value,
+					])
 					chart.data.datasets = datasetData
 					chart.data.labels = [MapMonth(new Date().getMonth() + 1)]
 					chart.options.onClick = (ev) => {
-						const name = FindIam(ev, datasetData)
+						const name = FindIam(ev, datasetData, chart)
 						tickets.value = datasetData.filter((el) => el.label == name)[0].tickets
 						ticketSection.value = true
 					}
@@ -215,7 +203,7 @@ onMounted(async () => {
 			}
 
 			case 'tech': {
-				const datasetData = FilterTech(techs.value)
+				const datasetData = FilterElement(techs.value)
 				chart.data.datasets = datasetData
 				chart.data.labels = ['Técnicos']
 				chart.options.onClick = (ev) => {
@@ -228,39 +216,6 @@ onMounted(async () => {
 		}
 	})
 })
-
-// <Mapper
-function MapMonth(month) {
-	switch (month) {
-		case 1:
-			return 'Janeiro'
-		case 2:
-			return 'Fevereiro'
-		case 3:
-			return 'Março'
-		case 4:
-			return 'Abril'
-		case 5:
-			return 'Maio'
-		case 6:
-			return 'Junho'
-		case 7:
-			return 'Julho'
-		case 8:
-			return 'Agosto'
-		case 9:
-			return 'Setembro'
-		case 10:
-			return 'Outubro'
-		case 11:
-			return 'Novembro'
-		case 12:
-			return 'Dezembro'
-		default:
-			throw new Error('unknown month')
-	}
-}
-// Mapper />
 </script>
 
 <style scoped>
