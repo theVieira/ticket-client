@@ -80,7 +80,6 @@ onMounted(async () => {
 				},
 			},
 			responsive: true,
-			aspectRatio: 2 / 1.5,
 			onClick: (ev) => {
 				const name = FindIam(ev, datasetData, chart)
 				tickets.value = datasetData.filter((el) => el.label == name)[0].tickets
