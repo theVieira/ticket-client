@@ -244,6 +244,7 @@ input[type='date'] {
 
 .tickets-container {
 	width: 100%;
+	margin-top: 5rem;
 }
 
 .ticket {
