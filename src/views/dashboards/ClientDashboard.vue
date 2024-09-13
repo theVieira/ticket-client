@@ -132,7 +132,7 @@ onMounted(async () => {
 				padding: 30,
 			},
 			responsive: true,
-			aspectRatio: 2 / 1.5,
+			aspectRatio: 2 / 2,
 			plugins: {
 				legend: {
 					position: 'bottom',
@@ -222,8 +222,8 @@ onMounted(async () => {
 }
 
 #chart {
-	max-width: 100%;
-	max-height: 80%;
+	max-height: 85%;
+	max-width: 85%;
 }
 
 .controls {
@@ -267,6 +267,11 @@ input[type='date'] {
 @media (max-width: 800px) {
 	#close {
 		left: 3rem;
+	}
+
+	#chart {
+		max-height: 100% !important;
+		max-width: 100% !important;
 	}
 }
 </style>
