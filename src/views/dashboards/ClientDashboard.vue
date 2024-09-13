@@ -131,12 +131,13 @@ onMounted(async () => {
 			layout: {
 				padding: 30,
 			},
+			responsive: true,
+			aspectRatio: 2 / 1.5,
 			plugins: {
 				legend: {
 					position: 'bottom',
 				},
 			},
-			responsive: true,
 			onClick: (ev) => {
 				const name = FindIam(ev, datasetData, chart)
 				tickets.value = datasetData.filter((el) => el.label == name)[0].tickets
@@ -210,19 +211,19 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.client-dashboard-container {
-	min-height: 100vh;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-}
-
 .dashboard {
-	width: 90%;
+	width: 100%;
+	height: 100vh;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	gap: 4rem;
+	justify-content: center;
+	gap: 3rem;
+}
+
+#chart {
+	max-width: 100%;
+	max-height: 80%;
 }
 
 .controls {
