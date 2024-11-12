@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Itim&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
 @font-face {
 	font-family: 'abode';
 	src: url('../fonts/jk-abode/JKAbode-Demo.ttf') format('truetype');
@@ -12,7 +14,7 @@
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
-	font-family: 'itim';
+	font-family: 'Montserrat';
 	list-style: none;
 	text-decoration: none;
 }
