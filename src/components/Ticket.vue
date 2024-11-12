@@ -513,7 +513,7 @@ async function addNote(id) {
 
 .info-section p {
 	text-align: center;
-	word-break: break-all;
+	word-break: break-word;
 }
 
 .ticket-actions {
@@ -609,11 +609,13 @@ async function addNote(id) {
 .status {
 	padding: 0.3rem 0.7rem;
 	border-radius: 1.2rem;
+	word-break: break-word;
 }
 
 .priority {
 	padding: 0.3rem 0.7rem;
 	border-radius: 1.2rem;
+	word-break: break-word;
 }
 
 .checkReccurrent {
@@ -676,7 +678,6 @@ async function addNote(id) {
 @media (max-width: 900px) {
 	.ticket-container {
 		padding: 3rem;
-		border: 1px solid #c25005;
 	}
 
 	.more-infos {
