@@ -1,91 +1,99 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+@font-face {
+	font-family: 'abode';
+	src: url('../fonts/jk-abode/JKAbode-Demo.ttf') format('truetype');
+}
+
+@font-face {
+	font-family: 'itim';
+	src: url('../fonts/Itim/Itim-Regular.ttf') format('truetype');
+}
 
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Montserrat';
-  list-style: none;
-  text-decoration: none;
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-family: 'itim';
+	list-style: none;
+	text-decoration: none;
 }
 
 :root {
-  font-size: 62.5%;
-  --dark-background: #121416;
-  --medium-background: #171a1d;
-  --light-background: #1c1f22f5;
-  --light-color: #cecece;
+	font-size: 62.5%;
+	--dark-background: #121416;
+	--medium-background: #171a1d;
+	--light-background: #1c1f22f5;
+	--light-color: #cecece;
 }
 
 body {
-  font-size: 1.6rem;
-  overflow-x: hidden;
+	font-size: 1.6rem;
+	overflow-x: hidden;
 }
 
 .tickets-container {
-  color: var(--light-color);
-  padding: 3rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
+	color: var(--light-color);
+	padding: 3rem;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 1rem;
 }
 
 .tickets-list {
-  width: 100%;
-  height: fit-content;
-  background: var(--medium-background);
-  padding: 3rem;
-  border-radius: 1.2rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.2rem;
+	width: 100%;
+	height: fit-content;
+	background: var(--medium-background);
+	padding: 3rem;
+	border-radius: 1.2rem;
+	display: flex;
+	flex-direction: column;
+	gap: 1.2rem;
 }
 
 .tickets-header {
-  width: 100%;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 3rem;
+	width: 100%;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 3rem;
 }
 
 .popup {
-  position: absolute;
-  top: 3rem;
+	position: absolute;
+	top: 3rem;
 }
 
 .urgent-priority {
-  background: #d83f3f94;
+	background: #d83f3f94;
 }
 
 .high-priority {
-  background: #d89b3f94;
+	background: #d89b3f94;
 }
 
 .medium-priority {
-  background: #3fd8b794;
+	background: #3fd8b794;
 }
 
 .low-priority {
-  background: #59d83f94;
+	background: #59d83f94;
 }
 
 .open-status {
-  background: #d83f3f94;
+	background: #d83f3f94;
 }
 
 .progress-status {
-  background: #d89b3f94;
+	background: #d89b3f94;
 }
 
 .finished-status {
-  background: #59d83f94;
+	background: #59d83f94;
 }
 
 @media (max-width: 800px) {
-  .header {
-    padding: 0 6rem 0 0;
-  }
+	.header {
+		padding: 0 6rem 0 0;
+	}
 }

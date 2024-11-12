@@ -108,6 +108,10 @@ async function login() {
 </script>
 
 <style scoped>
+h1 {
+	font-weight: bold;
+}
+
 .login-container {
 	width: 100vw;
 	height: 100vh;
@@ -121,12 +125,16 @@ async function login() {
 .login-container form {
 	display: flex;
 	flex-direction: column;
-	align-items: center;
 	justify-content: center;
 	gap: 2rem;
 	padding: 5rem;
 	border-radius: 1.2rem;
-	background: #5a58e6;
+}
+
+.login-container form h1 {
+	font-family: 'abode';
+	margin-bottom: 2rem;
+	font-size: 8rem;
 }
 
 .login-container form input {
@@ -139,7 +147,7 @@ async function login() {
 .login-container form input[type='submit'] {
 	font-weight: 600;
 	width: 100%;
-	background: #565cb3aa;
+	background: #4044ed;
 	color: var(--light-color);
 	font-size: 1.5rem;
 	cursor: pointer;
