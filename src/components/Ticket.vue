@@ -70,7 +70,7 @@
 					<p>{{ FormatDate(ticket.progress) }}</p>
 				</section>
 				<section class="more-info" v-if="ticket.status == 'finished'">
-					<h4>Finalizado</h4>
+					<h4>Finalizado:</h4>
 					<p>{{ FormatDate(ticket.finished) }}</p>
 				</section>
 				<section class="more-info" v-if="ticket.techName">
@@ -86,7 +86,7 @@
 					</p>
 				</section>
 				<section class="note" v-if="ticket.note">
-					<h4>Anotação</h4>
+					<h4 style="color: #ffffff">Anotação</h4>
 					<p style="white-space: pre-wrap; word-break: break-word">
 						{{ ticket.note }}
 					</p>
@@ -489,6 +489,7 @@ async function addNote(id) {
 	align-items: self-start;
 	justify-content: center;
 	background: var(--dark-background);
+	box-shadow: inset 0 0 0.2rem white;
 	padding: 1rem 3rem;
 	border-radius: 1.2rem;
 	flex-wrap: wrap;
@@ -504,6 +505,10 @@ async function addNote(id) {
 	flex-basis: 10rem;
 	flex-shrink: 0;
 	flex-grow: 1;
+}
+
+.info-section h4 {
+	color: #f1f1f1;
 }
 
 .info-section p {
@@ -522,6 +527,7 @@ async function addNote(id) {
 	align-items: center;
 	justify-content: space-around;
 	gap: 1.5rem;
+	box-shadow: inset 0 0 0.2rem white;
 }
 
 .ticket-actions .actions {
@@ -592,6 +598,7 @@ async function addNote(id) {
 
 .more-info h4 {
 	white-space: nowrap;
+	color: #f1f1f1;
 }
 
 .more-info p {

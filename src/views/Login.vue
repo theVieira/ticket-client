@@ -134,7 +134,7 @@ h1 {
 .login-container form h1 {
 	font-family: 'abode';
 	margin-bottom: 2rem;
-	font-size: 8rem;
+	font-size: 6rem;
 }
 
 .login-container form input {
