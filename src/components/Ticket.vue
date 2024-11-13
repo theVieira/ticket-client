@@ -247,7 +247,8 @@ msg.value = `Chamado%0ACliente%3A%20${
 )}%2C%0AStatus%3A%20${Translate(props.ticket.status)}`
 
 function sendMsg() {
-	open(`https://wa.me/55${phone.value}?text=${msg.value}`, '_blank')
+	const url = `https://wa.me/55${phone.value}?text=${encodeURIComponent(msg.value)}`
+	window.open(url, '_blank')
 }
 
 const ticketFocus = ref(false)
