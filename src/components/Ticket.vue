@@ -1,9 +1,10 @@
 <template>
 	<div class="container">
-		<div class="ticket-container" @click="showTicketInfos">
+		<div class="ticket-container" @click="showTicketInfos" :class="progressBorder">
 			<section class="info-section">
 				<h4>Cliente</h4>
 				<p>{{ ticket.clientName.toUpperCase() }}</p>
+				<p style="font-size: 1.5rem">{{ FormatDate(ticket.createdAt) }}</p>
 			</section>
 			<section class="info-section large">
 				<h4>Descrição</h4>
@@ -272,6 +273,12 @@ const emit = defineEmits([
 	'noted',
 	'focus',
 ])
+
+const progressBorder = computed(() => {
+	if (props.ticket.status == 'progress') {
+		return 'progressBorder'
+	}
+})
 
 const priority = computed(() => {
 	switch (props.ticket.priority) {
@@ -674,6 +681,11 @@ async function addNote(id) {
 	color: var(--light-color);
 	padding: 1rem 2rem;
 	border-radius: 1.2rem;
+}
+
+.progressBorder {
+	border: 1px solid #d89b3f94;
+	box-shadow: inset 0 0 0.2rem #d89b3f94;
 }
 
 @media (max-width: 900px) {

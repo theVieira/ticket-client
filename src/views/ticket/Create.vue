@@ -26,6 +26,7 @@
 						<option value="daily">Diário</option>
 						<option value="delivery">Entrega</option>
 						<option value="budget">Orçamento</option>
+						<option value="maintenance">Manutenção</option>
 					</select>
 				</div>
 				<div class="form-data">
