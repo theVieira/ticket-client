@@ -4,7 +4,12 @@
 			<section class="info-section">
 				<h4>Cliente</h4>
 				<p>{{ ticket.clientName.toUpperCase() }}</p>
-				<p style="font-size: 1.5rem">{{ FormatDate(ticket.createdAt) }}</p>
+				<p style="font-size: 1.5rem">
+					{{ FormatDate(ticket.createdAt) }}
+				</p>
+				<p style="font-size: 1.5rem" v-show="ticket.createdBy != ''">
+					Criado por: {{ ticket.createdBy }}
+				</p>
 			</section>
 			<section class="info-section large">
 				<h4>Descrição</h4>
@@ -80,8 +85,8 @@
 						{{ ticket.techName.toUpperCase() }}
 					</section>
 				</section>
-				<section class="more-info" v-if="ticket.report">
-					<h4>Feedback do técnico</h4>
+				<section class="note" v-if="ticket.report">
+					<h4 style="color: #ffffff">Feedback do técnico</h4>
 					<p style="white-space: pre-wrap; word-break: break-word">
 						{{ ticket.report }}
 					</p>

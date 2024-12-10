@@ -10,6 +10,17 @@
 				v-model="clientName"
 			/>
 		</div>
+		<div class="date-input">
+			<input
+				type="date"
+				name="from"
+				id="from-date"
+				class="date-option"
+				v-model="dateFrom"
+			/>
+			<span>até</span>
+			<input type="date" name="" id="to-date" class="date-option" v-model="dateTo" />
+		</div>
 		<div class="filter-input">
 			<select name="order" id="order" v-model="order" class="search">
 				<option value="all" selected>Todos</option>
@@ -25,8 +36,13 @@
 <script setup>
 import { FetchAPI } from '@/assets/utils/FetchAPI'
 import { InitializeVars } from '@/assets/utils/InitializeVars'
+import { isWithinInterval, parseISO } from 'date-fns'
+import { ref } from 'vue'
 
 const { order, clientName, token } = InitializeVars()
+
+const dateFrom = ref()
+const dateTo = ref()
 
 const emit = defineEmits(['search'])
 
@@ -42,13 +58,31 @@ addEventListener('keydown', (ev) => {
 
 async function search() {
 	const res = await FetchAPI(`/ticket/list${props.url}/${order.value}`, token)
-	const data = res.filter((ticket) =>
+
+	const filterByName = res.filter((ticket) =>
 		ticket.clientName.toLowerCase().includes(clientName.value.toLowerCase())
 	)
 
+	const data = filterByName.filter((ticket) =>
+		filterByDate(dateFrom.value, dateTo.value, ticket)
+	)
+
 	clientName.value = ''
+	dateFrom.value = undefined
+	dateTo.value = undefined
 
 	emit('search', { data })
+}
+
+function filterByDate(dateFrom, dateTo, ticket) {
+	const compare = isWithinInterval(parseISO(ticket.createdAt), {
+		start: parseISO(dateFrom),
+		end: parseISO(dateTo),
+	})
+
+	if (compare) {
+		return ticket
+	}
 }
 </script>
 
@@ -60,7 +94,7 @@ async function search() {
 
 .filter .filter-input {
 	display: flex;
-	gap: 4rem;
+	gap: 2rem;
 	height: 4rem;
 }
 
@@ -76,10 +110,6 @@ async function search() {
 	transition: 0.3s;
 }
 
-#find {
-	width: 90%;
-}
-
 .filter .search:hover {
 	filter: brightness(120%);
 }
@@ -91,6 +121,22 @@ select {
 	padding: 1rem 2rem;
 	color: var(--light-color);
 	font-weight: 600;
+}
+
+.date-input {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+	margin: 0 2rem;
+}
+
+.date-option {
+	padding: 1rem 2rem;
+	border-radius: 1.2rem;
+	background: transparent;
+	color: var(--light-color);
+	border: none;
+	box-shadow: inset 0 0 0.2rem white;
 }
 
 @media (max-width: 900px) {

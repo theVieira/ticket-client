@@ -59,7 +59,7 @@ import { InitializeVars } from '@/assets/utils/InitializeVars'
 import { SetTitle } from '@/assets/utils/SetTitle'
 import { ShowPopup } from '@/assets/utils/ShowPopup'
 
-const { popup, clientName, msg, type, token, clients } = InitializeVars()
+const { popup, clientName, msg, type, token, clients, techName } = InitializeVars()
 
 const priority = ref('')
 const category = ref('')
@@ -91,6 +91,7 @@ async function createTicket() {
 			description: description.value,
 			priority: priority.value,
 			category: category.value,
+			createdBy: techName,
 		}),
 	})
 
