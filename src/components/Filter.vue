@@ -13,13 +13,12 @@
 		<div class="date-input">
 			<input
 				type="date"
-				name="from"
 				id="from-date"
 				class="date-option"
 				v-model="dateFrom"
 			/>
 			<span>até</span>
-			<input type="date" name="" id="to-date" class="date-option" v-model="dateTo" />
+			<input type="date" id="to-date" class="date-option" v-model="dateTo" />
 		</div>
 		<div class="filter-input">
 			<select name="order" id="order" v-model="order" class="search">
@@ -28,7 +27,12 @@
 				<option value="delivery">Entregas</option>
 				<option value="budget">Orçamentos</option>
 			</select>
-			<input type="button" value="Buscar" class="search" @click.prevent="search" />
+			<input
+				type="button"
+				value="Buscar"
+				class="search"
+				@click.prevent="search"
+			/>
 		</div>
 	</div>
 </template>
@@ -64,25 +68,28 @@ async function search() {
 	)
 
 	const data = filterByName.filter((ticket) =>
-		filterByDate(dateFrom.value, dateTo.value, ticket)
+		filterByDate(ticket, dateFrom.value, dateTo.value)
 	)
-
-	clientName.value = ''
-	dateFrom.value = undefined
-	dateTo.value = undefined
 
 	emit('search', { data })
 }
 
-function filterByDate(dateFrom, dateTo, ticket) {
-	const compare = isWithinInterval(parseISO(ticket.createdAt), {
-		start: parseISO(dateFrom),
-		end: parseISO(dateTo),
-	})
+function filterByDate(ticket, dateFrom, dateTo) {
+	const parseISO = (date) => new Date(date)
 
-	if (compare) {
-		return ticket
+	if (!dateFrom && !dateTo) return true
+
+	const ticketDate = parseISO(ticket.createdAt)
+	const startDate = dateFrom ? parseISO(dateFrom) : null
+	const endDate = dateTo ? parseISO(dateTo) : new Date()
+
+	if (startDate && endDate) {
+		return ticketDate >= startDate && ticketDate <= endDate
+	} else if (startDate) {
+		return ticketDate >= startDate
 	}
+
+	return true
 }
 </script>
 
